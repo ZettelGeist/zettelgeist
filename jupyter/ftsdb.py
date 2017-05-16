@@ -65,4 +65,6 @@ class SQLiteFTS(object):
     self.conn.close()
     
 
+def getDB():
+  return SQLiteFTS('zettels.db', 'zettels', ['title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note' ])
 
