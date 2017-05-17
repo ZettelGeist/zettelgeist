@@ -11,14 +11,20 @@ import sqlite3
 import pprint
 printer = pprint.PrettyPrinter(indent=2)
 
+#
+# Flattens a list of text. Any item not text is converted to text forcibly,
+# if necessary.
+#
+
 def flatten(item):
+    if item == None:
+        return [""]
     if type(item) != type([]):
         return [str(item)]
-    if item == []:
+    if len(item) == 0:
         return item
-    if isinstance(item[0], list):
+    else:
         return flatten(item[0]) + flatten(item[1:])
-    return item[:1] + flatten(item[1:])
 
 class SQLiteFTS(object):  
   def __init__(self, db_name, table_name, field_names):
@@ -37,10 +43,11 @@ class SQLiteFTS(object):
     self.record = self.fts_default_record.copy()
     for k in doc.keys():
         if k in self.record.keys():
-           self.record[k] = doc[k]
+           if doc[k] != None: self.record[k] = doc[k]
         else:
-           print("Unknown fts field %s" % k)
-    self.record.update(doc)
+           print("Unknown fts field %s - deleting it" % k)
+           
+    #self.record.update(doc)
     
   def drop_table(self):
     self.conn.execute("DROP TABLE IF EXISTS %s" % self.table_name)
@@ -52,7 +59,9 @@ class SQLiteFTS(object):
     
   def insert_into_table(self):
     sql_params = ",".join(self.fts_fields.values())
-    #printer.pprint(self.record)
+    #print("record keys")
+    #printer.pprint(self.record.keys())
+    #print("\nvalues only")
     #printer.pprint(self.record.values())
     sql_insert_values = [ ",".join(flatten(value)) for value in list(self.record.values())]
     #print("INSERT INTO zettels VALUES (%s)" % sql_params)
@@ -66,5 +75,5 @@ class SQLiteFTS(object):
     
 
 def getDB():
-  return SQLiteFTS('zettels.db', 'zettels', ['title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note' ])
+  return SQLiteFTS('zettels.db', 'zettels', ['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note' ])
 
