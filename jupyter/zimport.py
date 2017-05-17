@@ -9,23 +9,24 @@ zdb = getDB()
 
 print("dir = %s" % dir)
 for filename in os.listdir(dir):
-  print("Processing %s" % filename)
+  print("%s:" % filename)
   filepath = os.path.join(dir, filename)
   with open(filepath) as infile:
     try:
        text = infile.read()
     except:
-       print("Could not read() from file %s" % filename)
-       text = ""
+       print("- I/O error on %s: Encoding must be UTF-8" % filename)
+       continue
     try:
        ydocs = yaml.load_all(text)
     except:
+       print("- YAML load failure (run yamllint on this file)")
        continue
 
     try:
       ydocs = list(ydocs)
     except:
-      print("errors in filename %s" % filename)
+      print("- YAML loaded but could not be processed")
       continue
 
     for ydoc in ydocs:

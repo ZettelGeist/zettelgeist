@@ -26,6 +26,7 @@ def flatten(item):
     else:
         return flatten(item[0]) + flatten(item[1:])
 
+
 class SQLiteFTS(object):  
   def __init__(self, db_name, table_name, field_names):
     self.db_name = db_name
