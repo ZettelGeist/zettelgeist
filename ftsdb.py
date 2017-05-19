@@ -76,5 +76,5 @@ class SQLiteFTS(object):
     
 
 def getDB():
-  return SQLiteFTS('zettels.db', 'zettels', ['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note' ])
+  return SQLiteFTS('zettels.db', 'zettels', ['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ])
 
