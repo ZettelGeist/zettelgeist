@@ -9,6 +9,8 @@ zdb = getDB()
 
 print("dir = %s" % dir)
 for filename in os.listdir(dir):
+  if not filename.endswith('.yaml'):
+    continue
   print("%s:" % filename)
   filepath = os.path.join(dir, filename)
   with open(filepath) as infile:
