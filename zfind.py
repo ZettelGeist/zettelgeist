@@ -9,6 +9,8 @@ for field in ftsdb.ZETTEL_FIELDS:
    parser.add_argument('--exclude-%s' % field, help='search the YAML %s field' % field)
    parser.add_argument('--show-%s' % field, action='store_const', const=True, default=False)
 
+parser.add_argument('--count', action='store_const', const=True, default=False, help="Show number of Zettels matching this search")
+
 args = parser.parse_args()
 
 argsd = vars(args)
@@ -26,7 +28,9 @@ for field in ftsdb.ZETTEL_FIELDS:
 db = ftsdb.get()
 gen = db.fts_search(query)
 
+search_count = 0
 for row in gen:
+   search_count = search_count + 1
    printed_something = False
    for field in row.keys():
       show_field = "show_" + field
@@ -40,3 +44,6 @@ for row in gen:
    if printed_something:
       print("-" * 40)
       print()
+   
+if args.count:
+   print("%d Zettels matched search" % search_count)
