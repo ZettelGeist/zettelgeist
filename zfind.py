@@ -3,13 +3,12 @@ import ftsdb
 
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument('--find-text', help='search the YAML text field')
-parser.add_argument('--exclude-text', help='search the YAML text field')
-parser.add_argument('--find-title', help='search the YAML title field')
-parser.add_argument('--exclude-title', help='search the YAML title field')
-parser.add_argument('--show-filename',  action='store_const', const=True, default=False)
-parser.add_argument('--show-title',  action='store_const', const=True, default=False)
-parser.add_argument('--show-text',  action='store_const', const=True, default=False)
+
+for field in ftsdb.ZETTEL_FIELDS:
+   parser.add_argument('--find-%s' % field, help='search the YAML %s field' % field)
+   parser.add_argument('--exclude-%s' % field, help='search the YAML %s field' % field)
+   parser.add_argument('--show-%s' % field, action='store_const', const=True, default=False)
+
 args = parser.parse_args()
 
 print(args)
