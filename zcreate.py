@@ -4,7 +4,7 @@
 
 import os.path
 import argparse
-import ftsdb
+import zdb
 
 def parse_options():
   parser = argparse.ArgumentParser()
@@ -13,11 +13,11 @@ def parse_options():
 
 def zcreate(args):
   if args.delete:
-     fts.delete()
-  zdb = ftsdb.get()
-  zdb.drop_table()
-  zdb.create_table()
-  zdb.done()
+     zdb.delete()
+  db = zdb.get()
+  db.drop_table()
+  db.create_table()
+  db.done()
 
 
 if __name__ == '__main__':

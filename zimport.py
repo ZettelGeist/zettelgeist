@@ -1,11 +1,11 @@
-import ftsdb
+import zdb
 import sys
 import os
 import os.path
 import yaml
 
 dir = sys.argv[1]
-zdb = ftsdb.get()
+db = zdb.get()
 
 print("dir = %s" % dir)
 for filename in os.listdir(dir):
@@ -34,8 +34,8 @@ for filename in os.listdir(dir):
     for ydoc in ydocs:
       if type(ydoc) == type({}):
          ydoc['filename'] = filename
-         zdb.bind(ydoc)
-         zdb.insert_into_table()
+         db.bind(ydoc)
+         db.insert_into_table()
 
-zdb.done()
+db.done()
 

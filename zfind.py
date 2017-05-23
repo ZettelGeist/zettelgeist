@@ -1,10 +1,10 @@
 
-import ftsdb
+import zdb
 
 import argparse
 parser = argparse.ArgumentParser()
 
-for field in ftsdb.ZETTEL_FIELDS:
+for field in zdb.ZETTEL_FIELDS:
    parser.add_argument('--find-%s' % field, help='search the YAML %s field' % field)
    parser.add_argument('--exclude-%s' % field, help='search the YAML %s field' % field)
    parser.add_argument('--show-%s' % field, action='store_const', const=True, default=False)
@@ -15,7 +15,7 @@ args = parser.parse_args()
 
 argsd = vars(args)
 query = []
-for field in ftsdb.ZETTEL_FIELDS:
+for field in zdb.ZETTEL_FIELDS:
    exclude_field = 'exclude_' + field
    include_field = 'find_' + field
    if exclude_field in argsd:
@@ -25,7 +25,7 @@ for field in ftsdb.ZETTEL_FIELDS:
       entry = argsd.get(include_field)
       if entry: query.append((field, '', entry))
 
-db = ftsdb.get()
+db = zdb.get()
 gen = db.fts_search(query)
 
 search_count = 0

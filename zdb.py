@@ -5,6 +5,7 @@
 # 
 
 import sqlite3
+import os
 
 ZETTEL_FIELDS=['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ]
 
