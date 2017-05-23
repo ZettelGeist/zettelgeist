@@ -15,7 +15,7 @@ print(args)
 
 argsd = vars(args)
 query = []
-for field in ['text', 'title']:
+for field in ftsdb.ZETTEL_FIELDS:
    exclude_field = 'exclude_' + field
    include_field = 'find_' + field
    if exclude_field in argsd:
