@@ -6,6 +6,8 @@
 
 import sqlite3
 
+ZETTEL_FIELDS=['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ]
+
 # This is for showing data structures only.
 
 import pprint
@@ -106,7 +108,7 @@ class SQLiteFTS(object):
 ZDB = 'zettels.db'
 
 def get():
-  return SQLiteFTS(ZDB, 'zettels', ['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ])
+  return SQLiteFTS(ZDB, 'zettels', ZETTEL_FIELDS)
 
 def delete():
   os.unlink(ZDB)
