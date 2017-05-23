@@ -96,7 +96,7 @@ class SQLiteFTS(object):
     #print(safe_term_list)
     fts_terms = " ".join(["".join(list(term)) for term in safe_term_list])
     Q="SELECT * from zettels where zettels match '%s'" % fts_terms
-    print(Q)
+    #print(Q)
     for row in self.cursor.execute(Q):
        yield(row)
     
