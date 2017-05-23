@@ -8,6 +8,8 @@ parser.add_argument('--exclude-text', help='search the YAML text field')
 parser.add_argument('--find-title', help='search the YAML title field')
 parser.add_argument('--exclude-title', help='search the YAML title field')
 parser.add_argument('--show-filename',  action='store_const', const=True, default=False)
+parser.add_argument('--show-title',  action='store_const', const=True, default=False)
+parser.add_argument('--show-text',  action='store_const', const=True, default=False)
 args = parser.parse_args()
 
 print(args)
