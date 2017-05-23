@@ -21,10 +21,10 @@ for field in ['text', 'title']:
    include_field = 'find_' + field
    if exclude_field in argsd:
       entry = argsd.get(exclude_field)
-      if entry: query.append(('-', field, entry))
+      if entry: query.append((field, '-', entry))
    if include_field in argsd:
       entry = argsd.get(include_field)
-      if entry: query.append(('', field, entry))
+      if entry: query.append((field, '', entry))
 
 db = ftsdb.get()
 gen = db.fts_search(query)

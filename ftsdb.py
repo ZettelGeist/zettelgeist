@@ -82,14 +82,14 @@ class SQLiteFTS(object):
     safe_term_list = []
     for term in term_list:
        if type(term) == type(()) and len(term) == 3:
-          (not_operator, name, words) = term
+          (name, not_operator, words) = term
           words = unquote(words)
           if not_operator not in '-':
              not_operator = ''
           if name not in self.fts_field_names:
              continue
           for word in words.split():
-             safe_term_list.append((not_operator, name, ":", word))
+             safe_term_list.append((name, ":", not_operator, word))
 
     #print(safe_term_list)
     fts_terms = " ".join(["".join(list(term)) for term in safe_term_list])
