@@ -1,11 +1,11 @@
-from ftsdb import getDB
+import ftsdb
 import sys
 import os
 import os.path
 import yaml
 
 dir = sys.argv[1]
-zdb = getDB()
+zdb = ftsdb.get()
 
 print("dir = %s" % dir)
 for filename in os.listdir(dir):

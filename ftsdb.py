@@ -1,4 +1,4 @@
-# 
+ 
 # ZettelGeist uses a FTS system for organizing Zettels. The index is intended
 # to be emphemeral and can be regenerated at any time. The schema itself is
 # ephemeral and can be augmented with additional fields of interest.
@@ -26,11 +26,14 @@ def flatten(item):
     else:
         return flatten(item[0]) + flatten(item[1:])
 
+def unquote(text):
+   return text.replace('"','').replace("'","")
 
 class SQLiteFTS(object):  
   def __init__(self, db_name, table_name, field_names):
     self.db_name = db_name
     self.conn = sqlite3.connect(db_name)
+    self.conn.row_factory = sqlite3.Row
     self.cursor = self.conn.cursor()
     
     self.table_name = table_name
@@ -51,12 +54,14 @@ class SQLiteFTS(object):
     #self.record.update(doc)
     
   def drop_table(self):
-    self.conn.execute("DROP TABLE IF EXISTS %s" % self.table_name)
+    self.cursor.execute("DROP TABLE IF EXISTS %s" % self.table_name)
+    self.conn.commit()
 
   def create_table(self):
     sql_fields = ",".join(self.fts_default_record.keys())
     #print("CREATE VIRTUAL TABLE zettels USING fts4(%s)" % sql_fields)
-    self.conn.execute("CREATE VIRTUAL TABLE zettels USING fts4(%s)" % sql_fields) 
+    self.cursor.execute("CREATE VIRTUAL TABLE zettels USING fts4(%s)" % sql_fields) 
+    self.conn.commit()
     
   def insert_into_table(self):
     sql_params = ",".join(self.fts_fields.values())
@@ -68,13 +73,41 @@ class SQLiteFTS(object):
     #print("INSERT INTO zettels VALUES (%s)" % sql_params)
     #print(self.record.keys())
     #printer.pprint(sql_insert_values)
-    self.conn.execute("INSERT INTO zettels VALUES (%s)" % sql_params, sql_insert_values)
+    self.cursor.execute("INSERT INTO zettels VALUES (%s)" % sql_params, sql_insert_values)
+    self.conn.commit()
 
+  # A term_list is a list of 3-tuples (not-option, fieldname, word
+
+  def fts_search(self, term_list):
+    safe_term_list = []
+    for term in term_list:
+       if type(term) == type(()) and len(term) == 3:
+          (not_operator, name, words) = term
+          words = unquote(words)
+          if not_operator not in '-':
+             not_operator = ''
+          if name not in self.fts_field_names:
+             continue
+          for word in words.split():
+             safe_term_list.append((not_operator, name, ":", word))
+
+    #print(safe_term_list)
+    fts_terms = " ".join(["".join(list(term)) for term in safe_term_list])
+    Q="SELECT * from zettels where zettels match '%s'" % fts_terms
+    print(Q)
+    for row in self.cursor.execute(Q):
+       yield(row)
+    
   def done(self):
     self.conn.commit()
     self.conn.close()
     
 
-def getDB():
-  return SQLiteFTS('zettels.db', 'zettels', ['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ])
+ZDB = 'zettels.db'
+
+def get():
+  return SQLiteFTS(ZDB, 'zettels', ['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ])
+
+def delete():
+  os.unlink(ZDB)
 
