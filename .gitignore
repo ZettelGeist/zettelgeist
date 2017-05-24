@@ -91,3 +91,6 @@ ENV/
 # ZettelGeist Ignores
 data/
 zettels.db
+
+# OS X Junk
+.DS_Store
