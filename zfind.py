@@ -5,8 +5,8 @@ import argparse
 parser = argparse.ArgumentParser()
 
 for field in zdb.ZETTEL_FIELDS:
-   parser.add_argument('--find-%s' % field, help='search the YAML %s field' % field)
-   parser.add_argument('--exclude-%s' % field, help='search the YAML %s field' % field)
+   parser.add_argument('--find-%s' % field, help='search the Zettel %s field' % field)
+   parser.add_argument('--exclude-%s' % field, help='search the Zettel %s field' % field)
    parser.add_argument('--show-%s' % field, action='store_const', const=True, default=False)
 
 parser.add_argument('--count', action='store_const', const=True, default=False, help="Show number of Zettels matching this search")
