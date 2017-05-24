@@ -1,5 +1,3 @@
-from random_words import RandomWords
-
 import yaml
 import zdb
 import random
@@ -7,7 +5,7 @@ import pprint
 import os
 import os.path
 import sys
-
+import random_words
 
 NUMBER_OF_DOCS = int(sys.argv[1])
 
@@ -36,7 +34,7 @@ def generate_doc():
 
   return doc
 
-rw = RandomWords()
+rw = random_words.RandomWords()
 
 def generate_word(i):
   return rw.random_word()
