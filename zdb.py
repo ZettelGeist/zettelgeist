@@ -73,10 +73,13 @@ class SQLiteFTS(object):
     #print("\nvalues only")
     #printer.pprint(self.record.values())
     sql_insert_values = [ ",".join(flatten(value)) for value in list(self.record.values())]
-    #print("INSERT INTO zettels VALUES (%s)" % sql_params)
+    sql_columns = ",".join(list(self.record.keys()))
+    #print(sql_columns)
+    insert_sql="INSERT INTO zettels (%s) VALUES (%s)" % (sql_columns, sql_params)
     #print(self.record.keys())
     #printer.pprint(sql_insert_values)
-    self.cursor.execute("INSERT INTO zettels VALUES (%s)" % sql_params, sql_insert_values)
+    #print(insert_sql)
+    self.cursor.execute(insert_sql, sql_insert_values)
     self.conn.commit()
 
   # A term_list is a list of 3-tuples (not-option, fieldname, word
