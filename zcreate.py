@@ -7,17 +7,26 @@ import argparse
 import zdb
 
 def parse_options():
-  parser = argparse.ArgumentParser()
+  parser = zdb.get_argparse()
   parser.add_argument('--delete', action='store_const', const=True, default=False, help="delete the Zettel database file (not usually require)")
   return parser.parse_args()
 
 def zcreate(args):
   if args.delete:
-     zdb.delete()
-  db = zdb.get()
-  db.drop_table()
-  db.create_table()
-  db.done()
+     print("Deleting %s" % args.database)
+     os.unlink(args.database)
+
+  if not os.path.exists(args.database):
+     print("Creating new database %s" % args.database)
+     db = zdb.get(args.database)
+     db.drop_table()
+     db.create_table()
+     db.done()
+  else:
+     print("Won't delete existing database %s" % args.database)
+     print("- Rerun with --delete option to achieve this.")
+
+ 
 
 
 if __name__ == '__main__':

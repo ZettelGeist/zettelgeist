@@ -4,12 +4,26 @@
 # ephemeral and can be augmented with additional fields of interest.
 # 
 
-import sqlite3
+import argparse
 import os
+import os.path
+import sqlite3
+
+
+# Default Zettel DB name
+ZDB = 'zettels.db'
+
+# Default Zettel fields. You can add to this list if you like.
+# TODO: Allow zcreate.py to run with additional fields.
 
 ZETTEL_FIELDS=['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ]
 
 # This is for showing data structures only.
+
+def get_argparse():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--database', help="alternate database name", default=ZDB)
+  return parser
 
 import pprint
 printer = pprint.PrettyPrinter(indent=2)
@@ -109,11 +123,13 @@ class SQLiteFTS(object):
     self.conn.close()
     
 
-ZDB = 'zettels.db'
+class FNF(Exception):
+  def __init__(self, text):
+    self.text = text
 
-def get():
-  return SQLiteFTS(ZDB, 'zettels', ZETTEL_FIELDS)
+  def __str__(self):
+    return "File not found: " + self.text
 
-def delete():
-  os.unlink(ZDB)
+def get(db_name):
+  return SQLiteFTS(db_name, 'zettels', ZETTEL_FIELDS)
 

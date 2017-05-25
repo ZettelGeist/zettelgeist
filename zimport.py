@@ -4,8 +4,12 @@ import os
 import os.path
 import yaml
 
-dir = sys.argv[1]
-db = zdb.get()
+parser = zdb.get_argparse()
+parser.add_argument('--zettel-dir', help="location of Zettels (path to folder)")
+
+args = parser.parse_args()
+dir = args.zettel_dir
+db = zdb.get(args.database)
 
 print("dir = %s" % dir)
 for filename in os.listdir(dir):

@@ -2,7 +2,7 @@
 import zdb
 
 import argparse
-parser = argparse.ArgumentParser()
+parser = zdb.get_argparse()
 
 for field in zdb.ZETTEL_FIELDS:
    parser.add_argument('--find-%s' % field, help='search the Zettel %s field' % field)
@@ -25,7 +25,7 @@ for field in zdb.ZETTEL_FIELDS:
       entry = argsd.get(include_field)
       if entry: query.append((field, '', entry))
 
-db = zdb.get()
+db = zdb.get(args.database)
 gen = db.fts_search(query)
 
 search_count = 0
