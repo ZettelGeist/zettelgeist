@@ -7,6 +7,7 @@ import os.path
 import sys
 import random_words
 
+
 NUMBER_OF_DOCS = int(sys.argv[1])
 
 MIN_WORDS = 5
@@ -23,8 +24,10 @@ OUTPUT_DIR = "./data"
 def generate_doc():
   doc = {}
   for field in zdb.ZETTEL_FIELDS:
-    if field in ['tags', 'mentions']:
+    if field in ['tags']:
       doc[field] = generate_list()
+    elif field in ['mentions']:
+      doc[field] = generate_list_of_nicknames()
     elif field in ['filename']:
       doc[field] = generate_filename()
     elif field in ['summary', 'text']:
@@ -46,6 +49,11 @@ def generate_text(min_words, max_words):
 def generate_list():
   number_of_lines = random.randint(MIN_LINES, MAX_LINES)
   return [ generate_word(i) for i in range(0, number_of_lines) ]
+
+def generate_list_of_nicknames():
+  rn = random_words.RandomNicknames()
+  number_of_lines = random.randint(MIN_LINES, MAX_LINES)
+  return [ rn.random_nick(gender=['m','f'][i % 2]) for i in range(0, number_of_lines) ]
 
 def generate_filename():
   return "-".join( generate_list() ) + '.yaml'
