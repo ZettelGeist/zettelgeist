@@ -12,7 +12,7 @@ def parse_options():
   return parser.parse_args()
 
 def zcreate(args):
-  if args.delete:
+  if args.delete and os.path.exists(args.database):
      print("Deleting %s" % args.database)
      os.unlink(args.database)
 
