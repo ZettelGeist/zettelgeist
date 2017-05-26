@@ -1,21 +1,27 @@
-import zdb
-import sys
+# zimport.py - Import Zettels into an exising database
+
 import os
 import os.path
+import sys
 import yaml
+import zdb
 
 parser = zdb.get_argparse()
 parser.add_argument('--zettel-dir', help="location of Zettels (path to folder)")
 
 args = parser.parse_args()
 dir = args.zettel_dir
+if not dir:
+   parser.print_help()
+   sys.exit(1)
+
 db = zdb.get(args.database)
 
-print("dir = %s" % dir)
 for filename in os.listdir(dir):
   if not filename.endswith('.yaml'):
+    print("Ignoring %s; add .yaml extension to import this file." % filename)
     continue
-  print("%s:" % filename)
+  print("Importing %s" % filename)
   filepath = os.path.join(dir, filename)
   with open(filepath) as infile:
     try:
