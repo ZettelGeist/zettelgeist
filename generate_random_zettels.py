@@ -32,6 +32,8 @@ def generate_doc():
       doc[field] = generate_filename()
     elif field in ['summary', 'text']:
       doc[field] = generate_text(MIN_WORDS_TEXT, MAX_WORDS_TEXT)
+    elif field in ['dates']:
+      doc[field] = generate_date()
     else:
       doc[field] = generate_text(MIN_WORDS, MAX_WORDS)
 
@@ -54,6 +56,22 @@ def generate_list_of_nicknames():
   rn = random_words.RandomNicknames()
   number_of_lines = random.randint(MIN_LINES, MAX_LINES)
   return [ rn.random_nick(gender=['m','f'][i % 2]) for i in range(0, number_of_lines) ]
+
+ERA = ['BC', 'BCE', 'CE', 'AD']
+
+def generate_date():
+  year = random.randint(0, 2016)
+  disp = random.randint(0, 100)
+     
+  if disp % 3 == 0:
+     return "%s %s" % (year, ERA[year % 4])
+  else:
+     era = ERA[year % 4]
+     if era in ['BC', 'BCE']:
+        return "%s-%s %s" % (year+disp, year, ERA[year % 4])
+     else:
+        return "%s-%s %s" % (year, year+disp, ERA[year % 4])
+  return year
 
 def generate_filename():
   return "-".join( generate_list() ) + '.yaml'
