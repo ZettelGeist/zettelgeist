@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-ZettelGeist is a plaintext note-taking system, inspired by the ZettelKasten method: http://zettelkasten.de/posts/zettelkasten-improves-thinking-writing/.
+ZettelGeist is a plaintext note-taking system, inspired by the [ZettelKasten Method](http://zettelkasten.de/posts/zettelkasten-improves-thinking-writing/).
 
 The project founders have both been interested in taking notes long before discovering ZettelKasten. We really like the thought process behind ZettelKasten, however, and think it is ahead of its time by being "less is more" in its focus.
 
