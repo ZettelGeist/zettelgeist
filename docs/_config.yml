@@ -16,7 +16,7 @@
 title: ZettelGeist
 email: thiruvathukal@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  ZettelGeist is a notetaking system based on [ZettelKasten](http://zettelkasten.de/) system for notetaking.
+  ZettelGeist is a notetaking system based on ZettelKasten system for notetaking.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username:  tbd
