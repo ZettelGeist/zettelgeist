@@ -1,0 +1,7 @@
+@misc{blahblahblah,
+ title = {In Depth - In Depth: Ray Kurzweil - Book {TV}},
+ url = {http://www.booktv.org/Program/7515/In+Depth+Ray+Kurzweil.aspx},
+ urldate = {2011-02-11},
+ keywords = {*{AddedToZettels}},
+ file = {In Depth - In Depth\: Ray Kurzweil - Book TV:/Users/dbdennis/Library/Application Support/Zotero/Profiles/duztnovb.default/zotero/storage/TWWBX3QV/In+Depth+Ray+Kurzweil.html:text/html}
+}
