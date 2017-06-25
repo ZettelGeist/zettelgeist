@@ -1,0 +1,9 @@
+USER               PID  %CPU %MEM      VSZ    RSS   TT  STAT STARTED      TIME COMMAND
+_windowserver    22462   5.3  0.6  3810764  52512   ??  Ss   Tue11PM  97:34.94 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer -daemon
+gkt              41927   5.3  4.6  3569996 387396   ??  S     9:52PM   0:43.32 /Applications/Paltalk.app/Contents/MacOS/Paltalk
+_coreaudiod        170   4.9  0.1  2474348   5288   ??  Ss   Sun11PM 112:38.13 /usr/sbin/coreaudiod
+gkt              22660   3.5  2.5  3677892 206684   ??  S    Wed07AM 109:15.02 /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+gkt              26378   3.1  1.0  2940736  86936   ??  S    Thu03PM   4:56.22 /Applications/iTerm.app/Contents/MacOS/iTerm2
+root                57   1.7  0.2  2509160  18132   ??  Ss   Sun11PM  14:47.52 /usr/libexec/airportd
+_hidd               99   1.2  0.1  2473184   6372   ??  Ss   Sun11PM  64:39.83 /usr/libexec/hidd
+root                77   0.9  0.2  2521356  16884   ??  Ss   Sun11PM   1:24.75 /usr/libexec/opendirectoryd
