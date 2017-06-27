@@ -94,3 +94,25 @@ zettels.db
 
 # OS X Junk
 .DS_Store
+
+*.class
+*.log
+*~
+
+# sbt specific
+.cache
+.history
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+scala-2.10/
+scala-2.11/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+.idea/
