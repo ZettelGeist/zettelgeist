@@ -26,7 +26,7 @@ ZFIELDS = {
   'tags' : 'ls',
   'mentions' : 'ls',
   'outline' : 'ls',
-  'cite' : 's',
+  'cite' : 'ls',
   'dates' : 'ls',
   'summary' : 's',
   'text' : 's',
