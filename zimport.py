@@ -8,6 +8,7 @@ import zdb
 
 parser = zdb.get_argparse()
 parser.add_argument('--zettel-dir', help="location of Zettels (path to folder)")
+parser.add_argument('--validate', action="store_true", help="check Zettels only (don't import)", default=False)
 
 args = parser.parse_args()
 dir = args.zettel_dir
@@ -41,11 +42,21 @@ for filename in os.listdir(dir):
       print("- YAML loaded but could not be processed")
       continue
 
+    ydoc_id = 0
     for ydoc in ydocs:
       if type(ydoc) == type({}):
-         ydoc['filename'] = filename
-         db.bind(ydoc)
-         db.insert_into_table()
+        ydoc['filename'] = filename
+        if args.validate:
+          errors = db.check(ydoc)
+          if len(errors) > 0:
+            if len(ydocs) > 0:
+              print("-- The following messages are for Fass entry %d" % ydoc_id)
+            for error in errors:
+              print("-- " + error)
+        else:
+          db.bind(ydoc)
+          db.insert_into_table()
+      ydoc_id = ydoc_id + 1
 
 db.done()
 

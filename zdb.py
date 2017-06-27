@@ -16,7 +16,29 @@ ZDB = 'zettels.db'
 # Default Zettel fields. You can add to this list if you like.
 # TODO: Allow zcreate.py to run with additional fields.
 
-ZETTEL_FIELDS=['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ]
+# In ZettelGeist, fields are either string or list of strings. We only
+# allow list of strings where it truly makes sense (e.g. keywords). Most
+# other fields are singleton strings.
+
+ZFIELDS = {
+  'filename' : 's',
+  'title' : 's',
+  'tags' : 'ls',
+  'mentions' : 'ls',
+  'outline' : 'ls',
+  'cite' : 's',
+  'dates' : 'ls',
+  'summary' : 's',
+  'text' : 's',
+  'bibkey' : 's',
+  'bibtex' : 's',
+  'ris' : 's',
+  'inline' : 's',
+  'note' : 's',
+  'url' : 's'
+}
+
+ZETTEL_FIELDS = list(ZFIELDS.keys())
 
 # This is for showing data structures only.
 
@@ -59,6 +81,25 @@ class SQLiteFTS(object):
     self.fts_field_init = [''] * len(self.fts_field_names)
     self.fts_fields = dict(zip(self.fts_field_names, self.fts_field_refs))
     self.fts_default_record = dict(zip(self.fts_field_names, self.fts_field_init))
+
+  def check(self, doc):
+    errors = []
+    for k in doc.keys():
+      if k not in ZFIELDS:
+        errors.append("Field %s: Not permitted in the Zettel format" % k)
+      else:
+        if ZFIELDS[k] == 's' and not isinstance(doc[k], str):
+          errors.append("Field %s: A non-string type, %s, was found." % (k, type(doc[k]).__name__))
+        if ZFIELDS[k] == 'ls':
+          if not isinstance(doc[k], (list,tuple)):
+            errors.append("Field %s: A non-list type, %s, was found" % (k, type(doc[k]).__name__))
+          else:
+            item_pos = 0
+            for item in doc[k]:
+              if not isinstance(item, str):
+                errors.append("Field %s: A non-string list entry of type %s was found at position %d" % (k, type(item).__name__, item_pos))
+              item_pos = item_pos + 1
+    return errors
 
   def bind(self, doc):
     self.record = self.fts_default_record.copy()
