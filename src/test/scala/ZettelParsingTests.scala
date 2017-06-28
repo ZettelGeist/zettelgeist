@@ -45,6 +45,6 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     val json = parse(zettelInJson)
     val zettel = json.extract[Zettel]
 
-    zettel.title.getOrElse("") should be ("")
+    zettel.title should be (None)
   }
 }
