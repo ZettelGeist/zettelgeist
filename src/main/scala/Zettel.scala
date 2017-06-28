@@ -30,14 +30,19 @@ case class Dates(year: Int, last_year: Int, era : Option[String] )
 
 case class Citation(bibkey: String, page: Option[Int],  last_page: Option[Int])
 
-
 object SimpleZettelInJSON extends App {
   val zdoc = """{
     "title" : "My First Zettel",
     "mentions" : [ "dbdennis", "gkt"],
     "tags" : ["Charles Babbage", "Ada Lovelace"],
-    "cite" : ["Ifrah", "22-36"],
-    "dates" : [ "2000 CE", "1995-2000 CE"],
+    "cite" : {
+      "bibkey" : "Ifrah",
+      "page": 22,
+      "last_page": 36
+    },
+    "dates" : {
+      "year" : 1841, "era" : "CE"
+    },
     "summary" : "An amazing Zettel",
     "text": "Text of Zettel",
     "bibkey" : "BibKey",
@@ -61,5 +66,5 @@ object SimpleZettelInJSON extends App {
   println("tags = ")
   zettel.tags.getOrElse(List()) map { n => "\t" + n } foreach println
   zettel.mentions.getOrElse(List()) map { n => "\t" + n } foreach println
-  zettel.cite.getOrElse(List()) map { n => "\t" + n } foreach println
+  println(s"""cite = ${zettel.cite.getOrElse("")}""")
 }
