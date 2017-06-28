@@ -1,5 +1,9 @@
 # ZettelGeist
 
+https://www.travis-ci.org/ZettelGeist/zettelgeist.svg?branch=master
+
+# Overview
+
 ZettelGeist is yet-another notetaking system. Details of this work in progress can be found on our wiki.
 
 Unlike other notetaking systems, our system starts with an information model. GUI and web clients are not going to be developed until we are
@@ -20,7 +24,7 @@ interested in having others replicate our approach but also welcome anyone to th
 - zfind: Searches the database fields using sqlite3's full-text search engine (FTS4 presently)
 - zreplace: Under development
 
-- create_random_zettels: A script to generate a large number of random text files for indexing purposes. 
+- create_random_zettels: A script to generate a large number of random text files for indexing purposes.
 
 See the wiki for details about our requirements and basic design.
 
