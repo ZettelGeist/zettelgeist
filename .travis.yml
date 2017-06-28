@@ -2,3 +2,5 @@ sudo: false
 language: scala
 scala:
 - 2.11.11
+notifications:
+    slack: luccsresearch:cEA9llY9UxQJymallfIwx9ar
