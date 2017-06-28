@@ -1,7 +1,6 @@
 # ZettelGeist
 
-https://www.travis-ci.org/ZettelGeist/zettelgeist.svg?branch=master
-
+[![Build Status](https://www.travis-ci.org/ZettelGeist/zettelgeist.svg?branch=master)](https://www.travis-ci.org/ZettelGeist/zettelgeist)
 # Overview
 
 ZettelGeist is yet-another notetaking system. Details of this work in progress can be found on our wiki.
