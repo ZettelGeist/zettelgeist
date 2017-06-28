@@ -2,7 +2,7 @@
 
 version := "1.0"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.11"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
@@ -17,5 +17,5 @@ libraryDependencies ++= Seq(
   "org.json4s" %% "json4s-native" % "3.3.0",
   "org.json4s" %% "json4s-jackson" % "3.3.0",
   "com.novocode" % "junit-interface" % "latest.release" % Test,
-  "org.scalatest" %% "scalatest" % "2.2.6" % Test
+  "org.scalatest" %% "scalatest" % "latest.release" % Test
 )
