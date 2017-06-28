@@ -15,8 +15,8 @@ import org.json4s.jackson.JsonMethods._
 case class Zettel( title: Option[String],
   tags: Option[List[String]],
   mentions: Option[List[String]],
-  cite: Option[List[String]],
-  dates: Option[List[String]],
+  cite: Option[Citation],
+  dates: Option[Dates],
   summary: Option[String],
   text: Option[String],
   bibkey: Option[String],
@@ -25,6 +25,11 @@ case class Zettel( title: Option[String],
   inline: Option[String],
   note: Option[String],
   url: Option[String])
+
+case class Dates(year: Int, last_year: Int, era : Option[String] )
+
+case class Citation(bibkey: String, page: Option[Int],  last_page: Option[Int])
+
 
 object SimpleZettelInJSON extends App {
   val zdoc = """{
