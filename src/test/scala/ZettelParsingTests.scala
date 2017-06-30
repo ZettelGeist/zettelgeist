@@ -11,23 +11,22 @@ import org.scalatest._
 class ZettelParsingTests extends FlatSpec with Matchers {
   "Zettel" should "parse with all fields present in JSON zettel" in {
     val zettelInJSON = """{
-      "title" : "My First Zettel",
-      "mentions" : [ "dbdennis", "gkt"],
-      "tags" : ["Charles Babbage", "Ada Lovelace"],
-      "cite" : {
-        "bibkey" : "Ifrah",
-        "page": 22,
-        "last_page": 36
-      },
-      "dates" : {
-        "year" : 1841, "era" : "CE"
-      },
-      "summary" : "An amazing Zettel",
-      "text": "Text of Zettel",
-      "bibkey" : "BibKey",
-      "bibtex" : "@article{key, entries}"
-    }
-    """
+      |"title" : "My First Zettel",
+      |"mentions" : [ "dbdennis", "gkt"],
+      |"tags" : ["Charles Babbage", "Ada Lovelace"],
+      |"cite" : {
+      |  "bibkey" : "Ifrah",
+      |  "page": 22,
+      |  "last_page": 36
+      |},
+      |"dates" : {
+      |  "year" : 1841, "era" : "CE"
+      |},
+      |"summary" : "An amazing Zettel",
+      |"text": "Text of Zettel",
+      |"bibkey" : "BibKey",
+      |"bibtex" : "@article{key, entries}"
+      |}""".stripMargin
     implicit val formats = DefaultFormats // Brings in default date formats etc.
 
     val jsonAst = parse(zettelInJSON)
@@ -65,15 +64,14 @@ class ZettelParsingTests extends FlatSpec with Matchers {
 
   it should "parse with some fields present in JSON zettel" in {
     val zettelInJson = """{
-      "title" : "My First Zettel",
-      "mentions" : [ "dbdennis", "gkt"],
-      "cite" : {
-        "bibkey" : "Ifrah",
-        "page": 22,
-        "last_page": 36
-      }
-     }
-    """
+      |"title" : "My First Zettel",
+      |"mentions" : [ "dbdennis", "gkt"],
+      |"cite" : {
+      |  "bibkey" : "Ifrah",
+      |  "page": 22,
+      |  "last_page": 36
+      |}
+      |}""".stripMargin
 
     implicit val formats = DefaultFormats // Brings in default date formats etc.
 
@@ -102,14 +100,13 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     case class Foo(foo: String, bar: Nested, baz: List[String])
 
     val json = yaml.parser.parse("""
-foo: Hello, World
-bar:
-    one: One Third
-    two: 33.333333
-baz:
-    - Hello
-    - World
-""")
+       |foo: Hello, World
+       |bar:
+       |  one: One Third
+       |  two: 33.333333
+       |baz:
+       |- Hello
+       |- World""".stripMargin)
 
     val foo = json
       .leftMap(err => err: Error)
