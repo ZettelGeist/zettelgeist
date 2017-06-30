@@ -89,7 +89,7 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     zettel.bibtex should be(None)
   }
 
-  "Circe YAML" should "run this example from their own docs" in {
+  "Circe YAML" should "run this slightly-modified example from their own docs" in {
 
     import cats.syntax.either._
     import io.circe._
@@ -97,7 +97,7 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     import io.circe.yaml
 
     case class Nested(one: String, two: BigDecimal)
-    case class Foo(foo: String, bar: Nested, baz: List[String])
+    case class Foo(foo: String, bar: Nested, baz: List[String], extra1: Option[String], extra2: Option[String])
 
     val json = yaml.parser.parse("""
        |foo: Hello, World
@@ -106,12 +106,18 @@ class ZettelParsingTests extends FlatSpec with Matchers {
        |  two: 33.333333
        |baz:
        |- Hello
-       |- World""".stripMargin)
+       |- World
+       |extra2: extra2""".stripMargin)
 
     val foo = json
       .leftMap(err => err: Error)
       .flatMap(_.as[Foo])
       .valueOr(throw _)
 
+    foo.foo should be("Hello, World")
+    foo.bar should be(Nested("One Third", BigDecimal("33.333333")))
+    foo.baz should be(List("Hello", "World"))
+    foo.extra1 should be(None)
+    foo.extra2 should be(Some("extra2"))
   }
 }
