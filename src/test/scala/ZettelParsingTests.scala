@@ -4,12 +4,11 @@
 
 package zettelgeist
 
+import org.scalatest._
 import io.circe.Error
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
-import org.scalatest._
 import cats.syntax.either._
-import io.circe._
 import io.circe.generic.auto._
 import io.circe.yaml
 
@@ -165,4 +164,40 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     zettel.bibkey.get should be("BibKey")
     zettel.bibtex.get should be("@article{key, entries}")
   }
+
+  it should "be able to load multiple Zettels in YAML format" in {
+    val jsonStream = yaml.parser.parseDocuments(
+      """
+        |title: Zettel 1
+        |---
+        |title: Zettel 2
+        |mentions:
+        |- dbdennis
+        |- gkt
+        |tags:
+        |- Charles Babbage
+        |- Ada Lovelace
+        |cite:
+        |  bibkey: Ifrah
+        |  page: 22
+        |  last_page: 36
+        |dates:
+        |  year: 1841
+        |  era: CE
+        |summary: An amazing Zettel
+        |text: Text of Zettel
+        |bibkey: BibKey
+        |bibtex: "@article{key, entries}"
+        |""".stripMargin
+    )
+
+    val zStream = jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
+    val zList = zStream.toList
+    zList.length should be(2)
+    val first = zList.head
+    val second = zList.tail.head
+    first.title.get should be("Zettel 1")
+    second.title.get should be("Zettel 2")
+  }
+
 }
