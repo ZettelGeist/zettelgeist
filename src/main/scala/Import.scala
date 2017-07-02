@@ -2,6 +2,8 @@
  * Created by gkt on 7/2/17.
  */
 
+package zettelgeist
+
 import scopt._
 
 object Import {
