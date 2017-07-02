@@ -192,12 +192,10 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     )
 
     val zStream = jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
-    val zList = zStream.toList
-    zList.length should be(2)
-    val first = zList.head
-    val second = zList.tail.head
+    val zStreamIterator = zStream.iterator
+    val first = zStreamIterator.next
+    val second = zStreamIterator.next
     first.title.get should be("Zettel 1")
     second.title.get should be("Zettel 2")
   }
-
 }
