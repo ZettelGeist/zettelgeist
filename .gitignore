@@ -116,3 +116,8 @@ scala-2.11/
 .scala_dependencies
 .worksheet
 .idea/
+
+
+# Temporary folders
+
+scratch/
