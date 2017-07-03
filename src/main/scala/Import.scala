@@ -29,7 +29,7 @@ object Import {
 
   def go(config: Config): Unit = {
     val yamlFileStream = Utils.getFileTreeWithExtension(new File(config.dir.get), ".yaml")
-    yamlFileStream foreach println
+    yamlFileStream map { file => ZettelLoader(file) }
   }
 
   def main(args: Array[String]) = {

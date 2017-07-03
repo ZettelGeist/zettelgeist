@@ -1,6 +1,11 @@
 package zettelgeist
 
-import java.io.File
+import java.io.{ File, FileReader }
+
+import cats.syntax.either._
+import io.circe.{ Error, yaml }
+import io.circe.generic.auto._
+import io.circe.yaml
 
 case class Zettel(
   title: Option[String] = None,
@@ -22,6 +27,10 @@ case class Dates(year: Int, last_year: Option[Int], era: Option[String])
 
 case class Citation(bibkey: String, page: Option[Int], last_page: Option[Int])
 
-object Zettel {
-  def apply(file: File): Zettel = Zettel()
+object ZettelLoader {
+  def apply(file: File): Stream[Zettel] = {
+    val reader = new FileReader(file)
+    val jsonStream = yaml.parser.parseDocuments(reader)
+    jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
+  }
 }
