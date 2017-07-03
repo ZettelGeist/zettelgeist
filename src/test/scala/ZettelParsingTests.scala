@@ -1,11 +1,13 @@
 package zettelgeist
 
+import ammonite.ops._
 import org.scalatest._
 import io.circe.Error
 import org.json4s.jackson.JsonMethods._
 import cats.syntax.either._
 import io.circe.generic.auto._
 import io.circe.yaml
+import java.io._
 
 class ZettelParsingTests extends FlatSpec with Matchers {
 
@@ -112,5 +114,33 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     val second = zStreamIterator.next
     first.title.get should be("Zettel 1")
     second.title.get should be("Zettel 2")
+  }
+
+  it should "be able to load Zettels from files" in {
+
+    val twoZettels = """
+        |title: Zettel 1
+        |---
+        |title: Zettel 2
+        |""".stripMargin
+
+    info("creating scratch directory")
+    val tmpDir = pwd / "scratch"
+    mkdir ! tmpDir
+    info("writing YAML to scratch directory")
+    val yamlFile = pwd / "scratch" / "simple.yaml"
+    if (exists ! yamlFile)
+      rm ! yamlFile
+
+    write(yamlFile, twoZettels)
+    val jsonStream = yaml.parser.parseDocuments(new FileReader(yamlFile.toIO))
+    val zStream = jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
+    val zStreamIterator = zStream.iterator
+    val first = zStreamIterator.next
+    val second = zStreamIterator.next
+    first.title.get should be("Zettel 1")
+    second.title.get should be("Zettel 2")
+    info("cleaning up scratch directory")
+    rm ! yamlFile
   }
 }

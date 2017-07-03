@@ -26,6 +26,7 @@ libraryDependencies ++= Seq(
   "com.github.scopt" %% "scopt" % "3.6.0",
   "com.novocode" % "junit-interface" % "latest.release" % Test,
   "org.scalatest" %% "scalatest" % "latest.release" % Test,
-  "com.github.tototoshi" %% "scala-csv" % "1.3.4"
+  "com.github.tototoshi" %% "scala-csv" % "1.3.4",
+  "com.lihaoyi" %% "ammonite-ops" % "1.0.0"
 )
 
