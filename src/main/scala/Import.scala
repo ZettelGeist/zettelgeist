@@ -4,7 +4,6 @@
 
 package zettelgeist
 
-import scopt._
 import java.io._
 
 object Import {
@@ -18,7 +17,7 @@ object Import {
         config.copy(database = Some(value))
       } text ("name of database (H2)")
       opt[String]('p', "path") action { (value, config) =>
-        config.copy(database = Some(value))
+        config.copy(dir = Some(value))
       } text ("path to Zettel directory")
       opt[Unit]('v', "validate") action { (_, config) =>
         config.copy(validate = true)
@@ -30,11 +29,11 @@ object Import {
 
   def go(config: Config): Unit = {
     val yamlFileStream = Utils.getFileTreeWithExtension(new File(config.dir.get), ".yaml")
+    yamlFileStream foreach println
   }
 
   def main(args: Array[String]) = {
     val config = parseCommandLine(args)
-    println(config.get)
     go(config.get)
   }
 }
