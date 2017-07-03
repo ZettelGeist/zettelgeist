@@ -1,3 +1,5 @@
+package zettelgeist
+
 import scala.collection.JavaConversions._
 import java.io._
 

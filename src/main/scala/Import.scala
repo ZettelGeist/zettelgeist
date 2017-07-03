@@ -5,6 +5,7 @@
 package zettelgeist
 
 import scopt._
+import java.io._
 
 object Import {
 
@@ -27,8 +28,13 @@ object Import {
     parser.parse(args, Config())
   }
 
+  def go(config: Config): Unit = {
+    val yamlFileStream = Utils.getFileTreeWithExtension(new File(config.dir.get), ".yaml")
+  }
+
   def main(args: Array[String]) = {
     val config = parseCommandLine(args)
-    println(config)
+    println(config.get)
+    go(config.get)
   }
 }
