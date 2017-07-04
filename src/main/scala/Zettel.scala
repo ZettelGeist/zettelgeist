@@ -41,8 +41,7 @@ object ZettelLoader {
       case Success(zettels) =>
         zettels
       case Failure(error) =>
-        println(error.getMessage)
-        // fail, so return stream of 0 Zettels
+        println(s"- ${file.getName}: ${error.getMessage}")
         Stream.empty[Zettel]
     }
   }
