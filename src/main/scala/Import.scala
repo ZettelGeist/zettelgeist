@@ -29,8 +29,8 @@ object Import {
   }
 
   def go(config: Config): Unit = {
-    ls.rec ! Path(config.dir.get) |? (_.ext == "yaml") foreach println
-    val results = ls.rec ! Path(config.dir.get) |? (_.ext == "yaml") map { file => ZettelLoader(file.toIO) }
+    val results = ls.rec ! Path(config.dir.get) |? (_.ext == "yaml") map { file => (file, ZettelLoader(file.toIO)) }
+    results map { pair => pair._1 + ": " + pair._2.size + " entries" } foreach println
   }
 
   def main(args: Array[String]) = {
