@@ -33,6 +33,7 @@ object ZettelLoader {
     val reader = new FileReader(file)
     println(s"Processing ${file.getName}")
     val jsonStream = yaml.parser.parseDocuments(reader)
+
     val result = Try {
       jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
     }

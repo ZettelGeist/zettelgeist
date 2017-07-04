@@ -11,7 +11,7 @@ import java.io._
 
 class ZettelParsingTests extends FlatSpec with Matchers {
 
-  "Circe YAML" should "run this slightly-modified example from their own docs" in {
+  "Circe YAML Experiments" should "run this slightly-modified example from their own docs" in {
 
     case class Nested(one: String, two: BigDecimal)
     case class Foo(foo: String, bar: Nested, baz: List[String], extra1: Option[String], extra2: Option[String])
@@ -41,7 +41,7 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     foo.extra2 should be(Some("extra2"))
   }
 
-  it should "be able to load a Zettel in YAML format and create case class" in {
+  it should "be able to bind to case class Zettel (domain object)" in {
     val json = yaml.parser.parse(
       """
        |title: My First Zettel
@@ -82,7 +82,7 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     zettel.bibtex.get should be("@article{key, entries}")
   }
 
-  it should "be able to load multiple Zettels in YAML format" in {
+  it should "be able to parse multi-YAML documents" in {
     val jsonStream = yaml.parser.parseDocuments(
       """
         |title: Zettel 1
@@ -136,11 +136,32 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     val jsonStream = yaml.parser.parseDocuments(new FileReader(yamlFile.toIO))
     val zStream = jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
     val zStreamIterator = zStream.iterator
+    info("cleaning up scratch directory")
+    rm ! yamlFile
+  }
+
+  it should "be able to parse a ZettelFass by splitting on --- and parsing each separately" in {
+    val z1 = """
+       |title: Zettel 1
+       |""".stripMargin
+
+    val z2 = """
+       |title: Zettel 2
+       |""".stripMargin
+
+    val twoZettels = z1 + "---" + z2
+    val twoZettelsSplit = twoZettels.split(raw"\-\-\-")
+
+    twoZettelsSplit.length should be(2)
+    twoZettelsSplit should be(Array(z1, z2))
+
+    val jStream = twoZettelsSplit map { text => yaml.parser.parse(text) }
+
+    val zStream = jStream.map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
+    val zStreamIterator = zStream.iterator
     val first = zStreamIterator.next
     val second = zStreamIterator.next
     first.title.get should be("Zettel 1")
     second.title.get should be("Zettel 2")
-    info("cleaning up scratch directory")
-    rm ! yamlFile
   }
 }
