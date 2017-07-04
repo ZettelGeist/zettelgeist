@@ -29,12 +29,20 @@ case class Dates(year: Int, last_year: Option[Int], era: Option[String])
 case class Citation(bibkey: String, page: Option[Int], last_page: Option[Int])
 
 object ZettelLoader {
-  def apply(file: File): Try[Stream[Zettel]] = {
+  def apply(file: File): Stream[Zettel] = {
     val reader = new FileReader(file)
     println(s"Processing ${file.getName}")
     val jsonStream = yaml.parser.parseDocuments(reader)
-    Try {
+    val result = Try {
       jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
+    }
+    result match {
+      case Success(zettels) =>
+        zettels
+      case Failure(error) =>
+        println(error.getMessage)
+        // fail, so return stream of 0 Zettels
+        Stream.empty[Zettel]
     }
   }
 }

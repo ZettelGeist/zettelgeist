@@ -31,9 +31,6 @@ object Import {
   def go(config: Config): Unit = {
     ls.rec ! Path(config.dir.get) |? (_.ext == "yaml") foreach println
     val results = ls.rec ! Path(config.dir.get) |? (_.ext == "yaml") map { file => ZettelLoader(file.toIO) }
-    val successes = results count { _.toOption != None }
-    val failures = results count { _.toOption == None }
-    println(s"Processed ${successes + failures} files: $successes succeeed $failures failed")
   }
 
   def main(args: Array[String]) = {
