@@ -13,4 +13,5 @@ object Utils {
   // Support filtering by extension via composition
   def getFileTreeWithExtension(f: File, extension: String = ".yaml"): Stream[File] =
     getFileTree(f).filter(_.getName().endsWith(".yaml"))
+
 }

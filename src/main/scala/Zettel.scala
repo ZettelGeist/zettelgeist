@@ -30,19 +30,37 @@ case class Citation(bibkey: String, page: Option[Int], last_page: Option[Int])
 
 object ZettelLoader {
   def apply(file: File): Stream[Zettel] = {
-    val reader = new FileReader(file)
+    val input = scala.io.Source.fromFile(file)
     println(s"Processing ${file.getName}")
-    val jsonStream = yaml.parser.parseDocuments(reader)
 
-    val result = Try {
-      jsonStream map { json => json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _) }
+    val text = input.mkString
+    // split documents by ---; ^---\n and \n---\n ensure that embedded "---" is ignored
+    val fassText = text.split(raw"(^\-\-\-\n|\n\-\-\-\n)")
+    if (fassText.length > 0)
+      println(s"- Processing Fass with ${fassText.length} entries")
+    else
+      println(s"- Processing Stein")
+    val fassZettels = Array.ofDim[Zettel](fassText.length)
+    for (i <- 0 until fassText.length) {
+      println(s"- Processing Fass @ $i")
+
+      val attempt = Try {
+        val json = yaml.parser.parse(fassText(i))
+        json.leftMap(err => err: Error).flatMap(_.as[Zettel]).valueOr(throw _)
+      }
+
+      attempt match {
+        case Success(s) =>
+          fassZettels(i) = attempt.get
+        case Failure(error) =>
+          if (error.getMessage == "null")
+            println("Warning: First zettle is not a YAML document (possibly ok)")
+          else
+            println(s"-- ${error.getMessage}")
+          fassZettels(i) = new Zettel()
+      }
+
     }
-    result match {
-      case Success(zettels) =>
-        zettels
-      case Failure(error) =>
-        println(s"- ${file.getName}: ${error.getMessage}")
-        Stream.empty[Zettel]
-    }
+    fassZettels.toStream // to preserve the existing contract
   }
 }
