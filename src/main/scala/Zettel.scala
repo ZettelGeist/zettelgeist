@@ -35,7 +35,7 @@ object ZettelLoader {
 
     val text = input.mkString
     // split documents by ---; ^---\n and \n---\n ensure that embedded "---" is ignored
-    val fassText = text.split(raw"(^\-\-\-\n|\n\-\-\-\n)")
+    val fassText = text.split(raw"(^\-\-\-\n|^\-\-\-\r\n|\n\-\-\-\n|\r\n\-\-\-\r\n)")
     if (fassText.length > 0)
       println(s"- Processing Fass with ${fassText.length} entries")
     else
