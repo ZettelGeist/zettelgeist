@@ -54,7 +54,7 @@ object ZettelLoader {
           fassZettels(i) = attempt.get
         case Failure(error) =>
           if (error.getMessage == "null")
-            println("Warning: First zettle is not a YAML document (possibly ok)")
+            println("Warning: First zettel is not a YAML document (possibly ok)")
           else
             println(s"-- ${error.getMessage}")
           fassZettels(i) = new Zettel()
