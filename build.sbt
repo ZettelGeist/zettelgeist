@@ -1,4 +1,4 @@
-// name := "simplemap-spark-scala"
+name := "zettelgeist"
 
 version := "1.0"
 
@@ -6,7 +6,7 @@ scalaVersion := "2.12.2"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
-// mainClass in assembly := Some("dataflows.spark.SparkBenchmarkHPC")
+mainClass in assembly := Some("zettelgeist.Import")
 
 resolvers ++= Seq(
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
