@@ -53,13 +53,12 @@ class ZettelParsingTests extends FlatSpec with Matchers {
        |- Ada Lovelace
        |cite:
        |  bibkey: Ifrah
-       |  page: 22
-       |  last_page: 36
+       |  page: "22-36"
        |dates:
-       |  year: 1841
+       |  year: "1841"
        |  era: CE
        |summary: An amazing Zettel
-       |text: Text of Zettel
+       |note: Text of Zettel
        |bibkey: BibKey
        |bibtex: "@article{key, entries}"
        |""".stripMargin
@@ -74,10 +73,10 @@ class ZettelParsingTests extends FlatSpec with Matchers {
     zettel.title.get should be("My First Zettel")
     zettel.mentions.get should be(List("dbdennis", "gkt"))
     zettel.tags.get should be(List("Charles Babbage", "Ada Lovelace"))
-    zettel.cite.get should be(Citation("Ifrah", Some(22), Some(36)))
-    zettel.dates.get should be(Dates(1841, None, Some("CE")))
+    zettel.cite.get should be(Citation("Ifrah", Some("22-36")))
+    zettel.dates.get should be(Dates("1841", Some("CE")))
     zettel.summary.get should be("An amazing Zettel")
-    zettel.text.get should be("Text of Zettel")
+    zettel.note.get should be("Text of Zettel")
     zettel.bibkey.get should be("BibKey")
     zettel.bibtex.get should be("@article{key, entries}")
   }
@@ -96,13 +95,12 @@ class ZettelParsingTests extends FlatSpec with Matchers {
         |- Ada Lovelace
         |cite:
         |  bibkey: Ifrah
-        |  page: 22
-        |  last_page: 36
+        |  page: "22"
         |dates:
-        |  year: 1841
+        |  year: "1841"
         |  era: CE
         |summary: An amazing Zettel
-        |text: Text of Zettel
+        |note: Text of Zettel
         |bibkey: BibKey
         |bibtex: "@article{key, entries}"
         |""".stripMargin

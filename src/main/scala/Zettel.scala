@@ -14,19 +14,19 @@ case class Zettel(
   mentions: Option[List[String]] = None,
   cite: Option[Citation] = None,
   dates: Option[Dates] = None,
-  summary: Option[String] = None,
-  text: Option[String] = None,
   bibkey: Option[String] = None,
   bibtex: Option[String] = None,
   ris: Option[String] = None,
   inline: Option[String] = None,
-  note: Option[String] = None,
-  url: Option[String] = None
+  url: Option[String] = None,
+  summary: Option[String] = None, // concise summary about the resource (optional)
+  comment: Option[String] = None, // general commentary about the note (optional)
+  note: Option[String] = None // actual body/content of the note
 )
 
-case class Dates(year: Int, last_year: Option[Int], era: Option[String])
+case class Dates(year: String, era: Option[String])
 
-case class Citation(bibkey: String, page: Option[Int], last_page: Option[Int])
+case class Citation(bibkey: String, page: Option[String])
 
 object ZettelLoader {
   def apply(file: File): Stream[Zettel] = {
