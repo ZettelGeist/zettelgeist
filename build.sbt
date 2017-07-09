@@ -27,6 +27,9 @@ libraryDependencies ++= Seq(
   "com.novocode" % "junit-interface" % "latest.release" % Test,
   "org.scalatest" %% "scalatest" % "latest.release" % Test,
   "com.github.tototoshi" %% "scala-csv" % "1.3.4",
-  "com.lihaoyi" %% "ammonite-ops" % "1.0.0"
+  "com.lihaoyi" %% "ammonite-ops" % "1.0.0",
+  "com.typesafe.slick" %% "slick" % "3.2.0",
+  "org.slf4j" % "slf4j-nop" % "1.6.4",
+  "com.h2database" % "h2" % "1.3.175"
 )
 
