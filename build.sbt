@@ -2,7 +2,7 @@ name := "zettelgeist"
 
 version := "1.0"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.11.11"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
 
