@@ -2,7 +2,7 @@
 
 import os.path
 import argparse
-import zdb
+from zettelgeist import zdb
 
 def parse_options():
   parser = zdb.get_argparse()
@@ -24,6 +24,11 @@ def zcreate(args):
      print("Won't delete existing database %s" % args.database)
      print("- Rerun with --delete option to achieve this.")
 
-if __name__ == '__main__':
+
+def main():
   args = parse_options()
   zcreate(args)
+
+
+if __name__ == '__main__':
+  main()
