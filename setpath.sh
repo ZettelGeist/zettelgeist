@@ -9,3 +9,4 @@
 
 export PYTHONPATH=$(pwd):$PYTHONPATH
 export PATH=$(pwd)/bin:$PATH
+env | grep PATH
