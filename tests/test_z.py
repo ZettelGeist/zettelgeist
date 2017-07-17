@@ -1,3 +1,8 @@
+import sys
+sys.path.append("..")
+
+import zettelgeist
+
 # content of test_sysexit.py
 import pytest
 def f():
