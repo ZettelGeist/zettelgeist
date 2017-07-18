@@ -1,14 +1,96 @@
 #
-# zettel.py - a class that defines/restricts what is allowed in the Zettel.
-# 
-# All Zettel fields allow only a string or a list (of strings).
+# zettel.py - A checker for Zettels
 #
 
 import argparse
 import yaml
-import zdb
+from zettelgeist import zdb
+
+# Recursive descent parsing of Zettel dictionary format.
+
+class ParseError(Exception):
+  def __init__(self, message):
+    self.message = message
+
+def debug(message, on=False):
+  if on:
+    print(message)
+
+def parse_zettel(doc):
+  debug("Parsing Zettel")
+  if not isinstance(doc, dict):
+    raise ParseError("Zettels require key/value mappings at top-level. Found %s" % str(type(doc)))
+
+  # These fields are all optional but, if present, must be strings
+  parse_string_field(doc, 'title')
+  parse_string_field(doc, 'bibkey')
+  parse_string_field(doc, 'bibtex')
+  parse_string_field(doc, 'ris')
+  parse_string_field(doc, 'inline')
+  parse_string_field(doc, 'url')
+  parse_string_field(doc, 'summary')
+  parse_string_field(doc, 'comment')
+  parse_string_field(doc, 'note')
+  
+  # These fields are all optional but, if present, must be list of strings  
+  
+  parse_list_of_string_field(doc, 'tags')
+  parse_list_of_string_field(doc, 'mentions')
+
+  parse_citation(doc, 'cite')
+  parse_dates(doc, 'dates')
+
+  # TODO: Check for extraneous fields in all cases
+
+def parse_string_field(doc, field, required=False):
+  debug("Parsing %s" % field)
+  value = doc.get(field, None)
+  if value == None:
+    if required: 
+      raise ParseError("Field %s requires a string but found %s of type %s" % (field, value, type(value)))
+    return
+  if not isinstance(value, str):
+    raise ParseError("Field %s must be a string or not present at all - found value %s of type %s" % (field, value, type(value)))
 
 
+def parse_list_of_string_field(doc, field, required=False):
+  debug("Parsing %s" % field)
+  value = doc.get(field, None)
+  if value == None:
+    if required: 
+      raise ParseError("Field %s requires a list of strings" % field)
+    return
+  if not isinstance(value, (list, tuple)):
+    raise ParseError("Field %s must be a list or not present at all - foudn value %s of type %s" % (field, value, type(value)))
+
+  # Make a dictionary of the list items for checking purposes only
+  # That is, treat the list like a dictionary. Will simplify with comprehension magic later
+  doc2 = {}
+  pos = 0
+  for item in value:
+    doc2["%s(%d)" % (field, pos)] = item    
+  for key in doc2.keys():
+    parse_string_field(doc2, key, True)
+
+def parse_citation(doc, field):
+  debug("Citation")
+  value = doc.get(field, None)
+  if value == None:
+    return
+  parse_string_field(value, 'bibkey', True)
+  parse_string_field(value, 'page')
+
+def parse_dates(doc, field):
+  debug("Dates")
+  print(doc)
+  value = doc.get(field, None)
+  if value == None:
+    return
+  parse_string_field(value, 'year', True)
+  parse_string_field(value, 'era')
+
+# This is to support formatting of resulting YAML (after modification of the underlying dictionary)
+   
 from collections import OrderedDict
 
 class quoted(str):
@@ -46,10 +128,9 @@ def get_argparse():
 
 class Zettel(object):
 
-  FIELDS=['filename', 'title', 'tags', 'mentions', 'outline', 'cite', 'dates', 'summary', 'text', 'bibkey', 'bibtex', 'ris', 'inline', 'note', 'url' ]
-
-  def __init__(self, filename=None):
-    self.zettel = OrderedDict(zip(self.FIELDS, [None] * len(self.FIELDS)))
+  def __init__(self, data):
+    parse_zettel(data)
+    self.zettel = data
 
   def check_field(self, name):
     if name not in self.zettel:
