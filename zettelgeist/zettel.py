@@ -181,6 +181,37 @@ class Zettel(object):
     yaml.add_representer(OrderedDict, ordered_dict_presenter)
     return yaml.dump(self.zettel)
 
+#
+# This generic loader can be used in any module that needs to work on a Fass or Stein
+# Will be used mainly by zimport.py
+#
+
+class ZettelLoaderError(Exception):
+  def __init__(self, message):
+    self.message = message
+
+class ZettelLoader(object):
+  def __init__(self, filename):
+    with open(filename) as infile:
+      try:
+        text = infile.read()
+      except:
+        raise ZettelLoaderError("%s: I/O error - Encoding must be UTF-8" % filename)
+    try:
+      self.ydocs = yaml.load_all(text)
+    except:
+      raise ZettelLoaderError("%s: YAML load failure" % filename)
+
+  def getZettels(self):
+    ydoc_id = 0
+    for ydoc in self.ydocs:
+      if isinstance(ydoc, dict):
+        try:
+          oneZettel = zettel.Zettel(ydoc)
+          yield (ydoc_id, oneZettel, None)
+        except zettel.ParseError as error:
+          yield (ydoc_id, None, error)
+      ydoc_id = ydoc_id + 1
 
 if __name__ == '__main__':
    parser = get_argparse()
