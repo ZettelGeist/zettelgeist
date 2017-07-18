@@ -12,14 +12,15 @@ class ParseError(Exception):
   def __init__(self, message):
     self.message = message
 
-def debug(message, on=False):
-  if on:
-    print(message)
+  def __str__(self):
+    return self.message
+
+def typename(value):
+  return type(value).__name__
 
 def parse_zettel(doc):
-  debug("Parsing Zettel")
   if not isinstance(doc, dict):
-    raise ParseError("Zettels require key/value mappings at top-level. Found %s" % str(type(doc)))
+    raise ParseError("Zettels require key/value mappings at top-level. Found %s" % typename(doc))
 
   # These fields are all optional but, if present, must be strings
   parse_string_field(doc, 'title')
@@ -43,25 +44,23 @@ def parse_zettel(doc):
   # TODO: Check for extraneous fields in all cases
 
 def parse_string_field(doc, field, required=False):
-  debug("Parsing %s" % field)
   value = doc.get(field, None)
   if value == None:
     if required: 
-      raise ParseError("Field %s requires a string but found %s of type %s" % (field, value, type(value)))
+      raise ParseError("Field %s requires a string but found %s of type %s" % (field, value, typename(value)))
     return
   if not isinstance(value, str):
-    raise ParseError("Field %s must be a string or not present at all - found value %s of type %s" % (field, value, type(value)))
+    raise ParseError("Field %s must be a string or not present at all - found value %s of type %s" % (field, value, typename(value)))
 
 
 def parse_list_of_string_field(doc, field, required=False):
-  debug("Parsing %s" % field)
   value = doc.get(field, None)
   if value == None:
     if required: 
       raise ParseError("Field %s requires a list of strings" % field)
     return
   if not isinstance(value, (list, tuple)):
-    raise ParseError("Field %s must be a list or not present at all - foudn value %s of type %s" % (field, value, type(value)))
+    raise ParseError("Field %s must be a list or not present at all - foudn value %s of type %s" % (field, value, typename(value)))
 
   # Make a dictionary of the list items for checking purposes only
   # That is, treat the list like a dictionary. Will simplify with comprehension magic later
@@ -73,19 +72,20 @@ def parse_list_of_string_field(doc, field, required=False):
     parse_string_field(doc2, key, True)
 
 def parse_citation(doc, field):
-  debug("Citation")
   value = doc.get(field, None)
   if value == None:
     return
+  if not isinstance(value, dict):
+    raise ParseError("%s must be a nested (citation) dictoinary" % field)
   parse_string_field(value, 'bibkey', True)
   parse_string_field(value, 'page')
 
 def parse_dates(doc, field):
-  debug("Dates")
-  print(doc)
   value = doc.get(field, None)
   if value == None:
     return
+  if not isinstance(value, dict):
+    raise ParseError("%s must be a nested (dates) dictionary" % field)
   parse_string_field(value, 'year', True)
   parse_string_field(value, 'era')
 

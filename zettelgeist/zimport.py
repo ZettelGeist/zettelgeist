@@ -4,7 +4,7 @@ import os
 import os.path
 import sys
 import yaml
-from zettelgeist import zdb
+from zettelgeist import zdb, zettel
 
 def main():
   parser = zdb.get_argparse()
@@ -46,15 +46,15 @@ def main():
       ydoc_id = 0
       for ydoc in ydocs:
         if type(ydoc) == type({}):
-          ydoc['filename'] = filename
           if args.validate:
-            errors = db.check(ydoc)
-            if len(errors) > 0:
-              if len(ydocs) > 0:
-                print("-- The following messages are for Fass entry %d" % ydoc_id)
-              for error in errors:
-                print("-- " + error)
+            try:
+              zettel.Zettel(ydoc)
+            except zettel.ParseError as error:
+              error_text = str(error)
+#              error_text = error_text[0:min(80, len(error_text))]
+              print("%s:\n%s" % (filepath, error_text))
           else:
+            ydoc['filename'] = filename
             db.bind(ydoc)
             db.insert_into_table()
         ydoc_id = ydoc_id + 1
