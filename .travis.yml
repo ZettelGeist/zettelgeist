@@ -5,6 +5,7 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 # command to run tests
+before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
 script: pytest
 notifications:
   slack: luccsresearch:cEA9llY9UxQJymallfIwx9ar
