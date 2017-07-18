@@ -6,6 +6,6 @@ python:
 install: "pip install -r requirements.txt"
 # command to run tests
 before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
-script: pytest
+script: pytest -v
 notifications:
   slack: luccsresearch:cEA9llY9UxQJymallfIwx9ar
