@@ -78,6 +78,27 @@ def test_creator_and_load():
   text2 = z2.get_yaml()
   assert text == text2
 
+def test_creator_and_load_optional_fields():
+  z = zettel.Zettel({})
+  z.set_field('title', 'My First Zettel')
+  z.reset_list_field('mentions')
+  z.append_list_field('mentions', 'dbdennis')
+  z.append_list_field('mentions', 'gkt')
+  z.reset_list_field('tags')
+  z.append_list_field('tags', 'Charles Babbage')
+  z.append_list_field('tags', 'Ada Lovelace')
+  z.set_citation('Ifrah')
+  z.set_dates('1841')
+  z.set_field('summary', 'An amazing Zettel')
+  z.set_field('note', 'Text of Zettel')
+  z.set_field('bibkey', 'BibKey')
+  z.set_field('bibtex', '@article{ley, entries}')
+  text = z.get_yaml()
+
+  ydoc = yaml.load(text)
+  z2 = zettel.Zettel(ydoc)
+  text2 = z2.get_yaml()
+  assert text == text2
 
 
 
