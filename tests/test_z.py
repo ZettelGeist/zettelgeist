@@ -56,7 +56,7 @@ def test_simple_zettel():
   zdict = yaml.load(zdoc)
   z = zettel.Zettel(zdict)
 
-def test_creator():
+def test_creator_and_load():
   z = zettel.Zettel({})
   z.set_field('title', 'My First Zettel')
   z.reset_list_field('mentions')
@@ -71,7 +71,12 @@ def test_creator():
   z.set_field('note', 'Text of Zettel')
   z.set_field('bibkey', 'BibKey')
   z.set_field('bibtex', '@article{ley, entries}')
-  z.get_yaml()
+  text = z.get_yaml()
+
+  ydoc = yaml.load(text)
+  z2 = zettel.Zettel(ydoc)
+  text2 = z2.get_yaml()
+  assert text == text2
 
 
 
