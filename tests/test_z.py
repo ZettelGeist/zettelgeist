@@ -54,7 +54,25 @@ def test_simple_zettel():
   zdoc = textwrap.dedent(zdoc)
   print(zdoc)
   zdict = yaml.load(zdoc)
-  zettel.parse_zettel(zdict)
+  z = zettel.Zettel(zdict)
+
+def test_creator():
+  z = zettel.Zettel({})
+  z.set_field('title', 'My First Zettel')
+  z.reset_list_field('mentions')
+  z.append_list_field('mentions', 'dbdennis')
+  z.append_list_field('mentions', 'gkt')
+  z.reset_list_field('tags')
+  z.append_list_field('tags', 'Charles Babbage')
+  z.append_list_field('tags', 'Ada Lovelace')
+  z.set_citation('Ifrah', '22-36')
+  z.set_dates('1841', 'CE')
+  z.set_field('summary', 'An amazing Zettel')
+  z.set_field('note', 'Text of Zettel')
+  z.set_field('bibkey', 'BibKey')
+  z.set_field('bibtex', '@article{ley, entries}')
+  z.get_yaml()
+
 
 
 

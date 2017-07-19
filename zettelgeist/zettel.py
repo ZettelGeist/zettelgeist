@@ -129,56 +129,49 @@ def get_argparse():
 class Zettel(object):
 
   def __init__(self, data):
-    parse_zettel(data)
     self.zettel = data
+    parse_zettel(self.zettel)
 
-  def check_field(self, name):
-    if name not in self.zettel:
-       raise ZettelBadKey(name)
+  def set_field(self, name, value):
+    self.zettel[name] = value
+    parse_zettel(self.zettel)
 
-  def ensure_string(self, value):
-    if not isinstance(value, str):
-       raise ZettelStringRequired(value)
+  def delete_field(self, name):
+    del(self.zettel[name])
+    parse_zettel(self.zettel)
 
-  def set_field(self, name, value, verbatim=False):
-    self.check_field(name)
-    self.ensure_string(value)
-    if verbatim:
-       self.zettel[name] = literal(value)
-    else:
-       self.zettel[name] = value
+  def reset_list_field(self, name):
+    self.zettel[name] = []
+    parse_zettel(self.zettel)
 
-  def convert_to_list(self, name):
-    self.check_field(name)
-    value = self.zettel[name]
-    if value == None:
-       self.zettel[name] = []
-    if isinstance(value, str):
-       self.zettel[name] = [value]
-    else:
-       pass # we should never have a non-string or non-list entry but can put exception here if needed
-   
-  def append_field(self, name, value):
-    self.convert_to_list(name)
-    self.ensure_string(value)
+  def append_list_field(self, name, value):
     self.zettel[name].append(value)
+    parse_zettel(self.zettel)
+
+  def set_citation(self, bibkey, page=None):
+    citation = { 'bibkey' : bibkey }
+    if page != None:
+      citation['page'] = page
+    self.zettel['cite'] = citation
+    parse_zettel(self.zettel)
+
+  def set_dates(self, year, era=None):
+    dates = { 'year' : year }
+    if era != None:
+      dates['era'] = era
+    self.zettel['dates'] = dates
+    parse_zettel(self.zettel)
 
   def load_field(self, name, filename):
-    self.check_field(name)
     with open(filename, 'r') as infile:
       text = infile.read()
-    self.set_field(name, text, True)
-
-  def purge_unused_fields(self):
-    unused_fields = [ name for name in self.zettel if self.zettel[name] == None ]
-    for field in unused_fields:
-      del(self.zettel[field])
+    self.set_field(name, text)
+    parse_zettel(self.zettel)
 
   def get_yaml(self):
-    self.purge_unused_fields()
-    yaml.add_representer(quoted, quoted_presenter)
-    yaml.add_representer(literal, literal_presenter)
-    yaml.add_representer(OrderedDict, ordered_dict_presenter)
+    #yaml.add_representer(quoted, quoted_presenter)
+    #yaml.add_representer(literal, literal_presenter)
+    #yaml.add_representer(OrderedDict, ordered_dict_presenter)
     return yaml.dump(self.zettel)
 
 #
