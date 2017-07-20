@@ -100,5 +100,40 @@ def test_creator_and_load_optional_fields():
   text2 = z2.get_yaml()
   assert text == text2
 
+def test_zettel_fts_strings():
+  z = zettel.Zettel({})
+  z.set_field("title", "title")
+  z.set_field("summary","a summary")
+  expected = {'title': 'title', 'summary': 'a summary'}
+  z.get_indexed_representation() == expected
+
+def test_zettel_fts_lists():
+  z = zettel.Zettel({})
+  z.reset_list_field("tags")
+  z.append_list_field("tags","Babbage")
+  z.append_list_field("tags","Lovelace")
+  expected = {'tags': 'Babbage,Lovelace'}
+  z.get_indexed_representation() == expected
+
+def test_zettel_fts_cite():
+  z = zettel.Zettel({})
+  z.set_citation("Castells 2006","ii-iv")
+  z.get_indexed_representation()
+  expected = {'cite': 'bibkey:Castells 2006,page:ii-iv'}
+  z.get_indexed_representation() == expected
+
+  z.set_citation("Castells 2006") # omitting page numbers
+  expected = {'cite': 'bibkey:Castells 2006'}
+  z.get_indexed_representation() == expected
+
+def test_zettel_fts_dates():
+  z = zettel.Zettel({})
+  z.set_dates('2006','CE')
+  expected = {'dates': 'year:2006,era:CE'}
+  z.get_indexed_representation() == expected
+
+  z.set_dates('2006') # omit era
+  expected = {'dates': 'year:2006'}
+  z.get_indexed_representation() == expected
 
 
