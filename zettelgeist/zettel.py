@@ -126,6 +126,19 @@ def get_argparse():
      parser.add_argument('--load-%s' % field, help="load field from %s" % field)
   return parser
 
+def flatten(item):
+    if item == None:
+        return [""]
+    elif isinstance(item, dict):
+        return flatten([ ":".join([k, item[k]]) for k in item ])
+    elif not isinstance(item, (tuple, list)):
+        return [str(item)]
+
+    if len(item) == 0:
+        return item
+    else:
+        return flatten(item[0]) + flatten(item[1:])
+
 class Zettel(object):
 
   def __init__(self, data):
@@ -173,6 +186,11 @@ class Zettel(object):
     #yaml.add_representer(literal, literal_presenter)
     #yaml.add_representer(OrderedDict, ordered_dict_presenter)
     return yaml.dump(self.zettel)
+
+  def get_indexed_representation(self):
+    parse_zettel(self.zettel)
+    return { key : ",".join(flatten(self.zettel[key])) for key in self.zettel}
+
 
 #
 # This generic loader can be used in any module that needs to work on a Fass or Stein
