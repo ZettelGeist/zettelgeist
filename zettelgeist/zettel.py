@@ -144,12 +144,15 @@ class ZettelStringRequired(Exception):
 
 def get_argparse():
   parser = argparse.ArgumentParser()
-  parser.add_argument('--database', help="alternate database name", default=zdb.ZDB)
-  for field in Zettel.FIELDS:
-     parser.add_argument('--set-%s' % field, help="set the value of field %s" % field)
-     parser.add_argument('--append-%s' % field, help="add value to field %s" % field)
-     parser.add_argument('--erase-%s' % field, help="remove field %s" % field)
-     parser.add_argument('--load-%s' % field, help="load field from %s" % field)
+  for field in ZettelStringFields:
+    parser.add_argument('--set-%s' % field, help="set the value of field %s" % field)
+    parser.add_argument('--delete-%s' % field, action="store_true", help="delete field %s" % field, default=False)
+    parser.add_argument('--load-%s' % field, help="load field from %s" % field)
+
+  for field in ZettelListFields:
+    parser.add_argument('--reset-%s' % field, action="store_true", help="reset list field %s" % field, default=False)
+    parser.add_argument('--append-%s' % field, help="add value to list field %s" % field)
+
   return parser
 
 def flatten(item):
@@ -251,6 +254,36 @@ class ZettelLoader(object):
           yield (ydoc_id, None, error)
       ydoc_id = ydoc_id + 1
 
+def main():
+  parser = get_argparse()
+  args = parser.parse_args()
+  vargs = vars(args)
+  z = Zettel({})
+  for arg in vargs:
+    if arg.startswith("reset_"):
+      reset_what = arg[len("reset_"):]
+      if vargs[arg]: z.reset_list_field(reset_what)
+
+    if arg.startswith("delete_"):
+      delete_what = arg[len("delete_"):]
+      if vargs[arg]: z.delete_field(delete_what)
+
+
+  for arg in vargs:
+    if arg.startswith("set_"):
+      set_what = arg[len("set_"):]
+      if vargs[arg]: z.set_field(set_what, vargs[arg])
+
+    if arg.startswith("append_"):
+      append_what = arg[len("append_"):]
+      if vargs[arg]: z.append_list_field(append_what, vargs[arg])
+
+    if arg.startswith("load_"):
+      load_what = arg[len("load_"):]
+      if vargs[arg]: z.load_field(load_what, vargs[arg])
+
+  print(z.get_yaml())
+
+
 if __name__ == '__main__':
-   parser = get_argparse()
-   parser.print_help()
+  main()
