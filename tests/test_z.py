@@ -136,4 +136,29 @@ def test_zettel_fts_dates():
   expected = {'dates': 'year:2006'}
   z.get_indexed_representation() == expected
 
+def test_invalid_zettel_fields():
+  z = zettel.Zettel({})
+  with pytest.raises(zettel.ParseError):
+    z.set_field('blah', 'blah')
+  z.delete_field('blah')
+
+  # checks for injection of bad values in nested citation dictionary
+  z.set_citation('Castells 2006','ii-iv')
+  with pytest.raises(zettel.ParseError):
+    z.zettel['cite']['blah'] = 'blah'
+    z.get_yaml() # force checks
+
+  del(z.zettel['cite']['blah'])
+
+  # checks for injection of bad values in nested dates dictionary
+  z.set_dates('2006','CE')
+  with pytest.raises(zettel.ParseError):
+    z.zettel['dates']['blah'] = 'blah'
+    z.get_yaml()
+  del(z.zettel['dates']['blah'])
+
+
+
+
+
 

@@ -8,6 +8,14 @@ from zettelgeist import zdb
 
 # Recursive descent parsing of Zettel dictionary format.
 
+ZettelStringFields = [ 'title', 'bibkey', 'bibtex', 'ris', 'inline', 'url', 'summary', 'comment', 'note' ]
+ZettelListFields = [ 'tags', 'mentions' ]
+ZettelStructuredFields = ['cite', 'dates']
+
+ZettelFields = set(ZettelStringFields + ZettelListFields + ZettelStructuredFields)
+CitationFields = set(['bibkey', 'page'])
+DatesFields = set(['year', 'era'])
+
 class ParseError(Exception):
   def __init__(self, message):
     self.message = message
@@ -21,6 +29,8 @@ def typename(value):
 def parse_zettel(doc):
   if not isinstance(doc, dict):
     raise ParseError("Zettels require key/value mappings at top-level. Found %s" % typename(doc))
+
+  parse_check_zettel_field_names(doc)
 
   # These fields are all optional but, if present, must be strings
   parse_string_field(doc, 'title')
@@ -42,6 +52,20 @@ def parse_zettel(doc):
   parse_dates(doc, 'dates')
 
   # TODO: Check for extraneous fields in all cases
+
+def parse_check_zettel_field_names(doc):
+  check_field_names(doc, ZettelFields, "Zettel")
+
+def parse_check_citation_field_names(doc):
+  check_field_names(doc, CitationFields, "Citation")
+
+def parse_check_dates_field_names(doc):
+  check_field_names(doc, DatesFields, "Dates")
+
+def check_field_names(doc, name_set, label):
+  for key in doc.keys():
+    if key not in name_set:
+      raise ParseError("Invalid field %s found in %s" % (key, label))
 
 def parse_string_field(doc, field, required=False):
   value = doc.get(field, None)
@@ -77,6 +101,7 @@ def parse_citation(doc, field):
     return
   if not isinstance(value, dict):
     raise ParseError("%s must be a nested (citation) dictoinary" % field)
+  parse_check_citation_field_names(value)
   parse_string_field(value, 'bibkey', True)
   parse_string_field(value, 'page')
 
@@ -86,6 +111,7 @@ def parse_dates(doc, field):
     return
   if not isinstance(value, dict):
     raise ParseError("%s must be a nested (dates) dictionary" % field)
+  parse_check_dates_field_names(value)
   parse_string_field(value, 'year', True)
   parse_string_field(value, 'era')
 
@@ -185,6 +211,7 @@ class Zettel(object):
     #yaml.add_representer(quoted, quoted_presenter)
     #yaml.add_representer(literal, literal_presenter)
     #yaml.add_representer(OrderedDict, ordered_dict_presenter)
+    parse_zettel(self.zettel)
     return yaml.dump(self.zettel)
 
   def get_indexed_representation(self):
