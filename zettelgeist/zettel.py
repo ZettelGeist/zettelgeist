@@ -11,8 +11,8 @@ from zettelgeist import zdb
 ZettelStringFields = [ 'title', 'bibkey', 'bibtex', 'ris', 'inline', 'url', 'summary', 'comment', 'note' ]
 ZettelListFields = [ 'tags', 'mentions' ]
 ZettelStructuredFields = ['cite', 'dates']
-
-ZettelFields = set(ZettelStringFields + ZettelListFields + ZettelStructuredFields)
+ZettelFieldsOrdered = ZettelStringFields + ZettelListFields + ZettelStructuredFields
+ZettelFields = set(ZettelFieldsOrdered)
 CitationFields = set(['bibkey', 'page'])
 DatesFields = set(['year', 'era'])
 
@@ -117,19 +117,25 @@ def parse_dates(doc, field):
 
 # This is to support formatting of resulting YAML (after modification of the underlying dictionary)
    
+
+# Credit to StackOverflow for helping figure out how to format YAML
+# multiline strings properly (when emitting YAML representation of Zettel)
+
 from collections import OrderedDict
 
-class quoted(str):
-  pass
+class quoted(str): pass
+
+class literal(str): pass
 
 def quoted_presenter(dumper, data):
   return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='"')
 
-class literal(str):
-  pass
+# Note: Only use multiline syntax when there are actually multiple lines.
 
-def literal_presenter(dumper, data):
-  return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+def str_presenter(dumper, data):
+  if len(data.splitlines()) > 1:
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+  return dumper.represent_scalar('tag:yaml.org,2002:str', data)
 
 def ordered_dict_presenter(dumper, data):
   return dumper.represent_dict(data.items())
@@ -211,16 +217,23 @@ class Zettel(object):
     parse_zettel(self.zettel)
 
   def get_yaml(self):
-    #yaml.add_representer(quoted, quoted_presenter)
-    #yaml.add_representer(literal, literal_presenter)
-    #yaml.add_representer(OrderedDict, ordered_dict_presenter)
+    yaml.add_representer(quoted, quoted_presenter)
+    yaml.add_representer(literal, str_presenter)
+    yaml.add_representer(OrderedDict, ordered_dict_presenter)
     parse_zettel(self.zettel)
-    return yaml.dump(self.zettel)
+    yaml_zettel = OrderedDict()
+    for key in ZettelFieldsOrdered:
+      if key not in self.zettel:
+        continue
+      if key in ZettelStringFields:
+        yaml_zettel[key] = literal(self.zettel[key])
+      else:
+        yaml_zettel[key] = self.zettel[key]
+    return yaml.dump(yaml_zettel)
 
   def get_indexed_representation(self):
     parse_zettel(self.zettel)
     return { key : ",".join(flatten(self.zettel[key])) for key in self.zettel}
-
 
 #
 # This generic loader can be used in any module that needs to work on a Fass or Stein
