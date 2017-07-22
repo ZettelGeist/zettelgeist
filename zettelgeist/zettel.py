@@ -285,7 +285,10 @@ def main():
   for arg in vargs:
     if arg.startswith("set_"):
       set_what = arg[len("set_"):]
-      if vargs[arg]: z.set_field(set_what, vargs[arg])
+      if vargs[arg]:
+        # TODO: Make replacement of literal \n with newline an option
+        value = vargs[arg].replace(r"\n", "\n")
+        z.set_field(set_what, value)
 
     if arg.startswith("append_"):
       append_what = arg[len("append_"):]
