@@ -193,6 +193,10 @@ def get_argparse():
         parser.add_argument('--append-%s' %
                             field, nargs="+", help="add value to list field %s" % field)
 
+
+    parser.add_argument('--set-citation', nargs='+', type=str,
+            help="set citation - first arg is bibkey, rest are page numbers or ranges (no commas), e.g. Turing1936 ii-iv 36 1-25")
+
     parser.add_argument('--file', nargs='?',
                         help='Zettel files (.yaml) to process')
     return parser
@@ -364,7 +368,18 @@ def process_zettel_command_line_options(z, vargs, id):
 
 
     for arg in vargs:
-        if arg.startswith("set_"):
+        if arg == "set_citation":
+            cite_info = vargs[arg]
+            bibkey = cite_info[0]
+            try:
+                pages = ",".join(cite_info[1:])
+            except:
+                pass
+            z.set_citation(bibkey, pages)
+        elif arg == "set_dates":
+            pass
+
+        elif arg.startswith("set_"):
             set_what = arg[len("set_"):]
             if vargs[arg]:
                 # TODO: Make replacement of literal \n with newline an option
