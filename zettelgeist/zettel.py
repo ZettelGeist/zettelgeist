@@ -194,7 +194,7 @@ def get_argparse():
                             field, nargs="+", help="add value to list field %s" % field)
 
 
-    parser.add_argument('--set-citation', nargs='+', type=str,
+    parser.add_argument('--set-citation', nargs='+', type=str, metavar=('BIBKEY','PAGES'),
             help="set citation - first arg is bibkey, rest are page numbers or ranges (no commas), e.g. Turing1936 ii-iv 36 1-25")
 
     parser.add_argument('--file', nargs='?',
