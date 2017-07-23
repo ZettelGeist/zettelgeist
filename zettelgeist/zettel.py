@@ -188,7 +188,7 @@ def get_argparse():
         parser.add_argument('--reset-%s' % field, action="store_true",
                             help="reset list field %s" % field, default=False)
         parser.add_argument('--append-%s' %
-                            field, help="add value to list field %s" % field)
+                            field, nargs="+", help="add value to list field %s" % field)
 
     parser.add_argument('file', nargs='*',
                         help='Zettel files (.yaml) to process')
@@ -228,6 +228,7 @@ class Zettel(object):
         parse_zettel(self.zettel)
 
     def append_list_field(self, name, value):
+        self.zettel[name] = self.zettel.get(name, [])
         self.zettel[name].append(value)
         parse_zettel(self.zettel)
 
@@ -303,19 +304,21 @@ class ZettelLoader(object):
 def main():
     parser = get_argparse()
     args = parser.parse_args()
+    z_generator = gen_new_zettels(args)
+    print("---\n".join([z.get_yaml() for z in z_generator]))
+
+
+def gen_new_zettels(args):
     vargs = vars(args)
     if len(args.file) > 0:
         loader = ZettelLoader(args.file[0])
-        is_fass = False
         for z in loader.getZettels():
-            process(z, vargs, is_fass)
-            is_fass = True
-
+            yield process_zettel_command_line_options(z, vargs)
     else:
-        process(Zettel(), vargs)
+        yield process_zettel_command_line_options(Zettel(), vargs)
 
 
-def process(z, vargs, is_fass = False):
+def process_zettel_command_line_options(z, vargs):
     for arg in vargs:
         if arg.startswith("reset_"):
             reset_what = arg[len("reset_"):]
@@ -338,16 +341,16 @@ def process(z, vargs, is_fass = False):
         if arg.startswith("append_"):
             append_what = arg[len("append_"):]
             if vargs[arg]:
-                z.append_list_field(append_what, vargs[arg])
+                for text in vargs[arg]:
+                    z.append_list_field(append_what, text)
 
         if arg.startswith("load_"):
             load_what = arg[len("load_"):]
             if vargs[arg]:
                 z.load_field(load_what, vargs[arg])
 
-    if is_fass:
-        print("---")
-    print(z.get_yaml())
+    return z
+
 
 if __name__ == '__main__':
     main()
