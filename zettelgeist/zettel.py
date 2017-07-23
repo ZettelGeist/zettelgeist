@@ -193,9 +193,8 @@ def get_argparse():
         parser.add_argument('--append-%s' %
                             field, nargs="+", help="add value to list field %s" % field)
 
-    parser.add_argument('--file', nargs='*',
+    parser.add_argument('--file', nargs='?',
                         help='Zettel files (.yaml) to process')
-    parser.add_argument('--foo', nargs=2, metavar=('ALPHA','BETA'), help="ALPHA is ... BETA is ...")
     return parser
 
 
@@ -331,8 +330,8 @@ def gen_id():
 def gen_new_zettels(args):
     vargs = vars(args)
     id_gen = gen_id()
-    if args.file and len(args.file) > 0:
-        loader = ZettelLoader(args.file[0])
+    if args.file:
+        loader = ZettelLoader(args.file)
         for z in loader.getZettels():
             yield process_zettel_command_line_options(z, vargs, next(id_gen))
     else:
