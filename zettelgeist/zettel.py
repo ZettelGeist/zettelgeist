@@ -235,7 +235,6 @@ class Zettel(object):
         if name not in self.zettel:
             return
         positions.sort(reverse=True)
-        print(name, positions)
         for position in positions:
             del(self.zettel[name][position])
         if len(self.zettel[name]) == 0:
@@ -360,8 +359,6 @@ def process_zettel_command_line_options(z, vargs, id):
                 except:
                    print("Non-integer zettel ID or list position found in %s. Aborting." % arg)
                    sys.exit(1)
-                print(zettel_id)
-                print(list_entries)
                 if id == zettel_id:
                    z.delete_list_field_entries(delete_what, list_entries)
 
