@@ -12,7 +12,8 @@ ZettelStringFields = ['title', 'bibkey', 'bibtex',
                       'ris', 'inline', 'url', 'summary', 'comment', 'note']
 ZettelListFields = ['tags', 'mentions']
 ZettelStructuredFields = ['cite', 'dates']
-ZettelFieldsOrdered = ZettelStringFields + ZettelListFields + ZettelStructuredFields
+ZettelFieldsOrdered = ZettelStringFields + \
+    ZettelListFields + ZettelStructuredFields
 ZettelFields = set(ZettelFieldsOrdered)
 CitationFields = set(['bibkey', 'page'])
 DatesFields = set(['year', 'era'])
@@ -189,6 +190,8 @@ def get_argparse():
         parser.add_argument('--append-%s' %
                             field, help="add value to list field %s" % field)
 
+    parser.add_argument('file', nargs='*',
+                        help='Zettel files (.yaml) to process')
     return parser
 
 
@@ -208,7 +211,7 @@ def flatten(item):
 
 class Zettel(object):
 
-    def __init__(self, data):
+    def __init__(self, data={}):
         self.zettel = data
         parse_zettel(self.zettel)
 
@@ -292,22 +295,27 @@ class ZettelLoader(object):
             raise ZettelLoaderError("%s: YAML load failure" % filename)
 
     def getZettels(self):
-        ydoc_id = 0
         for ydoc in self.ydocs:
             if isinstance(ydoc, dict):
-                try:
-                    oneZettel = zettel.Zettel(ydoc)
-                    yield (ydoc_id, oneZettel, None)
-                except zettel.ParseError as error:
-                    yield (ydoc_id, None, error)
-            ydoc_id = ydoc_id + 1
+                yield Zettel(ydoc)
 
 
 def main():
     parser = get_argparse()
     args = parser.parse_args()
     vargs = vars(args)
-    z = Zettel({})
+    if len(args.file) > 0:
+        loader = ZettelLoader(args.file[0])
+        is_fass = False
+        for z in loader.getZettels():
+            process(z, vargs, is_fass)
+            is_fass = True
+
+    else:
+        process(Zettel(), vargs)
+
+
+def process(z, vargs, is_fass = False):
     for arg in vargs:
         if arg.startswith("reset_"):
             reset_what = arg[len("reset_"):]
@@ -337,8 +345,9 @@ def main():
             if vargs[arg]:
                 z.load_field(load_what, vargs[arg])
 
+    if is_fass:
+        print("---")
     print(z.get_yaml())
-
 
 if __name__ == '__main__':
     main()
