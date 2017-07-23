@@ -260,9 +260,10 @@ class Zettel(object):
         parse_zettel(self.zettel)
 
     def load_field(self, name, filename):
+        text = []
         with open(filename, 'r') as infile:
-            text = infile.read()
-        self.set_field(name, text)
+            text = infile.readlines()
+        self.set_field(name, ''.join(text))
         parse_zettel(self.zettel)
 
     def get_yaml(self):
