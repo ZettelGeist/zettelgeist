@@ -265,7 +265,7 @@ class Zettel(object):
                 yaml_zettel[key] = literal(self.zettel[key])
             else:
                 yaml_zettel[key] = self.zettel[key]
-        return yaml.dump(yaml_zettel)
+        return yaml.dump(yaml_zettel, default_flow_style=False)
 
     def get_indexed_representation(self):
         parse_zettel(self.zettel)
