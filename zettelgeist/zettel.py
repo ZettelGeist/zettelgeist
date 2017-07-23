@@ -2,6 +2,7 @@
 # zettel.py - A checker for Zettels
 #
 
+import sys
 import argparse
 import yaml
 from zettelgeist import zdb
@@ -187,11 +188,14 @@ def get_argparse():
     for field in ZettelListFields:
         parser.add_argument('--reset-%s' % field, action="store_true",
                             help="reset list field %s" % field, default=False)
+        parser.add_argument('--remove-entries-in-%s' % field, nargs=2, metavar=('FASS ENTRY', 'LIST ENTRY'), type=str,
+                            help="delete comma-separated LIST ENTRY positions from FASS ENTRY")
         parser.add_argument('--append-%s' %
                             field, nargs="+", help="add value to list field %s" % field)
 
-    parser.add_argument('file', nargs='*',
+    parser.add_argument('--file', nargs='*',
                         help='Zettel files (.yaml) to process')
+    parser.add_argument('--foo', nargs=2, metavar=('ALPHA','BETA'), help="ALPHA is ... BETA is ...")
     return parser
 
 
@@ -226,6 +230,16 @@ class Zettel(object):
     def reset_list_field(self, name):
         self.zettel[name] = []
         parse_zettel(self.zettel)
+
+    def delete_list_field_entries(self, name, positions):
+        if name not in self.zettel:
+            return
+        positions.sort(reverse=True)
+        print(name, positions)
+        for position in positions:
+            del(self.zettel[name][position])
+        if len(self.zettel[name]) == 0:
+            del(self.zettel[name])
 
     def append_list_field(self, name, value):
         self.zettel[name] = self.zettel.get(name, [])
@@ -308,17 +322,23 @@ def main():
     print("---\n".join([z.get_yaml() for z in z_generator]))
 
 
+def gen_id():
+    id = 0
+    while True:
+        yield id
+        id = id + 1
+
 def gen_new_zettels(args):
     vargs = vars(args)
-    if len(args.file) > 0:
+    id_gen = gen_id()
+    if args.file and len(args.file) > 0:
         loader = ZettelLoader(args.file[0])
         for z in loader.getZettels():
-            yield process_zettel_command_line_options(z, vargs)
+            yield process_zettel_command_line_options(z, vargs, next(id_gen))
     else:
-        yield process_zettel_command_line_options(Zettel(), vargs)
+        yield process_zettel_command_line_options(Zettel(), vargs, next(id_gen))
 
-
-def process_zettel_command_line_options(z, vargs):
+def process_zettel_command_line_options(z, vargs, id):
     for arg in vargs:
         if arg.startswith("reset_"):
             reset_what = arg[len("reset_"):]
@@ -329,6 +349,22 @@ def process_zettel_command_line_options(z, vargs):
             delete_what = arg[len("delete_"):]
             if vargs[arg]:
                 z.delete_field(delete_what)
+
+        if arg.startswith("remove_entries_in_"):
+            delete_what = arg[len("remove_intries_in_"):]
+            if vargs[arg]:
+                try:
+                   (zettel_id, list_entries) = vargs[arg][:2]
+                   zettel_id = int(zettel_id)
+                   list_entries = [int(pos) for pos in list_entries.split(",")]
+                except:
+                   print("Non-integer zettel ID or list position found in %s. Aborting." % arg)
+                   sys.exit(1)
+                print(zettel_id)
+                print(list_entries)
+                if id == zettel_id:
+                   z.delete_list_field_entries(delete_what, list_entries)
+
 
     for arg in vargs:
         if arg.startswith("set_"):
