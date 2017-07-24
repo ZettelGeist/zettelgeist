@@ -333,8 +333,8 @@ def main():
     z_generator = gen_new_zettels(args)
         
     if args.save:
-        print("Zettel saved to %s" % args.save)
-        outfile = open(args.save, "w")
+        print("Zettel saved to %s" % args.save[0])
+        outfile = open(args.save[0], "w")
     elif args.now:
         if args.now_id:
            filename = strftime("%Y%m%d%H%M%S") + "-%s.yaml" % args.now_id[0]
