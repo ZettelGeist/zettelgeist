@@ -359,7 +359,7 @@ def process_zettel_command_line_options(z, vargs, id):
             z.delete_field(delete_what)
 
         if arg.startswith("remove_entries_in_"):
-            delete_what = arg[len("remove_intries_in_"):]
+            delete_what = arg[len("remove_entries_in_"):]
             try:
                 (zettel_id, list_entries) = vargs[arg][:2]
                 zettel_id = int(zettel_id)
