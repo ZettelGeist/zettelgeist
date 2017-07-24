@@ -5,6 +5,7 @@
 import sys
 import argparse
 import yaml
+from time import strftime
 
 # Recursive descent parsing of Zettel dictionary format.
 
@@ -199,7 +200,14 @@ def get_argparse():
                         help="set dates; YEAR required - ERA is optional (extra arguments beyond the 2nd are ignored but allowed")
 
     parser.add_argument('--file', nargs='?',
-                        help='Zettel files (.yaml) to process')
+                        help='Zettel file (.yaml) to process')
+
+    parser.add_argument('--save', nargs=1,
+                        help='Write output to specified file.')
+
+    parser.add_argument('--now', action="store_true", default=False,
+                        help="Write output to file named by current time (must not exist a priori)")
+    parser.add_argument('--now-id', nargs=1, help="Append suffix to now filename")
     return parser
 
 
@@ -323,7 +331,20 @@ def main():
     parser = get_argparse()
     args = parser.parse_args()
     z_generator = gen_new_zettels(args)
-    print("---\n".join([z.get_yaml() for z in z_generator]))
+        
+    if args.save:
+        print("Zettel saved to %s" % args.save)
+        outfile = open(args.save, "w")
+    elif args.now:
+        if args.now_id:
+           filename = strftime("%Y%m%d%H%M%S") + "-%s.yaml" % args.now_id[0]
+        else:
+           filename = strftime("%Y%m%d%H%M%S.yaml")
+        print("Zettel saved to %s" % filename)
+        outfile = open(filename, "w")
+    else:
+        outfile = sys.stdout
+    outfile.write("---\n".join([z.get_yaml() for z in z_generator]))
 
 
 def gen_id():
