@@ -6,6 +6,7 @@ import sys
 import yaml
 from zettelgeist import zdb, zettel
 
+
 def main():
     parser = zdb.get_argparse()
     parser.add_argument(
@@ -40,27 +41,22 @@ def main():
                 continue
 
             try:
-                ydocs = list(ydocs)
+                ydoc = next(ydocs)
             except:
                 print("- YAML loaded but could not be processed")
                 continue
 
-            fass_id = zettel.gen_id()
-            for ydoc in ydocs:
-                if isinstance(ydoc, dict):
-                    try:
-                        z = zettel.Zettel(ydoc)
-                    except zettel.ParseError as error:
-                        error_text = str(error)
-                        print("%s:\n%s" % (filepath, error_text))
-                        continue
-                    finally:
-                        this_fass_id = next(fass_id)
+            if isinstance(ydoc, dict):
+                try:
+                    z = zettel.Zettel(ydoc)
+                except zettel.ParseError as error:
+                    error_text = str(error)
+                    print("%s:\n%s" % (filepath, error_text))
+                    continue
 
-                    if not args.validate:
-                        print("%s: fass entry %d" % (filename, this_fass_id))
-                        db.bind(z, filename, this_fass_id)
-                        db.insert_into_table()
+                if not args.validate:
+                    db.bind(z, filename)
+                    db.insert_into_table()
 
     db.done()
 
