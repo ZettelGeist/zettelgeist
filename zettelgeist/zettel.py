@@ -193,9 +193,11 @@ def get_argparse():
         parser.add_argument('--append-%s' %
                             field, nargs="+", help="add value to list field %s" % field)
 
+    parser.add_argument('--set-citation', nargs='+', type=str, metavar=('BIBKEY', 'PAGES'),
+                        help="set citation - first arg is bibkey, rest are page numbers or ranges (no commas), e.g. Turing1936 ii-iv 36 1-25")
 
-    parser.add_argument('--set-citation', nargs='+', type=str, metavar=('BIBKEY','PAGES'),
-            help="set citation - first arg is bibkey, rest are page numbers or ranges (no commas), e.g. Turing1936 ii-iv 36 1-25")
+    parser.add_argument('--set-dates', nargs='+', type=str, metavar=('YEAR', 'ERA'),
+                        help="set dates; YEAR required - ERA is optional (extra arguments beyond the 2nd are ignored but allowed")
 
     parser.add_argument('--file', nargs='?',
                         help='Zettel files (.yaml) to process')
@@ -331,6 +333,7 @@ def gen_id():
         yield id
         id = id + 1
 
+
 def gen_new_zettels(args):
     vargs = vars(args)
     id_gen = gen_id()
@@ -341,33 +344,37 @@ def gen_new_zettels(args):
     else:
         yield process_zettel_command_line_options(Zettel(), vargs, next(id_gen))
 
+
 def process_zettel_command_line_options(z, vargs, id):
+    # --reset-*, --delete-*, and --remove_entries_in-* are evaluated first
     for arg in vargs:
+        if not vargs[arg]:
+            continue
+
         if arg.startswith("reset_"):
             reset_what = arg[len("reset_"):]
-            if vargs[arg]:
-                z.reset_list_field(reset_what)
+            z.reset_list_field(reset_what)
 
         if arg.startswith("delete_"):
             delete_what = arg[len("delete_"):]
-            if vargs[arg]:
-                z.delete_field(delete_what)
+            z.delete_field(delete_what)
 
         if arg.startswith("remove_entries_in_"):
             delete_what = arg[len("remove_intries_in_"):]
-            if vargs[arg]:
-                try:
-                   (zettel_id, list_entries) = vargs[arg][:2]
-                   zettel_id = int(zettel_id)
-                   list_entries = [int(pos) for pos in list_entries.split(",")]
-                except:
-                   print("Non-integer zettel ID or list position found in %s. Aborting." % arg)
-                   sys.exit(1)
-                if id == zettel_id:
-                   z.delete_list_field_entries(delete_what, list_entries)
-
+            try:
+                (zettel_id, list_entries) = vargs[arg][:2]
+                zettel_id = int(zettel_id)
+                list_entries = [int(pos) for pos in list_entries.split(",")]
+            except:
+                print(
+                    "Non-integer zettel ID or list position found in %s. Aborting." % arg)
+                sys.exit(1)
+            if id == zettel_id:
+                z.delete_list_field_entries(delete_what, list_entries)
 
     for arg in vargs:
+        if not vargs[arg]:
+            continue
         if arg == "set_citation":
             cite_info = vargs[arg]
             bibkey = cite_info[0]
@@ -377,26 +384,27 @@ def process_zettel_command_line_options(z, vargs, id):
                 pass
             z.set_citation(bibkey, pages)
         elif arg == "set_dates":
-            pass
+            date_info = vargs[arg]
+            year = date_info[0]
+            try:
+                era = date_info[1]
+                z.set_dates(year, era)
+            except:
+                z.set_dates(year)
 
         elif arg.startswith("set_"):
             set_what = arg[len("set_"):]
-            if vargs[arg]:
-                # TODO: Make replacement of literal \n with newline an option
-                value = vargs[arg].replace(r"\n", "\n")
-                z.set_field(set_what, value)
+            value = vargs[arg].replace(r"\n", "\n")
+            z.set_field(set_what, value)
 
         if arg.startswith("append_"):
             append_what = arg[len("append_"):]
-            if vargs[arg]:
-                for text in vargs[arg]:
-                    z.append_list_field(append_what, text)
+            for text in vargs[arg]:
+                z.append_list_field(append_what, text)
 
         if arg.startswith("load_"):
             load_what = arg[len("load_"):]
-            if vargs[arg]:
-                z.load_field(load_what, vargs[arg])
-
+            z.load_field(load_what, vargs[arg])
     return z
 
 
