@@ -5,7 +5,6 @@
 import sys
 import argparse
 import yaml
-from zettelgeist import zdb
 
 # Recursive descent parsing of Zettel dictionary format.
 

@@ -6,7 +6,6 @@ import sys
 import yaml
 from zettelgeist import zdb, zettel
 
-
 def main():
     parser = zdb.get_argparse()
     parser.add_argument(
@@ -48,17 +47,15 @@ def main():
 
             ydoc_id = 0
             for ydoc in ydocs:
-                if type(ydoc) == type({}):
-                    if args.validate:
-                        try:
-                            zettel.Zettel(ydoc)
-                        except zettel.ParseError as error:
-                            error_text = str(error)
-#              error_text = error_text[0:min(80, len(error_text))]
-                            print("%s:\n%s" % (filepath, error_text))
-                    else:
-                        ydoc['filename'] = filename
-                        db.bind(ydoc)
+                if isinstance(ydoc, dict):
+                    try:
+                        z = zettel.Zettel(ydoc)
+                    except zettel.ParseError as error:
+                        error_text = str(error)
+                        print("%s:\n%s" % (filepath, error_text))
+                        continue
+                    if not args.validate:
+                        db.bind(z, filename)
                         db.insert_into_table()
                 ydoc_id = ydoc_id + 1
 

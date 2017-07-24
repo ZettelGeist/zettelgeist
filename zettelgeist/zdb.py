@@ -9,39 +9,12 @@ import os
 import os.path
 import sqlite3
 
+from zettelgeist import zettel
+
+ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
 
 # Default Zettel DB name
 ZDB = 'zettels.db'
-
-# Default Zettel fields. You can add to this list if you like.
-# TODO: Allow zcreate.py to run with additional fields.
-
-# In ZettelGeist, fields are either string or list of strings. We only
-# allow list of strings where it truly makes sense (e.g. keywords). Most
-# other fields are singleton strings.
-
-ZFIELDS = {
-    'filename': 's',
-    'title': 's',
-    'tags': 'ls',
-    'mentions': 'ls',
-    'outline': 'ls',
-    'cite': 'ls',
-    'dates': 'ls',
-    'summary': 's',
-    'text': 's',
-    'bibkey': 's',
-    'bibtex': 's',
-    'ris': 's',
-    'inline': 's',
-    'note': 's',
-    'url': 's'
-}
-
-ZETTEL_FIELDS = list(ZFIELDS.keys())
-
-# This is for showing data structures only.
-
 
 def get_argparse():
     parser = argparse.ArgumentParser()
@@ -52,23 +25,6 @@ def get_argparse():
 
 import pprint
 printer = pprint.PrettyPrinter(indent=2)
-
-#
-# Flattens a list of text. Any item not text is converted to text forcibly,
-# if necessary.
-#
-
-
-def flatten(item):
-    if item == None:
-        return [""]
-    if type(item) != type([]):
-        return [str(item)]
-    if len(item) == 0:
-        return item
-    else:
-        return flatten(item[0]) + flatten(item[1:])
-
 
 def unquote(text):
     return text.replace('"', '').replace("'", "")
@@ -90,30 +46,9 @@ class SQLiteFTS(object):
         self.fts_default_record = dict(
             zip(self.fts_field_names, self.fts_field_init))
 
-    def check(self, doc):
-        errors = []
-        for k in doc.keys():
-            if k not in ZFIELDS:
-                errors.append(
-                    "Field %s: Not permitted in the Zettel format" % k)
-            else:
-                if ZFIELDS[k] == 's' and not isinstance(doc[k], str):
-                    errors.append(
-                        "Field %s: A non-string type, %s, was found." % (k, type(doc[k]).__name__))
-                if ZFIELDS[k] == 'ls':
-                    if not isinstance(doc[k], (list, tuple)):
-                        errors.append(
-                            "Field %s: A non-list type, %s, was found" % (k, type(doc[k]).__name__))
-                    else:
-                        item_pos = 0
-                        for item in doc[k]:
-                            if not isinstance(item, str):
-                                errors.append("Field %s: A non-string list entry of type %s was found at position %d" % (
-                                    k, type(item).__name__, item_pos))
-                            item_pos = item_pos + 1
-        return errors
-
-    def bind(self, doc):
+    def bind(self, zettel, filename):
+        doc = zettel.get_indexed_representation()
+        doc['filename'] = filename
         self.record = self.fts_default_record.copy()
         for k in doc.keys():
             if k in self.record.keys():
@@ -137,19 +72,10 @@ class SQLiteFTS(object):
 
     def insert_into_table(self):
         sql_params = ",".join(self.fts_fields.values())
-        #print("record keys")
-        # printer.pprint(self.record.keys())
-        #print("\nvalues only")
-        # printer.pprint(self.record.values())
-        sql_insert_values = [",".join(flatten(value))
-                             for value in list(self.record.values())]
         sql_columns = ",".join(list(self.record.keys()))
-        # print(sql_columns)
+        sql_insert_values = list(self.record.values())
         insert_sql = "INSERT INTO zettels (%s) VALUES (%s)" % (
             sql_columns, sql_params)
-        # print(self.record.keys())
-        # printer.pprint(sql_insert_values)
-        # print(insert_sql)
         self.cursor.execute(insert_sql, sql_insert_values)
         self.conn.commit()
 
@@ -189,4 +115,4 @@ class FNF(Exception):
 
 
 def get(db_name):
-    return SQLiteFTS(db_name, 'zettels', ZETTEL_FIELDS)
+    return SQLiteFTS(db_name, 'zettels', ZettelSQLFields)
