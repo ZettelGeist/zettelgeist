@@ -11,7 +11,7 @@ import sqlite3
 
 from zettelgeist import zettel
 
-ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
+ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename', 'entry']
 
 # Default Zettel DB name
 ZDB = 'zettels.db'
@@ -46,9 +46,9 @@ class SQLiteFTS(object):
         self.fts_default_record = dict(
             zip(self.fts_field_names, self.fts_field_init))
 
-    def bind(self, zettel, filename):
+    def bind(self, zettel, filename, entry):
         doc = zettel.get_indexed_representation()
-        doc['filename'] = filename
+        doc.update({ 'filename' : filename, 'entry' : str(entry) })
         self.record = self.fts_default_record.copy()
         for k in doc.keys():
             if k in self.record.keys():

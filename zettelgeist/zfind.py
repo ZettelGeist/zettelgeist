@@ -41,7 +41,7 @@ def main():
 	    for field in row.keys():
 	        show_field = "show_" + field
 	        if argsd.get(show_field, None):
-	            if len(row[field]) > 0:
+	            if row[field]:
 	                print("%s:" % field)
 	                print(row[field])
 	                print()

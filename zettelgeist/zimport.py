@@ -45,7 +45,7 @@ def main():
                 print("- YAML loaded but could not be processed")
                 continue
 
-            ydoc_id = 0
+            fass_id = zettel.gen_id()
             for ydoc in ydocs:
                 if isinstance(ydoc, dict):
                     try:
@@ -54,10 +54,13 @@ def main():
                         error_text = str(error)
                         print("%s:\n%s" % (filepath, error_text))
                         continue
+                    finally:
+                        this_fass_id = next(fass_id)
+
                     if not args.validate:
-                        db.bind(z, filename)
+                        print("%s: fass entry %d" % (filename, this_fass_id))
+                        db.bind(z, filename, this_fass_id)
                         db.insert_into_table()
-                ydoc_id = ydoc_id + 1
 
     db.done()
 
