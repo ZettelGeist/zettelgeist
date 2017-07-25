@@ -177,13 +177,14 @@ class ZettelStringRequired(Exception):
 
 def get_argparse():
     parser = argparse.ArgumentParser()
+
     for field in ZettelStringFields:
         parser.add_argument('--set-%s' %
                             field, help="set the value of field %s" % field)
         parser.add_argument('--delete-%s' % field, action="store_true",
                             help="delete field %s" % field, default=False)
         parser.add_argument('--load-%s' %
-                            field, help="load field from %s" % field)
+                            field, help="load field %s from filename" % field)
 
     for field in ZettelListFields:
         parser.add_argument('--reset-%s' % field, action="store_true",
@@ -198,6 +199,11 @@ def get_argparse():
 
     parser.add_argument('--set-dates', nargs='+', type=str, metavar=('YEAR', 'ERA'),
                         help="set dates; YEAR required - ERA is optional (extra arguments beyond the 2nd are ignored but allowed")
+    for field in ZettelFieldsOrdered:
+        parser.add_argument('--prompt-%s' % field, action="store_true",
+                            help="prompt for input of %s" % field,
+                            default=False)
+
 
     parser.add_argument('--file', nargs='?',
                         help='Zettel file (.yaml) to process')
@@ -224,6 +230,17 @@ def flatten(item):
     else:
         return flatten(item[0]) + flatten(item[1:])
 
+def prompt(field):
+    print("Enter text for %s. ctrl-d to end." % field)
+    lines = []
+    while True:
+        try:
+            line = input("%s> " % field)
+            lines.append(line)
+        except EOFError:
+            print()
+            break
+    return lines
 
 class Zettel(object):
 
@@ -416,6 +433,27 @@ def process_zettel_command_line_options(z, vargs, id):
             set_what = arg[len("set_"):]
             value = vargs[arg].replace(r"\n", "\n")
             z.set_field(set_what, value)
+
+        elif arg.startswith("prompt_"):
+            prompt_field = arg[len("prompt_"):]
+            lines = prompt(prompt_field)
+            if prompt_field in ZettelStringFields:
+                z.set_field(prompt_field, "\n".join(lines))
+            elif prompt_field in ZettelListFields:
+                for line in lines:
+                    z.append_list_field(prompt_field, line)
+            elif prompt_field == "dates":
+                if len(lines) > 0:
+                    try:
+                        z.set_dates(lines[0], lines[1])
+                    except:
+                        z.set_dates(lines[0])
+            elif prompt_field == "cite":
+                if len(lines) > 0:
+                    try:
+                        z.set_citation(lines[0], lines[1])
+                    except:
+                        z.set_citation(lines[0])
 
         if arg.startswith("append_"):
             append_what = arg[len("append_"):]
