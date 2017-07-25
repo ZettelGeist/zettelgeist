@@ -4,6 +4,7 @@
 
 import sys
 import argparse
+import readline # for input()
 import yaml
 from time import strftime
 
