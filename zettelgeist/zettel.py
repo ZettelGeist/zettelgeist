@@ -415,7 +415,6 @@ def gen_id():
         id = id + 1
 
 
-# TODO Remove Fass features.
 def gen_new_zettels(args):
     vargs = vars(args)
     id_gen = gen_id()
