@@ -4,7 +4,7 @@
 
 import sys
 import argparse
-import readline # for input()
+import readline  # for input()
 import yaml
 from time import strftime
 
@@ -90,6 +90,8 @@ def parse_string_field(doc, field, required=False):
     if not isinstance(value, str):
         raise ParseError("Field %s must be a string or not present at all - found value %s of type %s" %
                          (field, value, typename(value)))
+    if len(value) == 0:
+        raise ParseError("Field %s is an empty string. Not permitted." % field)
 
 
 def parse_list_of_string_field(doc, field, required=False):
@@ -108,6 +110,7 @@ def parse_list_of_string_field(doc, field, required=False):
     pos = 0
     for item in value:
         doc2["%s(%d)" % (field, pos)] = item
+        pos = pos + 1
     for key in doc2.keys():
         parse_string_field(doc2, key, True)
 
@@ -195,8 +198,8 @@ def get_argparse():
         parser.add_argument('--append-%s' %
                             field, nargs="+", help="add value to list field %s" % field)
 
-    parser.add_argument('--set-citation', nargs='+', type=str, metavar=('BIBKEY', 'PAGES'),
-                        help="set citation - first arg is bibkey, rest are page numbers or ranges (no commas), e.g. Turing1936 ii-iv 36 1-25")
+    parser.add_argument('--set-cite', nargs='+', type=str, metavar=('BIBKEY', 'PAGES'),
+                        help="set citation BIBKEY [ PAGE* ] - leave blank to override existing BIBKEY")
 
     parser.add_argument('--set-dates', nargs='+', type=str, metavar=('YEAR', 'ERA'),
                         help="set dates; YEAR required - ERA is optional (extra arguments beyond the 2nd are ignored but allowed")
@@ -204,7 +207,6 @@ def get_argparse():
         parser.add_argument('--prompt-%s' % field, action="store_true",
                             help="prompt for input of %s" % field,
                             default=False)
-
 
     parser.add_argument('--file', nargs='?',
                         help='Zettel file (.yaml) to process')
@@ -214,7 +216,8 @@ def get_argparse():
 
     parser.add_argument('--now', action="store_true", default=False,
                         help="Write output to file named by current time (must not exist a priori)")
-    parser.add_argument('--now-id', nargs=1, help="Append suffix to now filename")
+    parser.add_argument('--now-id', nargs=1,
+                        help="Append suffix to now filename")
     return parser
 
 
@@ -231,6 +234,7 @@ def flatten(item):
     else:
         return flatten(item[0]) + flatten(item[1:])
 
+
 def prompt(field):
     print("Enter text for %s. ctrl-d to end." % field)
     lines = []
@@ -242,6 +246,7 @@ def prompt(field):
             print()
             break
     return lines
+
 
 class Zettel(object):
 
@@ -280,6 +285,40 @@ class Zettel(object):
         if page != None:
             citation['page'] = page
         self.zettel['cite'] = citation
+        parse_zettel(self.zettel)
+
+    def has_citation(self):
+        return 'cite' in self.zettel
+
+    def set_cite_bibkey(self, bibkey):
+        if len(bibkey) == 0:
+            return
+        if self.has_citation():
+            self.zettel['cite']['bibkey'] = bibkey
+        parse_zettel(self.zettel)
+
+    def set_cite_page(self, page):
+        if len(page) == 0:
+            return
+        if self.has_citation():
+            self.zettel['cite']['page'] = page
+        parse_zettel(self.zettel)
+
+    def has_dates(self):
+        return 'dates' in self.zettel
+
+    def set_dates_year(self, year):
+        if len(year) == 0:
+            return
+        if self.has_dates():
+            self.zettel['dates']['year'] = year
+        parse_zettel(self.zettel)
+
+    def set_dates_era(self, era):
+        if len(era) == 0:
+            return
+        if self.has_dates():
+            self.zettel['dates']['era'] = era
         parse_zettel(self.zettel)
 
     def set_dates(self, year, era=None):
@@ -349,20 +388,24 @@ def main():
     parser = get_argparse()
     args = parser.parse_args()
     z_generator = gen_new_zettels(args)
-        
+
     if args.save:
         print("Zettel saved to %s" % args.save[0])
         outfile = open(args.save[0], "w")
     elif args.now:
         if args.now_id:
-           filename = strftime("%Y%m%d%H%M%S") + "-%s.yaml" % args.now_id[0]
+            filename = strftime("%Y%m%d%H%M%S") + "-%s.yaml" % args.now_id[0]
         else:
-           filename = strftime("%Y%m%d%H%M%S.yaml")
+            filename = strftime("%Y%m%d%H%M%S.yaml")
         print("Zettel saved to %s" % filename)
         outfile = open(filename, "w")
     else:
         outfile = sys.stdout
-    outfile.write("---\n".join([z.get_yaml() for z in z_generator]))
+
+    try:
+        outfile.write(next(z_generator).get_yaml() + '\n')
+    except ParseError as error:
+        print(error)
 
 
 def gen_id():
@@ -372,6 +415,7 @@ def gen_id():
         id = id + 1
 
 
+# TODO Remove Fass features.
 def gen_new_zettels(args):
     vargs = vars(args)
     id_gen = gen_id()
@@ -413,22 +457,26 @@ def process_zettel_command_line_options(z, vargs, id):
     for arg in vargs:
         if not vargs[arg]:
             continue
-        if arg == "set_citation":
+        if arg == "set_cite":
             cite_info = vargs[arg]
             bibkey = cite_info[0]
-            try:
-                pages = ",".join(cite_info[1:])
-            except:
-                pass
-            z.set_citation(bibkey, pages)
+            pages = ",".join(cite_info[1:])
+
+            if z.has_citation():
+                z.set_cite_bibkey(bibkey)
+                z.set_cite_page(pages)
+            else:
+                z.set_citation(bibkey, pages)
+
         elif arg == "set_dates":
             date_info = vargs[arg]
             year = date_info[0]
-            try:
-                era = date_info[1]
+            era = ','.join(date_info[1:])
+            if z.has_dates():
+                z.set_dates_year(year)
+                z.set_dates_era(era)
+            else:
                 z.set_dates(year, era)
-            except:
-                z.set_dates(year)
 
         elif arg.startswith("set_"):
             set_what = arg[len("set_"):]
