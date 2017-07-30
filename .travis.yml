@@ -8,4 +8,4 @@ install: "pip install -r requirements.txt"
 before_script: export PYTHONPATH=$PYTHONPATH:$(pwd)
 script: pytest -v
 notifications:
-  slack: luccsresearch:cEA9llY9UxQJymallfIwx9ar
+  slack: zettelgeist:84fHzwcyrvujQDrF1GWJ8NMM
