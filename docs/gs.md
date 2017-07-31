@@ -197,9 +197,39 @@ zfind --database mlb.db --find-summary Chicago --count
 ...and print the `summary` and `filename` of the zettel:
 
 ```
-zfind --database mlb.db --find-summary Chicago --count --show-summary --show-filename
+zfind --database mlb.db --find-summary Chicago --count --show-filename
+filename:
+20170731132024-chicago-cubs.yaml
 
-1 Zettels matched search
+----------------------------------------
+
+filename:
+20170731155613-chicago-grey-sox.yaml
+
+----------------------------------------
+
+2 Zettels matched search
+```
+
+...and show the `summary` about the team:
+
+```
+zfind --database mlb.db --find-summary Chicago --count --show-filename --show-summary
+summary:
+Chicago Cubs
+
+filename:
+20170731132024-chicago-cubs.yaml
+
+----------------------------------------
+
+summary:
+Chicago White Sox
+
+filename:
+20170731155613-chicago-grey-sox.yaml
+
+----------------------------------------
 ```
 
 Find the terms MLB and Central in the `note` field. Upon finding a  match, show the `filename` and the `summary` fields.
