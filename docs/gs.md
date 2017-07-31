@@ -221,10 +221,10 @@ Find how many Zettels mention Chicago in the `summary` field:
 
 ```
 zfind --database mlb.db --find-summary Chicago --count
-1 Zettels matched search
+2 Zettels matched search
 ```
 
-...and print the `summary` and `filename` of the zettel:
+...and print the `summary and `filename` of the zettels:
 
 ```
 zfind --database mlb.db --find-summary Chicago --count --show-filename
@@ -241,7 +241,7 @@ filename:
 2 Zettels matched search
 ```
 
-...and show the `summary` about the team:
+...and show the `summary` about the teams:
 
 ```
 zfind --database mlb.db --find-summary Chicago --count --show-filename --show-summary
