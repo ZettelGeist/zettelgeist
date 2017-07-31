@@ -29,7 +29,7 @@ the text, especially if you are using reserved YAML characters.
 
 These all are intended to be string data, so there are no restrictions on what can be in any field; however, we will likely limit tags, mentions, dates in some way as we go forward. Fields such as bibtex, ris, or inline are also subject to validity checking.
 
-Here's an example where of a zettel where all fields are being used.
+Here's an example where of a zettel where most fields are being used.
 
 ```yaml
 title: First BIB Note for Castells
