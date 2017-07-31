@@ -7,6 +7,12 @@ import yaml
 from zettelgeist import zdb, zettel
 
 
+def get_zettels(dir):
+    for (dirpath, dirnames, filenames) in os.walk(dir):
+        for filename in filenames:
+            if filename.endswith('.yaml'):
+                yield os.path.join(dirpath, filename)
+
 def main():
     parser = zdb.get_argparse()
     parser.add_argument(
@@ -22,17 +28,16 @@ def main():
 
     db = zdb.get(args.database)
 
-    for filename in os.listdir(dir):
-        if not filename.endswith('.yaml'):
-            print("Ignoring %s; add .yaml extension to import this file." % filename)
+    for filepath in get_zettels(dir):
+        if not filepath.endswith('.yaml'):
+            print("Ignoring %s; add .yaml extension to import this file." % filepath)
             continue
-        print("Importing %s" % filename)
-        filepath = os.path.join(dir, filename)
+        print("Importing %s" % filepath)
         with open(filepath) as infile:
             try:
                 text = infile.read()
             except:
-                print("- I/O error on %s: Encoding must be UTF-8" % filename)
+                print("- I/O error on %s: Encoding must be UTF-8" % filepath)
                 continue
             try:
                 ydocs = yaml.load_all(text)
@@ -55,7 +60,7 @@ def main():
                     continue
 
                 if not args.validate:
-                    db.bind(z, filename)
+                    db.bind(z, filepath)
                     db.insert_into_table()
 
     db.done()
