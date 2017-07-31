@@ -335,20 +335,29 @@ class Zettel(object):
         self.set_field(name, ''.join(text))
         parse_zettel(self.zettel)
 
-    def get_yaml(self):
+    def get_yaml(self, restrict_to_fields=ZettelFieldsOrdered):
         yaml.add_representer(quoted, quoted_presenter)
         yaml.add_representer(literal, str_presenter)
         yaml.add_representer(OrderedDict, ordered_dict_presenter)
         parse_zettel(self.zettel)
         yaml_zettel = OrderedDict()
-        for key in ZettelFieldsOrdered:
+        for key in ZettelFields:
             if key not in self.zettel:
+                continue
+            if key not in restrict_to_fields:
                 continue
             if key in ZettelStringFields:
                 yaml_zettel[key] = literal(self.zettel[key])
             else:
-                yaml_zettel[key] = self.zettel[key]
+                yaml_zettel[key] = self.zettel[key].copy()
         return yaml.dump(yaml_zettel, default_flow_style=False)
+
+    def get_yaml_subset(self, fields=[]):
+        z = Zettel({})
+        for field in fields:
+            z.zettel[field] = self.zettel[field].copy()
+
+
 
     def get_indexed_representation(self):
         parse_zettel(self.zettel)
