@@ -51,7 +51,7 @@ note: |-
   Line 3
 ```
 
-When setting a field to a string value as we have done for each of these fields, it is permitted to have *embedded newlines* anywhere you like. For the note we have written, we havethree input lines, each of which appears on a separate line.
+When setting a field to a string value as we have done for each of these fields, it is permitted to have *embedded newlines* anywhere you like. For the note we have written, we have three input lines, each of which appears on a separate line.
 
 YAML (the format in which Zettels are stored) provides excellent support for this concept and will take your text and indent it using a multiline string. As long as each line is indented consistently relative to the *note* key, it will be valid.
 
@@ -122,6 +122,21 @@ $ ls example/mlb
 20170731142237-colorado-rockies.yaml
 20170731143033-los-angeles-dodgers.yaml
 20170731143425-san-diego-padres.yaml
+20170731154135-baltimore-orioles.yaml
+20170731154404-boston-red-sox.yaml
+20170731154645-new-york-yankees.yaml
+20170731154837-tampa-bay-rays.yaml
+20170731155132-toronto-blue-jays.yaml
+20170731155613-chicago-grey-sox.yaml
+20170731160002-cleveland-indians.yaml
+20170731160508-detroit-tigers.yaml
+20170731160722-kansas-city-royals.yaml
+20170731160940-minnesota-twins.yaml
+20170731161550-houston-astros.yaml
+20170731161927-los-angeles-angels.yaml
+20170731162502-oakland-athletics.yaml
+20170731162806-seattle-mariners.yaml
+20170731163040-texas-rangers.yaml
 ```
 
 You may see more files than what is shown here. It's ok!
@@ -144,6 +159,21 @@ Importing 20170731141908-arizona-diamondbacks.yaml
 Importing 20170731142237-colorado-rockies.yaml
 Importing 20170731143033-los-angeles-dodgers.yaml
 Importing 20170731143425-san-diego-padres.yaml
+Importing 20170731154135-baltimore-orioles.yaml
+Importing 20170731154404-boston-red-sox.yaml
+Importing 20170731154645-new-york-yankees.yaml
+Importing 20170731154837-tampa-bay-rays.yaml
+Importing 20170731155132-toronto-blue-jays.yaml
+Importing 20170731155613-chicago-grey-sox.yaml
+Importing 20170731160002-cleveland-indians.yaml
+Importing 20170731160508-detroit-tigers.yaml
+Importing 20170731160722-kansas-city-royals.yaml
+Importing 20170731160940-minnesota-twins.yaml
+Importing 20170731161550-houston-astros.yaml
+Importing 20170731161927-los-angeles-angels.yaml
+Importing 20170731162502-oakland-athletics.yaml
+Importing 20170731162806-seattle-mariners.yaml
+Importing 20170731163040-texas-rangers.yaml
 Ignoring README.md; add .yaml extension to import this file.
 ```
 
