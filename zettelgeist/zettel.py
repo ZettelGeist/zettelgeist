@@ -357,8 +357,6 @@ class Zettel(object):
         for field in fields:
             z.zettel[field] = self.zettel[field].copy()
 
-
-
     def get_indexed_representation(self):
         parse_zettel(self.zettel)
         return {key: ",".join(flatten(self.zettel[key])) for key in self.zettel}

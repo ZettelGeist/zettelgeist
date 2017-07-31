@@ -16,6 +16,7 @@ ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
 # Default Zettel DB name
 ZDB = 'zettels.db'
 
+
 def get_argparse():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -25,6 +26,7 @@ def get_argparse():
 
 import pprint
 printer = pprint.PrettyPrinter(indent=2)
+
 
 def unquote(text):
     return text.replace('"', '').replace("'", "")
@@ -48,7 +50,7 @@ class SQLiteFTS(object):
 
     def bind(self, zettel, filename):
         doc = zettel.get_indexed_representation()
-        doc.update({ 'filename' : filename })
+        doc.update({'filename': filename})
         self.record = self.fts_default_record.copy()
         for k in doc.keys():
             if k in self.record.keys():

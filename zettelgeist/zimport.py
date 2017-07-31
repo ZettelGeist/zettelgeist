@@ -13,6 +13,7 @@ def get_zettels(dir):
             if filename.endswith('.yaml'):
                 yield os.path.join(dirpath, filename)
 
+
 def main():
     parser = zdb.get_argparse()
     parser.add_argument(
