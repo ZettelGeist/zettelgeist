@@ -80,3 +80,4 @@ url: http://zettelgeist.com
 note: Zettelgeist is a plaintext notetaking system designed for scholarly/research purposes.
 ```
 
+It's really that simple!
