@@ -219,7 +219,7 @@ def get_argparse():
                             default=False)
 
     parser.add_argument('--file', nargs='?',
-                        help='Zettel file (.yaml) to process')
+                        help='Zettel file (.yaml) to process (or check syntax)')
 
     parser.add_argument('--save', nargs=1,
                         help='Write output to specified file.')
