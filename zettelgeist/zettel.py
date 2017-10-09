@@ -94,6 +94,8 @@ def parse_string_field(doc, field, required=False):
         raise ParseError("Field %s is an empty string. Not permitted." % field)
 
 
+# TODO: There is a possible bug in list of string that allows a field to be defined as YAML none.
+
 def parse_list_of_string_field(doc, field, required=False):
     value = doc.get(field, None)
     if value == None:
@@ -279,6 +281,9 @@ class Zettel(object):
         self.zettel[name] = self.zettel.get(name, [])
         self.zettel[name].append(value)
         parse_zettel(self.zettel)
+
+    def get_list_field(self, name):
+        return self.zettel.get(name, [])
 
     def set_citation(self, bibkey, page=None):
         citation = {'bibkey': bibkey}
