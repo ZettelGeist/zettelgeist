@@ -6,7 +6,7 @@
 # This is for keyword/mention discoery in a zdb until we can decide on
 # proper z-commands and how they would work.
 
-zdb_keywords() {
+zdb_tags() {
 	sqlite3 $1 'select distinct(lower(tag)) from tags' | sort -f | uniq -i
 }
 
