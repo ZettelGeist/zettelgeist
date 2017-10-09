@@ -86,6 +86,10 @@ def parse_string_field(doc, field, required=False):
         if required:
             raise ParseError("Field %s requires a string but found %s of type %s" % (
                 field, value, typename(value)))
+        # This extra check is needed to handle situation where a YAML field is
+        # present but is null. We cannot allow it.
+        if field in doc:
+            raise ParseError("Field %s may not be (YAML) null" % field)
         return
     if not isinstance(value, str):
         raise ParseError("Field %s must be a string or not present at all - found value %s of type %s" %
@@ -101,9 +105,13 @@ def parse_list_of_string_field(doc, field, required=False):
     if value == None:
         if required:
             raise ParseError("Field %s requires a list of strings" % field)
+        # This extra check is needed to handle situation where a YAML field is
+        # present but is null. We cannot allow it.
+        if field in doc:
+            raise ParseError("Field %s may not be (YAML) null" % field)
         return
     if not isinstance(value, (list, tuple)):
-        raise ParseError("Field %s must be a list or not present at all - foudn value %s of type %s" %
+        raise ParseError("Field %s must be a list or not present at all - found value %s of type %s" %
                          (field, value, typename(value)))
 
     # Make a dictionary of the list items for checking purposes only
