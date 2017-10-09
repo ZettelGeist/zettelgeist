@@ -31,5 +31,9 @@ See the wiki for details about our requirements and basic design.
 
 How to get unique tags/mentions after running zimport:
 
+```
 sqlite3 yourdatabase.db 'select distinct(tag) from tags' | sort -f | uniq -i 
 sqlite3 yourdatabase.db 'select distinct(mention) from mentions' | sort -f | uniq -i
+```
+
+These will become two command line tools soon.
