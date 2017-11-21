@@ -134,3 +134,51 @@ class FNF(Exception):
 
 def get(db_name):
     return SQLiteFTS(db_name, ZettelSQLFields)
+
+
+
+GRAMMAR="""@@grammar::ZQUERY
+
+start = expression $ ;
+
+expression
+    =
+    | or_expr
+    | term
+    ;
+
+or_expr
+    =
+    left:expression op:'|' right:term
+    ;
+
+term
+    = 
+    | and_expr
+    | factor
+    ;
+
+and_expr
+    = left:term op:'&' right:factor
+    ;
+
+factor
+    =
+    | '(' @:expression ')'
+    | z_field
+    | nz_field
+    ;
+
+nz_field
+    = negate:'-' field:literal ':' text:literal
+    ;
+
+z_field 
+    = field:literal ':' text:literal
+    ;
+
+literal
+    = word:/\w+|"(\s+|\w+)*"/
+    ;
+"""
+

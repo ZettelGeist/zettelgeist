@@ -3,6 +3,17 @@ import readline
 import pprint
 import json
 import tatsu
+import argparse
+
+from zettelgeist import zdb, zettel
+
+def parse_options():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--prompt', action='store_const', const=True,
+                        default=False, help="enter query interactively (overrides --input))")
+    parser.add_argument('--input', help="load query from file", default=None)
+    parser.add_argument('--output', help="save compiled query for use with zfind.py", default=None)
+    return parser.parse_args()
 
 def unquote(text):
     return text.replace('"','').replace("'","")
@@ -29,12 +40,28 @@ class ZG(object):
     def or_expr(self, ast):
         return "SELECT * from (%s UNION %s)" % (ast.left, ast.right)
 
-if __name__ == '__main__':
-    grammar = open('zquery.ebnf').read()
-    parser = tatsu.compile(grammar)
+def main():
+    #grammar = open('zquery.ebnf').read()
+    parser = tatsu.compile(zdb.GRAMMAR)
 
-    sys.stderr.write("Enter a query, and I will check it's syntax\n")
-    sys.stderr.write("""e.g. >> title:Charles | title:Babbage | text:George & -text:Bob & -note:"Sir Charles"\n """)
-    input_line = input()
-    ast = parser.parse(input_line, semantics=ZG())
-    print(ast)
+    args = parse_options()
+    input_line = None
+
+    if args.prompt:
+        input_line = input("zquery> ")
+
+    elif args.input:
+        with open(args.input) as infile:
+            input_line = infile.read()
+
+    if input_line:
+        ast = parser.parse(input_line, semantics=ZG())
+        if args.output:
+            with open(args.output, "w") as outfile:
+                outfile.write(ast + "\n")
+        else:
+            print(ast)
+
+
+if __name__ == '__main__':
+    main()
