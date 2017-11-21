@@ -23,6 +23,7 @@ def main():
 
     args = parser.parse_args()
     db = zdb.get(args.database)
+    dir = args.zettel_dir
 
     for filepath in get_zettels(dir):
         if not filepath.endswith('.yaml'):
