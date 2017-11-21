@@ -22,7 +22,10 @@ if __name__ == '__main__':
     grammar = open('zquery.ebnf').read()
     parser = tatsu.compile(grammar)
 
-    ast = parser.parse('title:Charles | title:Babbage | text:George & -text:Bob & -note:"Sir Charles as phrase"', semantics=ZG())
+    print("Enter a query, and I will check it's syntax")
+    print("""e.g. >> title:Charles | title:Babbage | text:George & -text:Bob & -note:"Sir Charles" """)
+    input_line = input(">> ")
+    ast = parser.parse(input_line, semantics=ZG())
     print('# PPRINT')
     pprint.pprint(ast, indent=2, width=70)
     print()
