@@ -39,5 +39,5 @@ z_field
     ;
 
 literal
-    = word:/\w+|"[^"]*"/
+    = word:/\w+|"(\s+|\w+)*"/
     ;
