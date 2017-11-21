@@ -20,7 +20,7 @@ ZDB = 'zettels.db'
 def get_argparse():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--database', help="alternate database name", default=ZDB)
+        '--database', help="database name", required=True)
     return parser
 
 
@@ -117,6 +117,12 @@ class SQLiteFTS(object):
         Q = "SELECT * from zettels where zettels match '%s'" % fts_terms
         # print(Q)
         for row in self.cursor.execute(Q):
+            yield(row)
+
+    def fts_query(self, query_file):
+        with open(query_file) as qfile:
+            sql = qfile.read()
+        for row in self.cursor.execute(sql):
             yield(row)
 
     def done(self):

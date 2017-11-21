@@ -1,3 +1,4 @@
+import sys
 import argparse
 from zettelgeist import zdb, zettel
 
@@ -15,6 +16,8 @@ def get_argparse():
         parser.add_argument('--show-%s' % field,
                             action='store_const', const=True, default=False)
 
+    parser.add_argument('--query', help="search using query prepared by zquery",
+            default=None)
     parser.add_argument('--count', action='store_const', const=True,
                         default=False, help="Show number of Zettels matching this search")
     return parser
@@ -24,22 +27,27 @@ def main():
     parser = get_argparse()
     args = parser.parse_args()
 
+    # If there is a query file, it overrides all of the other options.
     argsd = vars(args)
-    query = []
-    for field in zdb.ZettelSQLFields:
-        exclude_field = 'exclude_' + field
-        include_field = 'find_' + field
-        if exclude_field in argsd:
-            entry = argsd.get(exclude_field)
-            if entry:
-                query.append((field, '-', entry))
-        if include_field in argsd:
-            entry = argsd.get(include_field)
-            if entry:
-                query.append((field, '', entry))
+    if not args.query:
+        query = []
+        for field in zdb.ZettelSQLFields:
+            exclude_field = 'exclude_' + field
+            include_field = 'find_' + field
+            if exclude_field in argsd:
+                entry = argsd.get(exclude_field)
+                if entry:
+                    query.append((field, '-', entry))
+            if include_field in argsd:
+                entry = argsd.get(include_field)
+                if entry:
+                    query.append((field, '', entry))
 
-    db = zdb.get(args.database)
-    gen = db.fts_search(query)
+        db = zdb.get(args.database)
+        gen = db.fts_search(query)
+    else:
+        db = zdb.get(args.database)
+        gen = db.fts_query(args.query)
 
     search_count = 0
     for row in gen:

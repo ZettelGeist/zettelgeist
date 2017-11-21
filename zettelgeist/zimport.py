@@ -17,16 +17,11 @@ def get_zettels(dir):
 def main():
     parser = zdb.get_argparse()
     parser.add_argument(
-        '--zettel-dir', help="location of Zettels (path to folder)")
+        '--zettel-dir', help="location of Zettels (path to folder)", required=True)
     parser.add_argument('--validate', action="store_true",
                         help="check Zettels only (don't import)", default=False)
 
     args = parser.parse_args()
-    dir = args.zettel_dir
-    if not dir:
-        parser.print_help()
-        sys.exit(1)
-
     db = zdb.get(args.database)
 
     for filepath in get_zettels(dir):
