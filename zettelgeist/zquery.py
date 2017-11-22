@@ -4,6 +4,7 @@ import pprint
 import json
 import tatsu
 import argparse
+import os.path
 
 from zettelgeist import zdb, zettel
 
@@ -57,8 +58,14 @@ def main():
     if input_line:
         ast = parser.parse(input_line, semantics=ZG())
         if args.output:
-            with open(args.output, "w") as outfile:
+            query_filename = ".".join([args.output, 'zq'])
+            compiled_filename = ".".join([args.output, 'sql'])
+            if os.path.exists(query_filename):
+                os.rename(query_filename, ".".join([query_filename, 'orig']))
+            with open(compiled_filename, "w") as outfile:
                 outfile.write(ast + "\n")
+            with open(query_filename, "w") as outfile:
+                outfile.write(input_line)
         else:
             print(ast)
 
