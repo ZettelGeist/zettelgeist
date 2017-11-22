@@ -65,7 +65,7 @@ def main():
             with open(compiled_filename, "w") as outfile:
                 outfile.write(ast + "\n")
             with open(query_filename, "w") as outfile:
-                outfile.write(input_line)
+                outfile.write(input_line + "\n")
         else:
             print(ast)
 
