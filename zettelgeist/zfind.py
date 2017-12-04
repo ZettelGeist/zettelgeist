@@ -6,8 +6,7 @@ from zettelgeist import zdb, zettel, zquery
 
 def get_argparse():
     parser = zdb.get_argparse()
-    parser.add_argument('--use-zettel', action='store_const',
-                        const=True, default=False)
+    parser.add_argument('--use-index', action='store_const', const=True, default=False)
 
     for field in zdb.ZettelSQLFields:
         #parser.add_argument('--find-%s' %
@@ -62,12 +61,12 @@ def main():
             print("-" * 3)
         search_count = search_count + 1
         printed_something = False
-        if args.use_zettel:
+        if args.use_index:
+            z = None
+        else:
             loader = zettel.ZettelLoader(row['filename'])
             zettels = loader.getZettels()
             z = next(zettels)
-        else:
-            z = None
 
         for field in row.keys():
             show_field = "show_" + field
@@ -76,8 +75,7 @@ def main():
                     if z and field in zettel.ZettelFields:
                         print(z.get_yaml([field]))
                     else:
-                        print("%s:" % field)
-                        print(row[field])
+                        print(zettel.dict_as_yaml({ field : row[field] }))
                     printed_something = True
 
 
