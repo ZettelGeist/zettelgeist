@@ -21,7 +21,9 @@ def get_argparse():
                         default=False, help="Show number of Zettels matching this search")
     parser.add_argument('--prompt', action='store_const', const=True,
                         default=False, help="enter query interactively (overrides --input))")
-    parser.add_argument('--input', help="load query from file", default=None)
+    parser.add_argument('--query', help="load query from file", default=None)
+    parser.add_argument('--save-query', help="save source query to file", default=None)
+    parser.add_argument('--save-sql', help="save compiled SQL to file (for developers only)", default=None)
     return parser
 
 
@@ -34,14 +36,23 @@ def main():
     if args.prompt:
         input_line = input("zquery> ")
 
-    elif args.input:
-        with open(args.input) as infile:
+    elif args.query:
+        with open(args.query) as infile:
             input_line = infile.read()
 
     if input_line:
         ast = zquery.compile(input_line)
         db = zdb.get(args.database)
         gen = db.fts_query(ast)
+        if args.save_query:
+            if args.save_query != args.query:
+                with open(args.save_query,"w") as outfile:
+                    outfile.write(input_line)
+            else:
+                print("Ignored --save-query as it would clobber existing input file %s" % args.query)
+        if args.save_sql:
+            with open(args.save_sql,"w") as outfile:
+                outfile.write(ast)
 
     search_count = 0
     for row in gen:
