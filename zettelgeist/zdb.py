@@ -119,10 +119,8 @@ class SQLiteFTS(object):
         for row in self.cursor.execute(Q):
             yield(row)
 
-    def fts_query(self, query_file):
-        with open(query_file) as qfile:
-            sql = qfile.read()
-        for row in self.cursor.execute(sql):
+    def fts_query(self, prepared_sql):
+        for row in self.cursor.execute(prepared_sql):
             yield(row)
 
     def done(self):

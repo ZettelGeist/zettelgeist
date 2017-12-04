@@ -1,6 +1,6 @@
 import sys
 import argparse
-from zettelgeist import zdb, zettel
+from zettelgeist import zdb, zettel, zquery
 
 
 def get_argparse():
@@ -9,17 +9,19 @@ def get_argparse():
                         const=True, default=False)
 
     for field in zdb.ZettelSQLFields:
-        parser.add_argument('--find-%s' %
-                            field, help='search the Zettel %s field' % field)
-        parser.add_argument('--exclude-%s' %
-                            field, help='search the Zettel %s field' % field)
+        #parser.add_argument('--find-%s' %
+        #                    field, help='search the Zettel %s field' % field)
+        #parser.add_argument('--exclude-%s' %
+        #                    field, help='search the Zettel %s field' % field)
         parser.add_argument('--show-%s' % field,
-                            action='store_const', const=True, default=False)
+                            action='store_const', const=True, default=False,
+                            help="include field <%s> in output" % field)
 
-    parser.add_argument('--query', help="search using query prepared by zquery",
-            default=None)
     parser.add_argument('--count', action='store_const', const=True,
                         default=False, help="Show number of Zettels matching this search")
+    parser.add_argument('--prompt', action='store_const', const=True,
+                        default=False, help="enter query interactively (overrides --input))")
+    parser.add_argument('--input', help="load query from file", default=None)
     return parser
 
 
@@ -29,25 +31,17 @@ def main():
 
     # If there is a query file, it overrides all of the other options.
     argsd = vars(args)
-    if not args.query:
-        query = []
-        for field in zdb.ZettelSQLFields:
-            exclude_field = 'exclude_' + field
-            include_field = 'find_' + field
-            if exclude_field in argsd:
-                entry = argsd.get(exclude_field)
-                if entry:
-                    query.append((field, '-', entry))
-            if include_field in argsd:
-                entry = argsd.get(include_field)
-                if entry:
-                    query.append((field, '', entry))
+    if args.prompt:
+        input_line = input("zquery> ")
 
+    elif args.input:
+        with open(args.input) as infile:
+            input_line = infile.read()
+
+    if input_line:
+        ast = zquery.compile(input_line)
         db = zdb.get(args.database)
-        gen = db.fts_search(query)
-    else:
-        db = zdb.get(args.database)
-        gen = db.fts_query(args.query)
+        gen = db.fts_query(ast)
 
     search_count = 0
     for row in gen:
