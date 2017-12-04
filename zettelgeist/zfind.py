@@ -1,5 +1,6 @@
 import sys
 import argparse
+import yaml
 from zettelgeist import zdb, zettel, zquery
 
 
@@ -55,7 +56,10 @@ def main():
                 outfile.write(ast)
 
     search_count = 0
+    printed_something = False
     for row in gen:
+        if printed_something:
+            print("-" * 3)
         search_count = search_count + 1
         printed_something = False
         if args.use_zettel:
@@ -74,15 +78,14 @@ def main():
                     else:
                         print("%s:" % field)
                         print(row[field])
-                        print()
                     printed_something = True
 
-        if printed_something:
-            print("-" * 40)
-            print()
 
     if args.count:
-        print("%d Zettels matched search" % search_count)
+        if printed_something:
+            print("-" * 3)
+        doc = { 'count' : search_count, 'query' : input_line }
+        print(zettel.dict_as_yaml(doc))
 
 
 if __name__ == '__main__':
