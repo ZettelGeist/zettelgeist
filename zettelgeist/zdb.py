@@ -159,12 +159,16 @@ or_expr
 term
     = 
     | and_expr
-    | not_expr
     | factor
     ;
 
 and_expr
-    = left:term op:'&' right:factor
+    = left:term op:and_op right:factor
+    ;
+
+and_op
+    = op:'&'
+    | op:'!'
     ;
 
 not_expr

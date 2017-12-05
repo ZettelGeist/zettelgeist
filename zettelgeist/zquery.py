@@ -25,13 +25,17 @@ class ZG(object):
         return "SELECT * FROM zettels WHERE zettels MATCH '%s'" % match_clause
 
     def and_expr(self, ast):
-        return "SELECT * from (%s INTERSECT %s)" % (ast.left, ast.right)
+        if ast.op == '&':
+           return "SELECT * from (%s INTERSECT %s)" % (ast.left, ast.right)
+        elif ast.op == '!':
+           return "SELECT * from (%s EXCEPT %s)" % (ast.left, ast.right)
+        # else: parser should have caught any non-op
+           
+    def and_op(self, ast):
+        return ast.op
 
     def or_expr(self, ast):
         return "SELECT * from (%s UNION %s)" % (ast.left, ast.right)
-
-    def not_expr(self, ast):
-        return "SELECT * from (%s EXCEPT %s)" % (ast.left, ast.right)
 
 def compile(input_line):
     parser = tatsu.compile(zdb.GRAMMAR)
