@@ -159,6 +159,7 @@ or_expr
 term
     = 
     | and_expr
+    | not_expr
     | factor
     ;
 
@@ -166,15 +167,14 @@ and_expr
     = left:term op:'&' right:factor
     ;
 
+not_expr
+    = left:term op:'!' right:factor
+    ;
+
 factor
     =
     | '(' @:expression ')'
     | z_field
-    | nz_field
-    ;
-
-nz_field
-    = negate:'-' field:literal ':' text:literal
     ;
 
 z_field 

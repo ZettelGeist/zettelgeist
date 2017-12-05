@@ -24,15 +24,14 @@ class ZG(object):
         match_clause = self._get_match_clause(ast,'')
         return "SELECT * FROM zettels WHERE zettels MATCH '%s'" % match_clause
 
-    def nz_field(self, ast):
-        match_clause = self._get_match_clause(ast,'-')
-        return "SELECT * FROM zettels WHERE zettels MATCH '%s'" % match_clause
-
     def and_expr(self, ast):
         return "SELECT * from (%s INTERSECT %s)" % (ast.left, ast.right)
 
     def or_expr(self, ast):
         return "SELECT * from (%s UNION %s)" % (ast.left, ast.right)
+
+    def not_expr(self, ast):
+        return "SELECT * from (%s EXCEPT %s)" % (ast.left, ast.right)
 
 def compile(input_line):
     parser = tatsu.compile(zdb.GRAMMAR)
