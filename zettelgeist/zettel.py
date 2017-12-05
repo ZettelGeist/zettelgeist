@@ -533,6 +533,7 @@ def process_zettel_command_line_options(z, vargs, id):
             z.load_field(load_what, vargs[arg])
     return z
 
+
 def dict_as_yaml(data):
     yaml.add_representer(quoted, quoted_presenter)
     yaml.add_representer(literal, str_presenter)
@@ -541,7 +542,6 @@ def dict_as_yaml(data):
     for key in data:
         presented_data[key] = data[key]
     return yaml.dump(presented_data, default_flow_style=False)
-
 
 
 if __name__ == '__main__':

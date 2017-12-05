@@ -77,13 +77,16 @@ class SQLiteFTS(object):
 
     def create_index_table(self, table_name, field_name):
         self.cursor.execute("DROP TABLE IF EXISTS %(table_name)s" % vars())
-        self.cursor.execute("CREATE TABLE %(table_name)s (%(field_name)s text)" % vars())
+        self.cursor.execute(
+            "CREATE TABLE %(table_name)s (%(field_name)s text)" % vars())
         self.conn.commit()
 
     def update_index(self, table_name, field_name, items):
-        if not items: return
+        if not items:
+            return
         for item in items:
-            self.cursor.execute("INSERT INTO %(table_name)s (%(field_name)s) VALUES (?)" % vars(), (item,))
+            self.cursor.execute(
+                "INSERT INTO %(table_name)s (%(field_name)s) VALUES (?)" % vars(), (item,))
             # NB: (item,) means to pack this item into a tuple as required by sqlite3.
 
     def insert_into_table(self):
@@ -95,7 +98,8 @@ class SQLiteFTS(object):
         self.cursor.execute(insert_sql, sql_insert_values)
         self.conn.commit()
         self.update_index('tags', 'tag', self.zettel.get_list_field('tags'))
-        self.update_index('mentions', 'mention', self.zettel.get_list_field('mentions'))
+        self.update_index('mentions', 'mention',
+                          self.zettel.get_list_field('mentions'))
 
     # A term_list is a list of 3-tuples (not-option, fieldname, word)
 
@@ -140,8 +144,7 @@ def get(db_name):
     return SQLiteFTS(db_name, ZettelSQLFields)
 
 
-
-GRAMMAR="""@@grammar::ZQUERY
+GRAMMAR = """@@grammar::ZQUERY
 
 start = expression $ ;
 
@@ -189,4 +192,3 @@ literal
     = word:/\w+|"(\s+|\w+)*"/
     ;
 """
-
