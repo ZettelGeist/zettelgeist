@@ -4,11 +4,37 @@ title: Getting Started
 permalink: /gs/
 ---
 
-ZettelGeist is only a few days old at the time of writing and is thus a work in progress. We're certainly excited about the direction in which the work is heading but at the same time don't want to commit to the interfaces you see here. At least until release (expected mid-summer) you should assume that many aspects of the interface and internals might change.
+## Install ZettelGeist
 
-Owing to the nature of our work, where we are often keeping some proprietary materials in actual Zettels (that is, our notes), we cannot provide actual data files for you at this time. You most certainly can write your own notes based on literature you might be reviewing for your own scholarly project but we cannot provide any of our data sets (yet).
+ZettelGeist is now in beta, with pip/easy_install support to come shortly.
 
-Luckily, we have a script that can *generate* some test data for you. The instructions here assume you have done a checkout or download of the ZettelGeist system and installed any needed dependencies. That is covered on our Installation page (or will be soon).
+To get started, you need a functioning Python 3 setup on your computer. We won't ever support Python2, so please dont ask. We're not covering the details of Python 3 installation here. 
+
+We are also a Mac/Linux based development effort. Windows users interested in following us should use Windows Subsystem for Linux. We will only test on WSL and have no plans to support Windows native Python.
+
+We recommend setting up a virtual environment to avoid contaminating your global Python setup.
+
+```shell
+$ virtualenv ~/zenv
+$ source ~/zenv/bin/activate
+```
+
+Checkout and build zettelgeist. It's quick and painless.
+
+```shell
+$ git clone https://github.com/ZettelGeist/zettelgeist.git
+$ cd zettelgeist
+$ python setup.py install
+```
+
+Note: If you are installing to your global OS Python setup, you may need to put `sudo` in front of `python` in the above.
+
+Once you have run `setup.py`, you can verify that things are in proper working order as follows:
+
+```shell
+$ which zcreate
+/Users/gkt/zenv/bin/zcreate
+```
 
 ## Create some Zettels
 
