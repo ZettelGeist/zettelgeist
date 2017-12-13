@@ -9,7 +9,7 @@ import os
 import os.path
 import sqlite3
 
-from zettelgeist import zettel
+from . import zettel
 
 ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
 

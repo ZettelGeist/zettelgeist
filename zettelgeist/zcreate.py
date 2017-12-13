@@ -2,7 +2,7 @@
 
 import os.path
 import argparse
-from zettelgeist import zdb
+from . import zdb
 
 
 def parse_options():
