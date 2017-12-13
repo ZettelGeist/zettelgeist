@@ -17,14 +17,16 @@ We recommend setting up a virtual environment to avoid contaminating your global
 ```shell
 $ virtualenv ~/zenv
 $ source ~/zenv/bin/activate
+(zenv) $
 ```
 
 Checkout and build zettelgeist. It's quick and painless.
 
 ```shell
-$ git clone https://github.com/ZettelGeist/zettelgeist.git
-$ cd zettelgeist
-$ python setup.py install
+(zenv) $ git clone https://github.com/ZettelGeist/zettelgeist.git
+(zenv) $ cd zettelgeist
+(zenv) $ python setup.py install
+(zenv) $
 ```
 
 Note: If you are installing to your global OS Python setup, you may need to put `sudo` in front of `python` in the above.
@@ -32,7 +34,7 @@ Note: If you are installing to your global OS Python setup, you may need to put 
 Once you have run `setup.py`, you can verify that things are in proper working order as follows:
 
 ```shell
-$ which zcreate
+(zenv) $ which zcreate
 /Users/gkt/zenv/bin/zcreate
 ```
 
