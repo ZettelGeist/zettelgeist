@@ -4,7 +4,7 @@ import os
 import os.path
 import sys
 import yaml
-from zettelgeist import zdb, zettel
+from . import zdb, zettel
 
 
 def get_zettels(dir):
@@ -17,15 +17,15 @@ def get_zettels(dir):
 def main():
     parser = zdb.get_argparse()
     parser.add_argument(
-        '--zettel-dir', help="location of Zettels (path to folder)", required=True)
+        '--dir', help="location of Zettels (path to folder)", required=True)
     parser.add_argument('--validate', action="store_true",
                         help="check Zettels only (don't import)", default=False)
 
     args = parser.parse_args()
     db = zdb.get(args.database)
-    dir = args.zettel_dir
+    zettel_dir = args.dir
 
-    for filepath in get_zettels(dir):
+    for filepath in get_zettels(zettel_dir):
         if not filepath.endswith('.yaml'):
             print("Ignoring %s; add .yaml extension to import this file." % filepath)
             continue

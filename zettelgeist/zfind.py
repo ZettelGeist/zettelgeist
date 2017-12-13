@@ -1,13 +1,15 @@
 import sys
 import argparse
 import yaml
-from zettelgeist import zdb, zettel, zquery
+from . import zdb, zettel, zquery
 
 
 def get_argparse():
     parser = zdb.get_argparse()
     parser.add_argument('--use-index', action='store_const',
                         const=True, default=False)
+    parser.add_argument('--verbatim', action='store_const',
+            const=True, default=False)
 
     for field in zdb.ZettelSQLFields:
         # parser.add_argument('--find-%s' %
@@ -76,7 +78,9 @@ def main():
             show_field = "show_" + field
             if argsd.get(show_field, None):
                 if row[field]:
-                    if z and field in zettel.ZettelFields:
+                    if args.verbatim:
+                        print(row[field])
+                    elif z:
                         print(z.get_yaml([field]))
                     else:
                         print(zettel.dict_as_yaml({field: row[field]}))

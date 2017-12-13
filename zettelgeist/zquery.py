@@ -6,7 +6,7 @@ import tatsu
 import argparse
 import os.path
 
-from zettelgeist import zdb, zettel
+from . import zdb, zettel
 
 
 def unquote(text):
