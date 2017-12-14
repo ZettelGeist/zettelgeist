@@ -49,10 +49,11 @@ pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://
 ```
 
 You _might_ need to use `sudo`, if you are installing to your global Python
-setup:
+setup. Please try without sudo first, especially if you set up Python 3 using 
+Homebrew on a Mac, or you are installing to a virtualenv.
 
 ```shell
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple zettelgeist
+sudo pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple zettelgeist
 ```
 
 ## Create some Zettels
