@@ -4,23 +4,23 @@ title: Getting Started
 permalink: /gs/
 ---
 
-## Install ZettelGeist
+## Install ZettelGeist from Source
 
-ZettelGeist is now in beta, with pip/easy_install support to come shortly.
+ZettelGeist is now in beta, but we're approaching 1.0.
 
-To get started, you need a functioning Python 3 setup on your computer. We won't ever support Python2, so please dont ask. We're not covering the details of Python 3 installation here. 
+Prerequisites:
+- Make sure Python 3 is installed. We also recommend virtualenv.
+- Python 2 support is not planned.
+- Windows users should use [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10). We have no plans to support the native Windows Python implementations.
 
-We are also a Mac/Linux based development effort. Windows users interested in following us should use Windows Subsystem for Linux. We will only test on WSL and have no plans to support Windows native Python.
-
-We recommend setting up a virtual environment to avoid contaminating your global Python setup.
-
+Create a virtualenv for ZettelGeist work:
 ```shell
 $ virtualenv ~/zenv
 $ source ~/zenv/bin/activate
 (zenv) $
 ```
 
-Checkout and build zettelgeist. It's quick and painless.
+Checkout and build ZettelGeist in the new virtualenv:
 
 ```shell
 (zenv) $ git clone https://github.com/ZettelGeist/zettelgeist.git
@@ -29,13 +29,30 @@ Checkout and build zettelgeist. It's quick and painless.
 (zenv) $
 ```
 
-Note: If you are installing to your global OS Python setup, you may need to put `sudo` in front of `python` in the above.
-
-Once you have run `setup.py`, you can verify that things are in proper working order as follows:
+Ensure at least one of our binaries can be found:
 
 ```shell
 (zenv) $ which zcreate
 /Users/gkt/zenv/bin/zcreate
+```
+
+## Install via pip (from the Test PyPI server)
+
+This is only recommended for folks who wish to act only as users and avoid
+working with `git`, `python`, and `virtualenv`.
+
+We also note that this is being deployed on the _test_ PyPI servers. We should be moving to the production server soon.
+The lowdown is that you should assume absolutely nothing about the long-term support for the following. In other words, you will likely have to re-run this command once we move to the production PyPI server.
+
+```shell
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple zettelgeist
+```
+
+You _might_ need to use `sudo`, if you are installing to your global Python
+setup:
+
+```shell
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple zettelgeist
 ```
 
 ## Create some Zettels
