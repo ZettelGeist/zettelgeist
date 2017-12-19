@@ -4,57 +4,25 @@ title: Getting Started
 permalink: /gs/
 ---
 
-## Install ZettelGeist from Source
+## Install via pip
 
-ZettelGeist is now in beta, but we're approaching 1.0.
+ZettelGeist should be installed via `pip` for all new users. Installation
+in a virtualenv is strongly recommended (but not covered here).
 
-Prerequisites:
-- Make sure Python 3 is installed. We also recommend virtualenv.
-- Python 2 support is not planned.
-- Windows users should use [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10). We have no plans to support the native Windows Python implementations.
-
-Create a virtualenv for ZettelGeist work:
-```shell
-$ virtualenv ~/zenv
-$ source ~/zenv/bin/activate
-(zenv) $
-```
-
-Checkout and build ZettelGeist in the new virtualenv:
+Python 3 is required.
 
 ```shell
-(zenv) $ git clone https://github.com/ZettelGeist/zettelgeist.git
-(zenv) $ cd zettelgeist
-(zenv) $ python setup.py install
-(zenv) $
+pip install zettelgeist
 ```
 
-Ensure at least one of our binaries can be found:
+This will install the z-scripts to your `bin` directory so you can run
+the commands in this getting stated page.
 
-```shell
-(zenv) $ which zcreate
-/Users/gkt/zenv/bin/zcreate
-```
+## Install from Repository
 
-## Install via pip (from the Test PyPI server)
-
-This is only recommended for folks who wish to act only as users and avoid
-working with `git`, `python`, and `virtualenv`.
-
-We also note that this is being deployed on the _test_ PyPI servers. We should be moving to the production server soon.
-The lowdown is that you should assume absolutely nothing about the long-term support for the following. In other words, you will likely have to re-run this command once we move to the production PyPI server.
-
-```shell
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple zettelgeist
-```
-
-You _might_ need to use `sudo`, if you are installing to your global Python
-setup. Please try without sudo first, especially if you set up Python 3 using 
-Homebrew on a Mac, or you are installing to a virtualenv.
-
-```shell
-sudo pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple zettelgeist
-```
+You can checkout ZettelGeist from GitHub and run the `setup.py` script to
+`install`. This is for experts only and no details are covered here in the
+interests of focusing on users (as opposed to developer-users).
 
 ## Create some Zettels
 
