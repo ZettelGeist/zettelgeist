@@ -8,8 +8,6 @@ def get_argparse():
     parser = zdb.get_argparse()
     parser.add_argument('--use-index', action='store_const',
                         const=True, default=False)
-    parser.add_argument('--verbatim', action='store_const',
-            const=True, default=False)
 
     for field in zdb.ZettelSQLFields:
         # parser.add_argument('--find-%s' %
@@ -65,8 +63,6 @@ def main():
     for row in gen:
         if printed_something:
             print("-" * 3)
-        search_count = search_count + 1
-        printed_something = False
         if args.use_index:
             z = None
         else:
@@ -74,17 +70,24 @@ def main():
             zettels = loader.getZettels()
             z = next(zettels)
 
-        for field in row.keys():
+        for field in zettel.ZettelFields:
             show_field = "show_" + field
             if argsd.get(show_field, None):
                 if row[field]:
-                    if args.verbatim:
-                        print(row[field])
-                    elif z:
+                    if z:
                         print(z.get_yaml([field]))
                     else:
                         print(zettel.dict_as_yaml({field: row[field]}))
                     printed_something = True
+
+        # The filename is a special case as it is not stored in the Zettel
+        # Might rethink this at some point.
+
+        if argsd.get("show_filename"):
+            print(zettel.dict_as_yaml({"filename": row["filename"]}))
+            printed_something = True
+
+        search_count = search_count + 1
 
     if args.count:
         if printed_something:
