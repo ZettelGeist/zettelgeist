@@ -11,6 +11,11 @@ import sqlite3
 
 from . import zettel
 
+__version__ = "0.9.5"
+
+def version():
+    return __version__
+
 ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
 
 # Default Zettel DB name
