@@ -1,17 +1,17 @@
 # setup.py - placeholder for eventual setup script
 
 from setuptools import setup
+from zettelgeist import zdb
 
 setup(
     name='zettelgeist',
     packages=['zettelgeist'],
-    version='0.9.2',
+    version=zdb.version(),
     description='ZettelGeist - a historiographically focused notetaking system',
     author='ZettelGeist Laboratories',
     author_email='gkt@cs.luc.edu',
     license='Apache License 2.0',
     url='https://github.com/zettelgeist/zettelgeist',
-    #download_url='https://github.com/zettelgeist/zegttelgeist/archive/0.9.tar.gz',
     keywords=['notetaking', 'YAML', 'Markdown', 'sqlite3', 'GitHub'],
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -23,8 +23,12 @@ setup(
         'PyYAML',
         'tatsu'
     ],
-    scripts=['bin/zcreate',
-             'bin/zimport',
-             'bin/zfind',
-             'bin/zettel']
+    entry_points = {
+        'console_scripts': [
+            'zcreate = zettelgeist.zcreate:main',
+            'zimport = zettelgeist.zimport:main',
+            'zfind = zettelgeist.zfind:main',
+            'zettel = zettelgeist.zettel:main'
+            ]
+    }
 )
