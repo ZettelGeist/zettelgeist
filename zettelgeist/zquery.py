@@ -5,6 +5,8 @@ import json
 import tatsu
 import argparse
 import os.path
+import tempfile
+import pprint
 
 from . import zdb, zettel
 
@@ -39,8 +41,60 @@ class ZG(object):
     def or_expr(self, ast):
         return "SELECT * from (%s UNION %s)" % (ast.left, ast.right)
 
+def get_temp_table_name():
+    return os.path.split(tempfile.mktemp())[1]
+
+class ZG2(object):
+    def __init__(self, select_fields = ["docid"]):
+        self.queries = {}
+        self.select_fields = ",".join(select_fields)
+        self.temp_table_name = get_temp_table_name()
+        self.create_temp_table_clause = "CREATE TABLE %s AS %%s" % self.temp_table_name
+        self.drop_table_statement = "DROP TABLE IF EXISTS %s" % self.temp_table_name
+
+    def get_sql(self, compiled_query):
+        statements = []
+        statements.append(self.drop_table_statement)
+        statements.append(self.create_temp_table_clause % compiled_query)
+        for field in self.queries:
+            statements = statements + self.queries[field]
+        return ";\n\n".join(statements) + ";"
+
+    def literal(self, ast):
+        return ast.word
+
+    def _get_match_clause(self, ast, negate):
+        text = unquote(ast.text)
+        words = text.split()
+        return " NEAR/1 ".join(["%s%s:%s" % (negate, ast.field, word) for word in words])
+
+    def z_field(self, ast):
+        match_clause = self._get_match_clause(ast, '')
+        query_list = self.queries.get(ast.field, [])
+        field_query = "SELECT docid FROM zettels WHERE zettels MATCH '%s'" % match_clause
+        context_query = """SELECT docid, snippet(zettels, '[', ']', '...', -1, -30) as %s FROM zettels WHERE zettels MATCH '%s' AND docid IN (SELECT docid FROM %s)"""% (ast.field, match_clause, self.temp_table_name)
+        query_list.append(context_query)
+        self.queries[ast.field] = query_list
+        return field_query
+
+    def and_expr(self, ast):
+        if ast.op == '&':
+            return "SELECT %s from (%s INTERSECT %s)" % (self.select_fields, ast.left, ast.right)
+        elif ast.op == '!':
+            return "SELECT %s from (%s EXCEPT %s)" % (self.select_fields, ast.left, ast.right)
+        # else: parser should have caught any non-op
+
+    def and_op(self, ast):
+        return ast.op
+
+    def or_expr(self, ast):
+        return "SELECT %s from (%s UNION %s)" % (self.select_fields, ast.left, ast.right)
+
 
 def compile(input_line):
     parser = tatsu.compile(zdb.GRAMMAR)
-    ast = parser.parse(input_line, semantics=ZG())
+    zg_semantics = ZG()
+    ast = parser.parse(input_line, semantics=zg_semantics)
+    # This works only for ZG2 semantics (not ZG)
+    # print(zg_semantics.get_sql(ast))
     return ast
