@@ -51,14 +51,14 @@ class ZG2(object):
         self.temp_table_name = get_temp_table_name()
         self.create_temp_table_clause = "CREATE TABLE %s AS %%s" % self.temp_table_name
         self.drop_table_statement = "DROP TABLE IF EXISTS %s" % self.temp_table_name
+        self.select_all = "SELECT docid from %s" % self.temp_table_name
 
-    def get_sql(self, compiled_query):
-        statements = []
-        statements.append(self.drop_table_statement)
-        statements.append(self.create_temp_table_clause % compiled_query)
-        for field in self.queries:
-            statements = statements + self.queries[field]
-        return ";\n\n".join(statements) + ";"
+    def get_create_sql(self, compiled_query):
+        return [self.drop_table_statement,  self.create_temp_table_clause % compiled_query, self.select_all]
+
+    def get_field_query_sql(self, field):
+        default = """SELECT docid, %s FROM zettels WHERE docid = %%s""" % field
+        return self.queries.get(field, [default])
 
     def literal(self, ast):
         return ast.word
@@ -72,7 +72,7 @@ class ZG2(object):
         match_clause = self._get_match_clause(ast, '')
         query_list = self.queries.get(ast.field, [])
         field_query = "SELECT docid FROM zettels WHERE zettels MATCH '%s'" % match_clause
-        context_query = """SELECT docid, snippet(zettels, '[', ']', '...', -1, -30) as %s FROM zettels WHERE zettels MATCH '%s' AND docid IN (SELECT docid FROM %s)"""% (ast.field, match_clause, self.temp_table_name)
+        context_query = """SELECT docid, snippet(zettels, '*', '*', '...', -1, -30) as %s FROM zettels WHERE zettels MATCH '%s' AND docid = %%s"""% (ast.field, match_clause)
         query_list.append(context_query)
         self.queries[ast.field] = query_list
         return field_query
@@ -95,6 +95,10 @@ def compile(input_line):
     parser = tatsu.compile(zdb.GRAMMAR)
     zg_semantics = ZG()
     ast = parser.parse(input_line, semantics=zg_semantics)
-    # This works only for ZG2 semantics (not ZG)
-    # print(zg_semantics.get_sql(ast))
-    return ast
+    return (ast, zg_semantics)
+
+def compile2(input_line):
+    parser = tatsu.compile(zdb.GRAMMAR)
+    zg_semantics = ZG2()
+    ast = parser.parse(input_line, semantics=zg_semantics)
+    return (ast, zg_semantics)

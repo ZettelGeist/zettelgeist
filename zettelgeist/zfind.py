@@ -17,6 +17,7 @@ def get_argparse():
         parser.add_argument('--show-%s' % field,
                             action='store_const', const=True, default=False,
                             help="include field <%s> in output" % field)
+        parser.add_argument('--snip-count-%s' % field, type=int, default=100, help="Set snip width for field %s (defaults to 100)" % field)
 
     parser.add_argument('--count', action='store_const', const=True,
                         default=False, help="Show number of Zettels matching this search")
@@ -44,9 +45,15 @@ def main():
             input_line = infile.read()
 
     if input_line:
-        ast = zquery.compile(input_line)
+        (ast, semantics) = zquery.compile(input_line)
+        (ast2, semantics2) = zquery.compile2(
+            input_line)  # This duplication is temporary
         db = zdb.get(args.database)
-        gen = db.fts_query(ast)
+        gen = None
+        for statement in semantics2.get_create_sql(ast2):
+            #print("executing", statement)
+            gen = list(db.fts_query(statement))
+
         if args.save_query:
             if args.save_query != args.query:
                 with open(args.save_query, "w") as outfile:
@@ -60,9 +67,17 @@ def main():
 
     search_count = 0
     printed_something = False
-    for row in gen:
+    for outer in gen:
+        inner_gen = db.fts_query(
+            "SELECT *,docid from zettels where docid = %s" % outer['docid'])
+        
+        # no loop for this generator, because it only returns one row
+        row = next(inner_gen)
+        #print(">>> RESULT ROW/%s" % outer['docid'])
+
         if printed_something:
             print("-" * 3)
+
         if args.use_index:
             z = None
         else:
@@ -72,20 +87,35 @@ def main():
 
         for field in zettel.ZettelFields:
             show_field = "show_" + field
+            snip_field = "snip_" + field
             if argsd.get(show_field, None):
-                if row[field]:
-                    if z:
-                        print(z.get_yaml([field]))
-                    else:
-                        print(zettel.dict_as_yaml({field: row[field]}))
+                for query in semantics2.get_field_query_sql(field):
+                    rgen = db.fts_query(query % row['docid'])
+                    #print(">> SQL-standard-fields/%s" % field, query % row['docid'])
+                    for result in rgen:
+                        if result[field]:
+                            if z:
+                                print(z.get_yaml([field]))
+                            else:
+                                print(zettel.dict_as_yaml(
+                                    {field: result[field]}))
+                            printed_something = True
+
+            # if argsd.get(snip_field, None):
+            #    for query in semantics2.get_field_query_sql(field):
+            #    	print(">> MATCH QUERY %s" % field, query % row['docid'])
+
+        if argsd.get("show_filename"):
+            for query in semantics2.get_field_query_sql('filename'):
+                #print(">> SQL-filename/%s" % field, query % row['docid'])
+                rgen = db.fts_query(query % row['docid'])
+                for result in rgen:
+                    print(zettel.dict_as_yaml(
+                        {"filename": result["filename"]}))
                     printed_something = True
 
         # The filename is a special case as it is not stored in the Zettel
         # Might rethink this at some point.
-
-        if argsd.get("show_filename"):
-            print(zettel.dict_as_yaml({"filename": row["filename"]}))
-            printed_something = True
 
         search_count = search_count + 1
 
