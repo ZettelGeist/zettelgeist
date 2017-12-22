@@ -99,6 +99,10 @@ zettels.db
 *.log
 *~
 
+# vim
+*.swp
+*.swo
+
 # sbt specific
 .cache
 .history
