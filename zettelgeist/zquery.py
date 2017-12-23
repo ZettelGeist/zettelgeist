@@ -53,10 +53,14 @@ class ZG2(object):
         self.drop_table_statement = "DROP TABLE IF EXISTS %s" % self.temp_table_name
         self.select_all = "SELECT docid from %s" % self.temp_table_name
 
-    def create_sql(self, compiled_query):
-        return [self.drop_table_statement,  self.create_temp_table_clause % compiled_query]
 
-    def select_sql(self):
+    def sql_drop_matches_table(self):
+        return self.drop_table_statement
+
+    def sql_create_matches_table(self, compiled_query):
+        return self.create_temp_table_clause % compiled_query
+
+    def sql_get_matches(self):
         return self.select_all
 
     def get_field_query_sql(self, field, field_context, docid):

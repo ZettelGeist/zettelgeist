@@ -78,12 +78,12 @@ def main():
     (ast2, semantics2) = zquery.compile2(input_line)
     db = zdb.get(args.database)
     gen = None
-    for statement in semantics2.create_sql(ast2):
+    for statement in [semantics2.sql_drop_matches_table(), semantics2.sql_create_matches_table(ast2)]:
         write_data(args.trace_sql, "a", "", statement)
         gen = db.fts_query(statement)
         for g in gen: pass
 
-    select_sql = semantics2.select_sql()
+    select_sql = semantics2.sql_get_matches()
     search_result_generator = db.fts_query(select_sql)
 
     write_data(args.trace_sql, "a", "# query match", select_sql)
@@ -150,6 +150,11 @@ def main():
                     results_printed = next(results_counter)
 
         search_count = next(search_counter)
+
+    drop_temp_matches_table = semantics2.sql_drop_matches_table()
+    write_data(args.trace_sql, "a", "", drop_temp_matches_table)
+    gen = db.fts_query(drop_temp_matches_table)
+    for g in gen: pass
 
     if args.count:
         if results_printed:
