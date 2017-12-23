@@ -56,9 +56,13 @@ class ZG2(object):
     def get_create_sql(self, compiled_query):
         return [self.drop_table_statement,  self.create_temp_table_clause % compiled_query, self.select_all]
 
-    def get_field_query_sql(self, field):
-        default = """SELECT docid, %s FROM zettels WHERE docid = %%s""" % field
-        return self.queries.get(field, [default])
+    def get_field_query_sql(self, field, field_context, docid):
+        default = """SELECT docid, %(field)s FROM zettels WHERE docid = %(docid)s""" % vars()
+        field_queries = self.queries.get(field, [default]).copy()
+        for i in range(0, len(field_queries)):
+            field_queries[i] = field_queries[i] % vars()
+        #print(">>> field_queries", field_queries)
+        return field_queries
 
     def literal(self, ast):
         return ast.word
@@ -72,7 +76,7 @@ class ZG2(object):
         match_clause = self._get_match_clause(ast, '')
         query_list = self.queries.get(ast.field, [])
         field_query = "SELECT docid FROM zettels WHERE zettels MATCH '%s'" % match_clause
-        context_query = """SELECT docid, snippet(zettels, '*', '*', '...', -1, -30) as %s FROM zettels WHERE zettels MATCH '%s' AND docid = %%s"""% (ast.field, match_clause)
+        context_query = """SELECT docid, snippet(zettels, '[', ']', '...', -1, -%%(field_context)s) as %s FROM zettels WHERE zettels MATCH '%s' AND docid = %%(docid)s"""% (ast.field, match_clause)
         query_list.append(context_query)
         self.queries[ast.field] = query_list
         return field_query

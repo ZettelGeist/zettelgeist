@@ -17,7 +17,7 @@ def get_argparse():
         parser.add_argument('--show-%s' % field,
                             action='store_const', const=True, default=False,
                             help="include field <%s> in output" % field)
-        parser.add_argument('--snip-count-%s' % field, type=int, default=100, help="Set snip width for field %s (defaults to 100)" % field)
+        parser.add_argument('--context-%s' % field, type=int, default=32, help="Set context width for field %s (default 32)" % field)
 
     parser.add_argument('--count', action='store_const', const=True,
                         default=False, help="Show number of Zettels matching this search")
@@ -27,9 +27,17 @@ def get_argparse():
     parser.add_argument(
         '--save-query', help="save source query to file", default=None)
     parser.add_argument(
+        '--trace-sql', help="log all SQL statements used to file", default=None)
+
+    parser.add_argument(
         '--save-sql', help="save compiled SQL to file (for developers only)", default=None)
     return parser
 
+def write_data(filename, mode, comment, statement):
+    if not filename:
+        return
+    with open(filename, mode) as outfile:
+        outfile.write("\n".join([comment, statement]) + "\n\n")
 
 def main():
     parser = get_argparse()
@@ -37,6 +45,7 @@ def main():
 
     # If there is a query file, it overrides all of the other options.
     argsd = vars(args)
+    #print(argsd)
     if args.prompt:
         input_line = input("zquery> ")
 
@@ -51,29 +60,25 @@ def main():
         db = zdb.get(args.database)
         gen = None
         for statement in semantics2.get_create_sql(ast2):
-            #print("executing", statement)
+            write_data(args.trace_sql, "a", "", statement)
             gen = list(db.fts_query(statement))
 
-        if args.save_query:
-            if args.save_query != args.query:
-                with open(args.save_query, "w") as outfile:
-                    outfile.write(input_line)
-            else:
-                print(
-                    "Ignored --save-query as it would clobber existing input file %s" % args.query)
-        if args.save_sql:
-            with open(args.save_sql, "w") as outfile:
-                outfile.write(ast)
+        write_data(args.save_query, "w", "", input_line)
+        write_data(args.save_sql, "w", "", ast2)
+        write_data(args.trace_sql, "a", "# saved SQL query", ast2)
 
     search_count = 0
     printed_something = False
     for outer in gen:
-        inner_gen = db.fts_query(
-            "SELECT *,docid from zettels where docid = %s" % outer['docid'])
+        docid = outer['docid']
+        print(">>> Processing DOC ID",docid)
+        bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars()
+        write_data(args.trace_sql, "a", "# finding zettels by docid", bound_query)
+
+        inner_gen = db.fts_query(bound_query)
         
         # no loop for this generator, because it only returns one row
         row = next(inner_gen)
-        #print(">>> RESULT ROW/%s" % outer['docid'])
 
         if printed_something:
             print("-" * 3)
@@ -87,11 +92,12 @@ def main():
 
         for field in zettel.ZettelFields:
             show_field = "show_" + field
-            snip_field = "snip_" + field
+            context_field = "context_" + field
             if argsd.get(show_field, None):
-                for query in semantics2.get_field_query_sql(field):
-                    rgen = db.fts_query(query % row['docid'])
-                    #print(">> SQL-standard-fields/%s" % field, query % row['docid'])
+                for query in semantics2.get_field_query_sql(field, argsd[context_field], docid):
+                    #print(">> SQL-standard-fields/%s" % field, query)
+                    rgen = db.fts_query(query)
+                    write_data(args.trace_sql, "a", "", query)
                     for result in rgen:
                         if result[field]:
                             if z:
@@ -106,9 +112,11 @@ def main():
             #    	print(">> MATCH QUERY %s" % field, query % row['docid'])
 
         if argsd.get("show_filename"):
-            for query in semantics2.get_field_query_sql('filename'):
+            for query in semantics2.get_field_query_sql('filename', 1000, docid):
                 #print(">> SQL-filename/%s" % field, query % row['docid'])
-                rgen = db.fts_query(query % row['docid'])
+                write_data(args.trace_sql, "a", "", query)
+                rgen = db.fts_query(query)
+
                 for result in rgen:
                     print(zettel.dict_as_yaml(
                         {"filename": result["filename"]}))
