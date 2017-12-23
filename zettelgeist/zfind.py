@@ -98,9 +98,10 @@ def main():
     results_printed = next(results_counter)
 
     search_result_generator = db.fts_query(select_sql)
+    # TODO: Investigated nested cursor issue
+    # Temporary workaround is to force evaluation of outer generator (not nice)
     for search_result in list(search_result_generator):
         docid = search_result['docid']
-        print(">>> Processing", docid)
         bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars()
         write_data(args.trace_sql, "a", "# finding zettels by docid", bound_query)
 

@@ -129,8 +129,7 @@ class SQLiteFTS(object):
             yield(row)
 
     def fts_query(self, prepared_sql):
-        for row in self.cursor.execute(prepared_sql):
-            yield(row)
+        return self.cursor.execute(prepared_sql)
 
     def done(self):
         self.conn.commit()
