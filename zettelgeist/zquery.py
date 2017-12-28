@@ -41,18 +41,19 @@ class ZG(object):
     def or_expr(self, ast):
         return "SELECT * from (%s UNION %s)" % (ast.left, ast.right)
 
+
 def get_temp_table_name():
     return os.path.split(tempfile.mktemp())[1]
 
+
 class ZG2(object):
-    def __init__(self, select_fields = ["docid"]):
+    def __init__(self, select_fields=["docid"]):
         self.queries = {}
         self.select_fields = ",".join(select_fields)
         self.temp_table_name = get_temp_table_name()
         self.create_temp_table_clause = "CREATE TABLE %s AS %%s" % self.temp_table_name
         self.drop_table_statement = "DROP TABLE IF EXISTS %s" % self.temp_table_name
         self.select_all = "SELECT docid from %s" % self.temp_table_name
-
 
     def sql_drop_matches_table(self):
         return self.drop_table_statement
@@ -83,7 +84,8 @@ class ZG2(object):
         match_clause = self._get_match_clause(ast, '')
         query_list = self.queries.get(ast.field, [])
         field_query = "SELECT docid FROM zettels WHERE zettels MATCH '%s'" % match_clause
-        context_query = """SELECT docid, snippet(zettels, '[', ']', '...', -1, -%%(field_context)s) as %s FROM zettels WHERE zettels MATCH '%s' AND docid = %%(docid)s"""% (ast.field, match_clause)
+        context_query = """SELECT docid, snippet(zettels, '[', ']', '...', -1, -%%(field_context)s) as %s, %s as %s_verbatim, offsets(zettels) as %s_offsets FROM zettels WHERE zettels MATCH '%s' AND docid = %%(docid)s""" % (
+            ast.field, ast.field, ast.field, ast.field, match_clause)
         query_list.append(context_query)
         self.queries[ast.field] = query_list
         return field_query
@@ -107,6 +109,7 @@ def compile(input_line):
     zg_semantics = ZG()
     ast = parser.parse(input_line, semantics=zg_semantics)
     return (ast, zg_semantics)
+
 
 def compile2(input_line):
     parser = tatsu.compile(zdb.GRAMMAR)

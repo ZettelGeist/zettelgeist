@@ -11,10 +11,11 @@ import sqlite3
 
 from . import zettel
 
-__version__ = "0.9.6"
+__version__ = "0.9.7"
 
 def version():
     return __version__
+
 
 ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
 
