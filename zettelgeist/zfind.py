@@ -1,6 +1,10 @@
 import sys
 import argparse
+import os
+import os.path
 import yaml
+from time import strftime
+
 from . import zdb, zettel, zquery
 
 
@@ -45,6 +49,11 @@ def get_argparse():
     parser.add_argument(
         '--save-sql',
         help="save compiled SQL to file (for developers only)", default=None)
+
+    parser.add_argument(
+        '--output',
+        help="add text to output filename", default="zfind")
+
     return parser
 
 
@@ -92,8 +101,18 @@ def process_offsets(text, offsets, context=100):
 def main():
     parser = get_argparse()
     args = parser.parse_args()
-
     argsd = vars(args)
+
+    output_dir = strftime("%Y%m%d%H%M%S") + "-%s" % args.output
+    if os.path.exists(output_dir):
+        print("Please remove directory %s. This error should never happen." % output_dir)
+        sys.exit(1)
+
+    try:
+        os.mkdir(output_dir)
+    except:
+        print("Failed to create %s. Please check permissions to write this folder." % output_dir)
+        sys.exit(2)
 
     if args.prompt:
         input_line = input("zquery> ")
@@ -104,6 +123,7 @@ def main():
     else:
         print("No query to process: Use --prompt or --query")
         return
+    print("zfind writing results to folder %s" % output_dir)
 
     (ast2, semantics2) = zquery.compile2(input_line)
     db = zdb.get(args.database)
@@ -126,15 +146,26 @@ def main():
     results_counter = counter()
 
     search_count = next(search_counter)
-    results_printed = next(results_counter)
     snippets_count = 0
 
     search_result_generator = db.fts_query(select_sql)
     # TODO: Investigated nested cursor issue
     # Temporary workaround is to force evaluation of outer generator (not nice)
-    for search_result in list(search_result_generator):
+
+    current_time = strftime("%Y%m%d%H%M%S")
+    all_results = list(search_result_generator)
+    format_d_length = len(str(len(all_results)))
+    for search_result in all_results:
         docid = search_result['docid']
-        bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars()
+        suffix_format = "-%%0%dd.yaml"
+        filename = current_time + (suffix_format %
+                                   format_d_length) % search_count
+        print("... " + filename)
+        output_path = os.path.join(output_dir, filename)
+
+        outfile = open(output_path, "w")
+        bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars(
+        )
         write_data(args.trace_sql, "a",
                    "# finding zettels by docid", bound_query)
 
@@ -143,9 +174,6 @@ def main():
             row = next(search_details_generator)
         except:
             print("Unexpected end of iteration")
-
-        if results_printed:
-            print("-" * 3)
 
         z = None
         if not args.use_index:
@@ -165,15 +193,14 @@ def main():
                             snippets = process_offsets(
                                 result[field + "_verbatim"], result[field + "_offsets"])
                             snippets_count = snippets_count + len(snippets)
-                            print(zettel.dict_as_yaml(
-                                {field: "\n".join(snippets)}))
+                            outfile.write(zettel.dict_as_yaml(
+                                {field: "\n".join(snippets)}) + "\n")
                         elif result[field]:
                             if z:
-                                print(z.get_yaml([field]))
+                                outfile.write(z.get_yaml([field]) + "\n")
                             else:
-                                print(zettel.dict_as_yaml(
-                                    {field: result[field]}))
-                            results_printed = next(results_counter)
+                                outfile.write(zettel.dict_as_yaml(
+                                    {field: result[field]}) + "\n")
 
         # TODO: Allow filename to be kept in the Zettel. Should be possible but we would just never save it.
         # Would like to eliminate special case code like the following to eliminate duplication.
@@ -184,11 +211,11 @@ def main():
                 field_query_generator = db.fts_query(query)
 
                 for result in field_query_generator:
-                    print(zettel.dict_as_yaml(
-                        {"filename": result["filename"]}))
-                    results_printed = next(results_counter)
+                    outfile.write(zettel.dict_as_yaml(
+                        {"filename": result["filename"]}) + "\n")
 
         search_count = next(search_counter)
+        outfile.close()
 
     if False:
         drop_temp_matches_table = semantics2.sql_drop_matches_table()
@@ -198,10 +225,8 @@ def main():
             pass
 
     if args.count:
-        if results_printed:
-            print("-" * 3)
         doc = {'count': search_count,
-               'snippets_count': snippets_count, 'query': input_line}
+               'snippets_count': snippets_count, 'query': input_line.strip()}
         print(zettel.dict_as_yaml(doc))
 
 
