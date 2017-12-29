@@ -155,6 +155,7 @@ def main():
     current_time = strftime("%Y%m%d%H%M%S")
     all_results = list(search_result_generator)
     format_d_length = len(str(len(all_results)))
+    match_filenames = []
     for search_result in all_results:
         docid = search_result['docid']
         suffix_format = "-%%0%dd.yaml"
@@ -174,6 +175,8 @@ def main():
             row = next(search_details_generator)
         except:
             print("Unexpected end of iteration")
+
+        match_filenames.append(row['filename'])
 
         z = None
         if not args.use_index:
@@ -225,10 +228,18 @@ def main():
             pass
 
     if args.count:
+        filename = current_time + "-stats.yaml"
+        output_path = os.path.join(output_dir, filename)
         doc = {'count': search_count,
                'snippets_count': snippets_count, 'query': input_line.strip()}
-        print(zettel.dict_as_yaml(doc))
+        with open(output_path, "w") as outfile:
+            outfile.write(zettel.dict_as_yaml(doc) + "\n")
 
+        filename = current_time + "-fileset.txt"
+        output_path = os.path.join(output_dir, filename)
+        with open(output_path, "w") as outfile:
+            match_filenames = list(set(match_filenames))
+            outfile.write("\n".join(match_filenames) + "\n")     
 
 if __name__ == '__main__':
     main()
