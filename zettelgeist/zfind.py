@@ -83,7 +83,7 @@ def offsets_gen(int_offsets):
                'size': size}
 
 
-def process_offsets(text, offsets, context=100):
+def process_offsets(filename, text, offsets, context=250):
     int_offsets = [int(offset) for offset in offsets.split()]
     results = []
     for info in offsets_gen(int_offsets):
@@ -91,7 +91,7 @@ def process_offsets(text, offsets, context=100):
         offset = info['size']
         low_pos = max(pos - offset - context, 0)
         high_pos = min(pos + offset + context, len(text))
-        results.append("[[")
+        results.append("[[ %s" % filename)
         results.append(text[low_pos:high_pos])
         results.append("]]")
 
@@ -176,7 +176,8 @@ def main():
         except:
             print("Unexpected end of iteration")
 
-        match_filenames.append(row['filename'])
+        current_filename = row['filename']
+        match_filenames.append(current_filename)
 
         z = None
         if not args.use_index:
@@ -193,7 +194,7 @@ def main():
                     write_data(args.trace_sql, "a", "", query)
                     for result in field_query_generator:
                         if query.find("offsets(") >= 0:
-                            snippets = process_offsets(
+                            snippets = process_offsets(current_filename,
                                 result[field + "_verbatim"], result[field + "_offsets"])
                             snippets_count = snippets_count + len(snippets)
                             outfile.write(zettel.dict_as_yaml(
