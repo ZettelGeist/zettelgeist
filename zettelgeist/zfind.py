@@ -182,6 +182,7 @@ def main():
             zettels = loader.getZettels()
             z = next(zettels)
 
+        wrote_snippet_field = {}      
         for field in zettel.ZettelFields:
             show_field = "show_" + field
             context_field = "context_" + field
@@ -204,13 +205,14 @@ def main():
                                 yaml_text = (zettel.dict_as_yaml(
                                     {field: snip.strip()}))
                                 lines = yaml_text.split("\n")
-                                if snip_count > 0:
+                                if snip_count > 0 or wrote_snippet_field.get(field, False):
                                     new_yaml_text = "\n".join(
                                         ["\n  [snippet]\n"] + lines[1:])
                                 else:
                                     new_yaml_text = "\n".join(
                                         [lines[0], "  [snippet]\n"] + lines[1:])
                                 outfile.write(new_yaml_text)
+                                wrote_snippet_field[field] = True
                                 snip_count = snip_count + 1
 
                         elif result[field]:
