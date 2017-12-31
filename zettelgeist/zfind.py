@@ -71,7 +71,7 @@ def counter():
         i = i + 1
 
 
-def offsets_gen(int_offsets):
+def offsets_gen(int_offsets, text):
     iterations = len(int_offsets) // 4
     #print(int_offsets, len(int_offsets), iterations)
     offsets_iter = iter(int_offsets)
@@ -80,18 +80,29 @@ def offsets_gen(int_offsets):
         yield {'column': column,
                'term': term,
                'pos': pos,
-               'size': size}
+               'size': size,
+               'substring': text[pos:pos+size]}
 
 
 def process_offsets(filename, text, offsets, context=250):
     int_offsets = [int(offset) for offset in offsets.split()]
     results = []
-    for info in offsets_gen(int_offsets):
+
+    highlights = []
+    for info in offsets_gen(int_offsets, text):
+        highlights.append(info['substring'])
+    highlights = set(highlights)
+
+    highlighted_text = text
+
+    for highlight in highlights:
+        highlighted_text = highlighted_text.replace(highlight, "[" + highlight.upper() + "]")
+    for info in offsets_gen(int_offsets, highlighted_text):
         pos = info['pos']
         offset = info['size']
         low_pos = max(pos - offset - context, 0)
         high_pos = min(pos + offset + context, len(text))
-        results.append(text[low_pos:high_pos])
+        results.append(highlighted_text[low_pos:high_pos])
     return results
 
 
