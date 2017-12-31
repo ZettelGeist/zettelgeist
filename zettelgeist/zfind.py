@@ -1,5 +1,6 @@
 import sys
 import argparse
+import re
 import os
 import os.path
 import yaml
@@ -96,7 +97,7 @@ def process_offsets(filename, text, offsets, context=250):
     highlighted_text = text
 
     for highlight in highlights:
-        highlighted_text = highlighted_text.replace(highlight, "[" + highlight.upper() + "]")
+        highlighted_text = highlighted_text.replace(highlight, "[[" + highlight.upper() + "]]")
     for info in offsets_gen(int_offsets, highlighted_text):
         pos = info['pos']
         offset = info['size']
@@ -105,6 +106,17 @@ def process_offsets(filename, text, offsets, context=250):
         results.append(highlighted_text[low_pos:high_pos])
     return results
 
+# Remove (likely) non-words from snippets.
+
+def get_context(snip):
+    text = snip.strip()
+    ws_matches = list(re.finditer("\s+", text))
+    if len(ws_matches) < 2:
+       return text
+
+    first = ws_matches[0].end()
+    last = ws_matches[-1].start()
+    return text[first:last]
 
 def main():
     parser = get_argparse()
@@ -213,9 +225,18 @@ def main():
                             # YAML field header. I hope to make this prettier.
                             snip_count = 0
                             for snip in snippets:
-                                yaml_text = (zettel.dict_as_yaml(
-                                    {field: snip.strip()}))
+                                yaml_text = zettel.dict_as_yaml(
+                                    {field: get_context(snip)})
                                 lines = yaml_text.split("\n")
+                                if lines[0].find("|") < 0:
+                                    print("Warning: Omitting bad YAML from %s (see below)" % output_path)
+                                    try:
+                                        print("\n".join(lines[0:5]))
+                                    except:
+                                        print(yaml_text)
+                                    print()
+                                    continue
+
                                 if snip_count > 0 or wrote_snippet_field.get(field, False):
                                     new_yaml_text = "\n".join(
                                         ["\n  [snippet]\n"] + lines[1:])
