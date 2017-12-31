@@ -540,7 +540,10 @@ def dict_as_yaml(data):
     yaml.add_representer(OrderedDict, ordered_dict_presenter)
     presented_data = OrderedDict()
     for key in data:
-        presented_data[key] = data[key]
+        if key in ZettelStringFields:
+           presented_data[key] = literal(data[key])
+        else:
+           presented_data[key] = data[key]
     return yaml.dump(presented_data, default_flow_style=False)
 
 

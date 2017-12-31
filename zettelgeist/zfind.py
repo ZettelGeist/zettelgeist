@@ -91,10 +91,7 @@ def process_offsets(filename, text, offsets, context=250):
         offset = info['size']
         low_pos = max(pos - offset - context, 0)
         high_pos = min(pos + offset + context, len(text))
-        results.append("[[ %s" % filename)
         results.append(text[low_pos:high_pos])
-        results.append("]]")
-
     return results
 
 
@@ -195,10 +192,27 @@ def main():
                     for result in field_query_generator:
                         if query.find("offsets(") >= 0:
                             snippets = process_offsets(current_filename,
-                                result[field + "_verbatim"], result[field + "_offsets"])
+                                                       result[field + "_verbatim"], result[field + "_offsets"])
                             snippets_count = snippets_count + len(snippets)
-                            outfile.write(zettel.dict_as_yaml(
-                                {field: "\n".join(snippets)}) + "\n")
+
+                            snippets_text = "\n".join(snippets)
+                            # This ugly workaround is to deal with PyYAML getting confused when
+                            # rendering blocks. We render each snippet separately and strip the
+                            # YAML field header. I hope to make this prettier.
+                            snip_count = 0
+                            for snip in snippets:
+                                yaml_text = (zettel.dict_as_yaml(
+                                    {field: snip.strip()}))
+                                lines = yaml_text.split("\n")
+                                if snip_count > 0:
+                                    new_yaml_text = "\n".join(
+                                        ["\n  [snippet]\n"] + lines[1:])
+                                else:
+                                    new_yaml_text = "\n".join(
+                                        [lines[0], "  [snippet]\n"] + lines[1:])
+                                outfile.write(new_yaml_text)
+                                snip_count = snip_count + 1
+
                         elif result[field]:
                             if z:
                                 outfile.write(z.get_yaml([field]) + "\n")
@@ -240,7 +254,8 @@ def main():
         output_path = os.path.join(output_dir, filename)
         with open(output_path, "w") as outfile:
             match_filenames = list(set(match_filenames))
-            outfile.write("\n".join(match_filenames) + "\n")     
+            outfile.write("\n".join(match_filenames) + "\n")
+
 
 if __name__ == '__main__':
     main()
