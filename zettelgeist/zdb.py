@@ -11,7 +11,7 @@ import sqlite3
 
 from . import zettel
 
-__version__ = "0.10.4"
+__version__ = "0.10.5"
 
 def version():
     return __version__

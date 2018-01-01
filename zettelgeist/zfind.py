@@ -254,17 +254,13 @@ def main():
                                 outfile.write(zettel.dict_as_yaml(
                                     {field: result[field]}) + "\n")
 
-        # TODO: Allow filename to be kept in the Zettel. Should be possible but we would just never save it.
-        # Would like to eliminate special case code like the following to eliminate duplication.
-
         if argsd.get("show_filename"):
             for query in semantics2.get_field_query_sql('filename', 32768, docid):
                 write_data(args.trace_sql, "a", "", query)
                 field_query_generator = db.fts_query(query)
 
                 for result in field_query_generator:
-                    outfile.write(zettel.dict_as_yaml(
-                        {"filename": result["filename"]}) + "\n")
+                    outfile.write("\n# (filename) %s\n" % result['filename'])
 
         search_count = next(search_counter)
         outfile.close()
