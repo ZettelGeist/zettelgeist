@@ -14,7 +14,7 @@ def get_argparse():
     parser.add_argument('--use-index', action='store_const',
                         const=True, default=False)
 
-    for field in zdb.ZettelSQLFields:
+    for field in zettel.ZettelFieldsOrdered:
         # parser.add_argument('--find-%s' %
         #                    field, help='search the Zettel %s field' % field)
         # parser.add_argument('--exclude-%s' %
@@ -199,6 +199,10 @@ def main():
         current_filename = row['filename']
         match_filenames.append(current_filename)
 
+        outfile.write("# zfind search results\n")
+        outfile.write("# filename = %s\n" % current_filename)
+        outfile.write("# query = %s\n\n" % input_line.strip())
+
         z = None
         if not args.use_index:
             loader = zettel.ZettelLoader(row['filename'])
@@ -229,12 +233,8 @@ def main():
                                     {field: get_context(snip)})
                                 lines = yaml_text.split("\n")
                                 if lines[0].find("|") < 0:
-                                    print("Warning: Omitting bad YAML from %s (see below)" % output_path)
-                                    try:
-                                        print("\n".join(lines[0:5]))
-                                    except:
-                                        print(yaml_text)
-                                    print()
+                                    print("Warning: Bad YAML written as comment to %s" % output_path)
+                                    outfile.write("#\n# " + "\n# ".join(lines) + "\n\n")
                                     continue
 
                                 if snip_count > 0 or wrote_snippet_field.get(field, False):
@@ -254,13 +254,6 @@ def main():
                                 outfile.write(zettel.dict_as_yaml(
                                     {field: result[field]}) + "\n")
 
-        if argsd.get("show_filename"):
-            for query in semantics2.get_field_query_sql('filename', 32768, docid):
-                write_data(args.trace_sql, "a", "", query)
-                field_query_generator = db.fts_query(query)
-
-                for result in field_query_generator:
-                    outfile.write("\n# (filename) %s\n" % result['filename'])
 
         search_count = next(search_counter)
         outfile.close()
