@@ -11,14 +11,8 @@ from . import zdb, zettel, zquery
 
 def get_argparse():
     parser = zdb.get_argparse()
-    parser.add_argument('--use-index', action='store_const',
-                        const=True, default=False)
 
     for field in zettel.ZettelFieldsOrdered:
-        # parser.add_argument('--find-%s' %
-        #                    field, help='search the Zettel %s field' % field)
-        # parser.add_argument('--exclude-%s' %
-        #                    field, help='search the Zettel %s field' % field)
         parser.add_argument('--show-%s' % field,
                             action='store_const', const=True, default=False,
                             help="include field <%s> in output" % field)
@@ -29,7 +23,7 @@ def get_argparse():
 
     parser.add_argument(
         '--count', action='store_const', const=True, default=False,
-        help="Show number of Zettels matching this search")
+        help="write number of zettels matched to statistics file")
 
     parser.add_argument(
         '--prompt', action='store_const', const=True, default=False,
@@ -53,7 +47,7 @@ def get_argparse():
 
     parser.add_argument(
         '--output',
-        help="add text to output filename", default="zfind")
+        help="add text to output folder name", default="zfind")
 
     return parser
 
@@ -74,8 +68,6 @@ def counter():
 
 def offsets_gen(int_offsets, text):
     iterations = len(int_offsets) // 4
-    #print(int_offsets, len(int_offsets), iterations)
-    offsets_iter = iter(int_offsets)
     for i in range(0, iterations):
         (column, term, pos, size) = int_offsets[i * 4:i * 4 + 4]
         yield {'column': column,
@@ -89,26 +81,23 @@ def process_offsets(filename, text, offsets, context=250):
     int_offsets = [int(offset) for offset in offsets.split()]
     results = []
 
-    highlights = []
     for info in offsets_gen(int_offsets, text):
-        highlights.append(info['substring'])
-    highlights = set(highlights)
-
-    highlighted_text = text
-
-    for highlight in highlights:
-        if highlight == highlight.upper():
-           highlighted_text = highlighted_text.replace("[[" + highlight.upper() + "]]", highlight)
-        highlighted_text = highlighted_text.replace(highlight, "[[" + highlight.upper() + "]]")
-    for info in offsets_gen(int_offsets, highlighted_text):
         pos = info['pos']
         offset = info['size']
         low_pos = max(pos - offset - context, 0)
         high_pos = min(pos + offset + context, len(text))
-        results.append(highlighted_text[low_pos:high_pos])
+        results.append(text[low_pos:high_pos])
     return results
 
-# Remove (likely) non-words from snippets.
+
+def write_to_file(filepath, text, **kwargs):
+    mode = kwargs.get("mode", "a")
+    newlines = kwargs.get("newlines", 1)
+    with open(filepath, mode) as outfile:
+        outfile.write(text)
+        if newlines:
+            outfile.write("\n" * int(newlines))
+
 
 def get_context(snip):
     text = snip.strip()
@@ -119,6 +108,17 @@ def get_context(snip):
     first = ws_matches[0].end()
     last = ws_matches[-1].start()
     return text[first:last]
+
+
+# TODO Create zutils.py module
+
+def dirname(path):
+    return os.path.split(path)[0]
+
+
+def basename(path):
+    return os.path.split(path)[1]
+
 
 def main():
     parser = get_argparse()
@@ -157,7 +157,6 @@ def main():
             pass
 
     select_sql = semantics2.sql_get_matches()
-    search_result_generator = db.fts_query(select_sql)
 
     write_data(args.trace_sql, "a", "# query match", select_sql)
     write_data(args.save_query, "w", "", input_line)
@@ -165,14 +164,11 @@ def main():
     write_data(args.trace_sql, "a", "# saved SQL query", ast2)
 
     search_counter = counter()
-    results_counter = counter()
 
     search_count = next(search_counter)
     snippets_count = 0
 
     search_result_generator = db.fts_query(select_sql)
-    # TODO: Investigated nested cursor issue
-    # Temporary workaround is to force evaluation of outer generator (not nice)
 
     current_time = strftime("%Y%m%d%H%M%S")
     all_results = list(search_result_generator)
@@ -180,15 +176,15 @@ def main():
     match_filenames = []
     for search_result in all_results:
         docid = search_result['docid']
-        suffix_format = "-%%0%dd.yaml"
-        filename = current_time + (suffix_format %
-                                   format_d_length) % search_count
-        print("... " + filename)
-        output_path = os.path.join(output_dir, filename)
+        base_name = current_time + ("-%%0%dd" % format_d_length) % search_count
+        base_path = os.path.join(output_dir, base_name)
+        yaml_path = base_path + '.yaml.in'
 
-        outfile = open(output_path, "w")
-        bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars(
-        )
+        print("... " + basename(yaml_path))
+
+        write_to_file(yaml_path, "# Note: This is a generated .yaml.in file intended for editing (editor or zettel command)", mode="w", newlines=0)
+
+        bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars()
         write_data(args.trace_sql, "a",
                    "# finding zettels by docid", bound_query)
 
@@ -201,17 +197,18 @@ def main():
         current_filename = row['filename']
         match_filenames.append(current_filename)
 
-        outfile.write("# zfind search results\n")
-        outfile.write("# filename = %s\n" % current_filename)
-        outfile.write("# query = %s\n\n" % input_line.strip())
+        write_to_file(yaml_path, "# zfind search results", mode="a", newlines=1)
+        write_to_file(yaml_path, "# filename = %s" % current_filename, mode="a", newlines=1)
+        write_to_file(yaml_path, "# query = %s" % input_line.strip(), mode="a", newlines=2)
 
-        z = None
-        if not args.use_index:
+        try:
             loader = zettel.ZettelLoader(row['filename'])
             zettels = loader.getZettels()
             z = next(zettels)
+        except:
+            print("Warning: Cannot load source Zettel %s from filesystem (using database instead)" % row['filename'])
+            z = None
 
-        wrote_snippet_field = {}      
         for field in zettel.ZettelFields:
             show_field = "show_" + field
             context_field = "context_" + field
@@ -225,40 +222,22 @@ def main():
                                                        result[field + "_verbatim"], result[field + "_offsets"])
                             snippets_count = snippets_count + len(snippets)
 
-                            snippets_text = "\n".join(snippets)
-                            # This ugly workaround is to deal with PyYAML getting confused when
-                            # rendering blocks. We render each snippet separately and strip the
-                            # YAML field header. I hope to make this prettier.
-                            snip_count = 0
-                            for snip in snippets:
-                                yaml_text = zettel.dict_as_yaml(
-                                    {field: get_context(snip)})
-                                lines = yaml_text.split("\n")
-                                if lines[0].find("|") < 0:
-                                    print("Warning: Bad YAML written as comment to %s" % output_path)
-                                    outfile.write("#\n# " + "\n# ".join(lines) + "\n\n")
-                                    continue
+                            # Write text version
+                            snip_path = base_path + '-%s.txt' % field
+                            print("... " + basename(snip_path) + " (snippets)")
 
-                                if snip_count > 0 or wrote_snippet_field.get(field, False):
-                                    new_yaml_text = "\n".join(
-                                        ["\n  [snippet]\n"] + lines[1:])
-                                else:
-                                    new_yaml_text = "\n".join(
-                                        [lines[0], "  [snippet]\n"] + lines[1:])
-                                outfile.write(new_yaml_text)
-                                wrote_snippet_field[field] = True
-                                snip_count = snip_count + 1
+                            for snip in snippets:
+                                write_to_file(snip_path, "# filename = %s" % current_filename, mode="a", newlines=1)
+                                write_to_file(snip_path, "# field = %s" % field, mode="a", newlines=2)
+                                write_to_file(snip_path, get_context(snip), mode="a", newlines=2)
+
+                            write_to_file(yaml_path,
+                                "# %s -> See %s for snippets." % (field, snip_path), mode="w", newlines=2)
 
                         elif result[field]:
-                            if z:
-                                outfile.write(z.get_yaml([field]) + "\n")
-                            else:
-                                outfile.write(zettel.dict_as_yaml(
-                                    {field: result[field]}) + "\n")
-
+                            write_to_file(yaml_path, z.get_yaml([field]), mode="a", newlines=1)
 
         search_count = next(search_counter)
-        outfile.close()
 
     if False:
         drop_temp_matches_table = semantics2.sql_drop_matches_table()
@@ -268,19 +247,14 @@ def main():
             pass
 
     if args.count:
-        filename = current_time + "-stats.yaml"
-        output_path = os.path.join(output_dir, filename)
+        stats_path = base_path + '-stats.yaml'
+        files_path = base_path + '-fileset.yaml'
+
         doc = {'count': search_count,
-               'snippets_count': snippets_count, 'query': input_line.strip()}
-        with open(output_path, "w") as outfile:
-            outfile.write(zettel.dict_as_yaml(doc) + "\n")
+               'query': input_line.strip()}
 
-        filename = current_time + "-fileset.txt"
-        output_path = os.path.join(output_dir, filename)
-        with open(output_path, "w") as outfile:
-            match_filenames = list(set(match_filenames))
-            outfile.write("\n".join(match_filenames) + "\n")
-
+        write_to_file(stats_path, zettel.dict_as_yaml(doc), mode="w", newlines=1)
+        write_to_file(files_path, "\n".join(match_filenames), mode="w", newlines=1)
 
 if __name__ == '__main__':
     main()
