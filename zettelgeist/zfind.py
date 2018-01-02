@@ -97,6 +97,8 @@ def process_offsets(filename, text, offsets, context=250):
     highlighted_text = text
 
     for highlight in highlights:
+        if highlight == highlight.upper():
+           highlighted_text = highlighted_text.replace("[[" + highlight.upper() + "]]", highlight)
         highlighted_text = highlighted_text.replace(highlight, "[[" + highlight.upper() + "]]")
     for info in offsets_gen(int_offsets, highlighted_text):
         pos = info['pos']
