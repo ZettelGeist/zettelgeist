@@ -209,6 +209,7 @@ def main():
             print("Warning: Cannot load source Zettel %s from filesystem (using database instead)" % row['filename'])
             z = None
 
+        snips_written = set()
         for field in zettel.ZettelFields:
             show_field = "show_" + field
             context_field = "context_" + field
@@ -230,8 +231,11 @@ def main():
                                 write_to_file(snip_path, "# field = %s" % field, mode="a", newlines=2)
                                 write_to_file(snip_path, get_context(snip), mode="a", newlines=2)
 
-                            write_to_file(yaml_path,
-                                "# %s -> See %s for snippets." % (field, snip_path), mode="a", newlines=2)
+                            snip_id = ":".join([snip_path, field])
+                            if snip_id not in snips_written:
+                                write_to_file(yaml_path,
+                                    "# %s -> See %s for snippets." % (field, snip_path), mode="a", newlines=2)
+                                snips_written.add(snip_id)
 
                         elif result[field]:
                             write_to_file(yaml_path, z.get_yaml([field]), mode="a", newlines=1)
