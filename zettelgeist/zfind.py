@@ -224,7 +224,6 @@ def main():
 
                             # Write text version
                             snip_path = base_path + '-%s.txt' % field
-                            print("... " + basename(snip_path) + " (snippets)")
 
                             for snip in snippets:
                                 write_to_file(snip_path, "# filename = %s" % current_filename, mode="a", newlines=1)
@@ -232,7 +231,7 @@ def main():
                                 write_to_file(snip_path, get_context(snip), mode="a", newlines=2)
 
                             write_to_file(yaml_path,
-                                "# %s -> See %s for snippets." % (field, snip_path), mode="w", newlines=2)
+                                "# %s -> See %s for snippets." % (field, snip_path), mode="a", newlines=2)
 
                         elif result[field]:
                             write_to_file(yaml_path, z.get_yaml([field]), mode="a", newlines=1)
