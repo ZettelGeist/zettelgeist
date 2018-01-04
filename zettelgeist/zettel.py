@@ -192,11 +192,13 @@ class ZettelStringRequired(Exception):
 def get_argparse():
     parser = argparse.ArgumentParser()
 
+    for field in ZettelFieldsOrdered:
+        parser.add_argument('--delete-%s' % field, action="store_true",
+                            help="delete field %s" % field, default=False)
+
     for field in ZettelStringFields:
         parser.add_argument('--set-%s' %
                             field, help="set the value of field %s" % field)
-        parser.add_argument('--delete-%s' % field, action="store_true",
-                            help="delete field %s" % field, default=False)
         parser.add_argument('--load-%s' %
                             field, help="load field %s from filename" % field)
 
