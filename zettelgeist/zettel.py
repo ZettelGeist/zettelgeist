@@ -480,8 +480,8 @@ def gen_new_zettels(args):
         loader = ZettelLoader(args.file)
         last_z = None
         for z in loader.getZettels():
-            z = process_zettel_command_line_options(z, vargs, next(id_gen))
-            last_z = z
+            last_z = process_zettel_command_line_options(z, vargs, next(id_gen))
+            yield last_z
         if not last_z:
             yield process_zettel_command_line_options(Zettel(), vargs, next(id_gen))
     else:
