@@ -6,6 +6,9 @@ import sys
 import argparse
 import readline  # for input()
 import yaml
+import os
+import os.path
+
 from time import strftime
 
 # Recursive descent parsing of Zettel dictionary format.
@@ -19,6 +22,8 @@ ZettelFieldsOrdered = ZettelStringFields + \
 ZettelFields = set(ZettelFieldsOrdered)
 CitationFields = set(['bibkey', 'page'])
 DatesFields = set(['year', 'era'])
+
+ZettelMarkdownExtensions = ['.text', '.txt', '.md', '.markdown']
 
 
 class ParseError(Exception):
@@ -356,7 +361,7 @@ class Zettel(object):
         yaml.add_representer(OrderedDict, ordered_dict_presenter)
         parse_zettel(self.zettel)
         yaml_zettel = OrderedDict()
-        for key in ZettelFields:
+        for key in ZettelFieldsOrdered:
             if key not in self.zettel:
                 continue
             if key not in restrict_to_fields:
@@ -367,6 +372,25 @@ class Zettel(object):
                 yaml_zettel[key] = self.zettel[key].copy()
         return yaml.dump(yaml_zettel, default_flow_style=False)
 
+    def get_text(self, restrict_to_fields=ZettelFieldsOrdered):
+        text = []
+        parse_zettel(self.zettel)
+        for key in ZettelFieldsOrdered:
+            if key not in self.zettel:
+                continue
+            if key not in restrict_to_fields:
+                continue
+            text.append(markdown_h1(key))
+            if key in ZettelStringFields:
+                text.append(self.zettel[key].strip())
+            elif key in ZettelListFields:
+                for item in self.zettel[key]:
+                    text.append(markdown_listitem(item))
+            else:
+                text.append(self.get_yaml([key]))
+            text.append("\n")
+        return "\n".join(text)
+
     def get_yaml_subset(self, fields=[]):
         z = Zettel({})
         for field in fields:
@@ -376,10 +400,13 @@ class Zettel(object):
         parse_zettel(self.zettel)
         return {key: ",".join(flatten(self.zettel[key])) for key in self.zettel}
 
-#
-# This generic loader can be used in any module that needs to work on a Fass or Stein
-# Will be used mainly by zimport.py
-#
+
+def markdown_h1(text):
+    return "\n".join([text, len(text) * "="]) + "\n"
+
+
+def markdown_listitem(text):
+    return "- %s" % text.strip().replace("\n", "").replace("\r", "")
 
 
 class ZettelLoaderError(Exception):
@@ -412,7 +439,10 @@ def main():
     z_generator = gen_new_zettels(args)
 
     if args.save:
-        print("Zettel saved to %s" % args.save[0])
+        filename = args.save[0]
+        (basename, extension) = os.path.splitext(filename)
+        print("Zettel being saved to %s (mode = %s)" %
+              (args.save[0], extension))
         outfile = open(args.save[0], "w")
     elif args.now:
         if args.now_id:
@@ -425,7 +455,10 @@ def main():
         outfile = sys.stdout
 
     try:
-        outfile.write(next(z_generator).get_yaml() + '\n')
+        if extension in ZettelMarkdownExtensions:
+            outfile.write(next(z_generator).get_text() + '\n')
+        else:
+            outfile.write(next(z_generator).get_yaml() + '\n')
     except ParseError as error:
         print(error)
 
@@ -543,9 +576,9 @@ def dict_as_yaml(data):
     presented_data = OrderedDict()
     for key in data:
         if key in ZettelStringFields:
-           presented_data[key] = literal(data[key])
+            presented_data[key] = literal(data[key])
         else:
-           presented_data[key] = data[key]
+            presented_data[key] = data[key]
     return yaml.dump(presented_data, default_flow_style=False)
 
 
