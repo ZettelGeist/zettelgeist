@@ -74,7 +74,7 @@ def offsets_gen(int_offsets, text):
                'term': term,
                'pos': pos,
                'size': size,
-               'substring': text[pos:pos+size]}
+               'substring': text[pos:pos + size]}
 
 
 def process_offsets(filename, text, offsets, context=250):
@@ -103,7 +103,7 @@ def get_context(snip):
     text = snip.strip()
     ws_matches = list(re.finditer("\s+", text))
     if len(ws_matches) < 2:
-       return text
+        return text
 
     first = ws_matches[0].end()
     last = ws_matches[-1].start()
@@ -182,9 +182,11 @@ def main():
 
         print("... " + basename(yaml_path))
 
-        write_to_file(yaml_path, "# Note: This is a generated .yaml.in file intended for editing (editor or zettel command)", mode="w", newlines=0)
+        write_to_file(
+            yaml_path, "# Note: This is a generated .yaml.in file intended for editing (editor or zettel command)", mode="w", newlines=0)
 
-        bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars()
+        bound_query = "SELECT *,docid from zettels where docid = %(docid)s" % vars(
+        )
         write_data(args.trace_sql, "a",
                    "# finding zettels by docid", bound_query)
 
@@ -197,16 +199,20 @@ def main():
         current_filename = row['filename']
         match_filenames.append(current_filename)
 
-        write_to_file(yaml_path, "# zfind search results", mode="a", newlines=1)
-        write_to_file(yaml_path, "# filename = %s" % current_filename, mode="a", newlines=1)
-        write_to_file(yaml_path, "# query = %s" % input_line.strip(), mode="a", newlines=2)
+        write_to_file(yaml_path, "# zfind search results",
+                      mode="a", newlines=1)
+        write_to_file(yaml_path, "# filename = %s" %
+                      current_filename, mode="a", newlines=1)
+        write_to_file(yaml_path, "# query = %s" %
+                      input_line.strip(), mode="a", newlines=2)
 
         try:
             loader = zettel.ZettelLoader(row['filename'])
             zettels = loader.getZettels()
             z = next(zettels)
         except:
-            print("Warning: Cannot load source Zettel %s from filesystem (using database instead)" % row['filename'])
+            print("Warning: Cannot load source Zettel %s from filesystem (using database instead)" %
+                  row['filename'])
             z = None
 
         snips_written = set()
@@ -227,18 +233,22 @@ def main():
                             snip_path = base_path + '-%s.txt' % field
 
                             for snip in snippets:
-                                write_to_file(snip_path, "# filename = %s" % current_filename, mode="a", newlines=1)
-                                write_to_file(snip_path, "# field = %s" % field, mode="a", newlines=2)
-                                write_to_file(snip_path, get_context(snip), mode="a", newlines=2)
+                                write_to_file(snip_path, "# filename = %s" %
+                                              current_filename, mode="a", newlines=1)
+                                write_to_file(snip_path, "# field = %s" %
+                                              field, mode="a", newlines=2)
+                                write_to_file(snip_path, get_context(
+                                    snip), mode="a", newlines=2)
 
                             snip_id = ":".join([snip_path, field])
                             if snip_id not in snips_written:
                                 write_to_file(yaml_path,
-                                    "# %s -> See %s for snippets." % (field, snip_path), mode="a", newlines=2)
+                                              "# %s -> See %s for snippets." % (field, snip_path), mode="a", newlines=2)
                                 snips_written.add(snip_id)
 
                         elif result[field]:
-                            write_to_file(yaml_path, z.get_yaml([field]), mode="a", newlines=1)
+                            write_to_file(yaml_path, z.get_yaml(
+                                [field]), mode="a", newlines=1)
 
         search_count = next(search_counter)
 
@@ -256,8 +266,11 @@ def main():
         doc = {'count': search_count,
                'query': input_line.strip()}
 
-        write_to_file(stats_path, zettel.dict_as_yaml(doc), mode="w", newlines=1)
-        write_to_file(files_path, "\n".join(match_filenames), mode="w", newlines=1)
+        write_to_file(stats_path, zettel.dict_as_yaml(
+            doc), mode="w", newlines=1)
+        write_to_file(files_path, "\n".join(
+            match_filenames), mode="w", newlines=1)
+
 
 if __name__ == '__main__':
     main()

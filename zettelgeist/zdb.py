@@ -16,6 +16,7 @@ ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
 # Default Zettel DB name
 ZDB = 'zettels.db'
 
+
 def get_argparse():
     parser = argparse.ArgumentParser()
     parser.add_argument(

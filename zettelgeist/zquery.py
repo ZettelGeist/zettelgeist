@@ -65,7 +65,8 @@ class ZG2(object):
         return self.select_all
 
     def get_field_query_sql(self, field, field_context, docid):
-        default = """SELECT docid, %(field)s FROM zettels WHERE docid = %(docid)s""" % vars()
+        default = """SELECT docid, %(field)s FROM zettels WHERE docid = %(docid)s""" % vars(
+        )
         field_queries = self.queries.get(field, [default]).copy()
         for i in range(0, len(field_queries)):
             field_queries[i] = field_queries[i] % vars()

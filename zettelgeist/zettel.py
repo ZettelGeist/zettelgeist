@@ -431,6 +431,8 @@ class ZettelLoader(object):
         for ydoc in self.ydocs:
             if isinstance(ydoc, dict):
                 yield Zettel(ydoc)
+            else:
+                yield Zettel({})
 
 
 def main():
@@ -476,8 +478,12 @@ def gen_new_zettels(args):
     id_gen = gen_id()
     if args.file:
         loader = ZettelLoader(args.file)
+        last_z = None
         for z in loader.getZettels():
-            yield process_zettel_command_line_options(z, vargs, next(id_gen))
+            z = process_zettel_command_line_options(z, vargs, next(id_gen))
+            last_z = z
+        if not last_z:
+            yield process_zettel_command_line_options(Zettel(), vargs, next(id_gen))
     else:
         yield process_zettel_command_line_options(Zettel(), vargs, next(id_gen))
 

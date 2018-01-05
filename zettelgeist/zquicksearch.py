@@ -50,7 +50,7 @@ def main():
         z = next(zettels)
         if z == None:
             print("Could not load source Zettel: %s" % row['filename'])
-            sys.exit(1) 
+            sys.exit(1)
 
         for field in row.keys():
             show_field = "show_" + field
