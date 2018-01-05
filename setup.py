@@ -1,12 +1,12 @@
 # setup.py - placeholder for eventual setup script
 
 from setuptools import setup
-from zettelgeist import zdb
+from zettelgeist import zversion
 
 setup(
     name='zettelgeist',
     packages=['zettelgeist'],
-    version=zdb.version(),
+    version=zversion.version(),
     description='ZettelGeist - a historiographically focused notetaking system',
     author='ZettelGeist Laboratories',
     author_email='gkt@cs.luc.edu',

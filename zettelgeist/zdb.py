@@ -11,17 +11,10 @@ import sqlite3
 
 from . import zettel
 
-__version__ = "0.10.9"
-
-def version():
-    return __version__
-
-
 ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
 
 # Default Zettel DB name
 ZDB = 'zettels.db'
-
 
 def get_argparse():
     parser = argparse.ArgumentParser()
