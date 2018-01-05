@@ -27,7 +27,8 @@ setup(
         'console_scripts': [
             'zcreate = zettelgeist.zcreate:main',
             'zimport = zettelgeist.zimport:main',
-            'zfind = zettelgeist.zfind:main',
+            'zfilter = zettelgeist.zfilter:main',
+            'zquicksearch = zettelgeist.zquicksearch:main',
             'zettel = zettelgeist.zettel:main'
             ]
     }

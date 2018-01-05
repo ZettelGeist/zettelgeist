@@ -438,6 +438,7 @@ def main():
     args = parser.parse_args()
     z_generator = gen_new_zettels(args)
 
+    extension = '.yaml'
     if args.save:
         filename = args.save[0]
         (basename, extension) = os.path.splitext(filename)
