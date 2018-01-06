@@ -4,41 +4,39 @@ title: Getting Started
 permalink: /gs/
 ---
 
-## Install via pip
+## Prerequisites
 
-ZettelGeist should be installed via `pip` for all new users. Installation
-in a virtualenv is strongly recommended (but not covered here).
+Please visit the [Installation](/install) before starting the tutorial. This tutorial assumes you have installed 
+ZettelGeist and have confirmed that the tools are available in a Python virtualenv.
 
-Python 3 is required.
+We assume that your virtualenv is named `zenv` here. Wherever you see `zenv` here, your setup can be different, as long
+as you completed the installation and verified that it is nominally functioning.
+
+This tutorial also depends on sample files, provided at https://github.com/ZettelGeist/zg-tutorial.  You can visit this
+page to download the examples, or you can use `git` to fetch it:
 
 ```shell
-pip install zettelgeist
+git clone https://github.com/ZettelGeist/zg-tutorial.git
 ```
 
-This will install the z-scripts to your `bin` directory so you can run
-the commands in this getting stated page.
+This will create the folder `zg-tutorial`, which we'll reference in this tutorial.
 
-## Install from Repository
+## Creating Zettels
 
-You can checkout ZettelGeist from GitHub and run the `setup.py` script to
-`install`. This is for experts only and no details are covered here in the
-interests of focusing on users (as opposed to developer-users).
+The `zettel` command is used to create zettels. You can also create zettels using an ordinary text editor.
 
-## Create some Zettels
-
-Zettels can be created with a plaintext editor or the `zettel` command-line tool. I prefer the command-line tool at this stage, because it provides great insight into what goes into a Zettel.
-
-You can start by getting help:
+### Getting help
 
 ```shell
 zettel --help
 ```
 
-The help shows what at first glance appears to be a bewildering number of options. However, most of the options are *the same*. 
+The help shows what at first glance appears to be a bewildering number of options. However, most of the options are *the same* and are just
+being used to do an operation (set, delete, append, etc.) on any given field.
 
-Let's start a simple example. We'll create a zettel on *standard output* that has nothing more than a title:
+### Create a simple zettel
 
-```
+```shell
 zettel --set-title "My First Zettel"
 ```
 
@@ -47,6 +45,8 @@ This results in the following output:
 ```yaml
 title: My First Zettel
 ```
+
+### Create zettel with multiple fields
 
 A zettel can have as few fields as you wish, including zero. However, a zettel only becomes interesting as you add more information. Let's add a *summary* and a *note*.
 
@@ -101,129 +101,100 @@ note: |-
 ```
 
 
+### Load field from another file
 
-
-
-
+TODO
 
 ## Indexing Zettels for Search
 
-For this section, we provide you with access to some sample zettels. These can be found in `docs/example/mlb`.
+For this section, we provide you with access to some sample zettels. These can be found in the ZettelGeist tutorial repository
+at https://github.com/ZettelGeist/zg-tutorial.git. (See Prerequisites above.)
 
 You can be in any folder while trying this, but we'll assume you are in the `zettelgeist\docs` after performing an initial clone of our repository.
 
 ```shell
-$ cd zettelgeist/docs
+$ cd zg-tutorial
 $ zcreate --database mlb.db
 Creating new database mlb.db
 ```
 
-Let's take a look at the `example/mlb` folder:
 
 ```shell
-$ ls example/mlb
-20170731132024-chicago-cubs.yaml
-20170731133642-cincinnati-reds.yaml
-20170731134823-milwaukee-brewers.yaml
-20170731135121-pittsburgh-pirates.yaml
-20170731135823-st-louis-cardinals.yaml
-20170731140433-atlanta-braves.yaml
-20170731140750-miami-marlins.yaml
-20170731141025-new-york-mets.yaml
-20170731141248-philadelphia-phillies.yaml
-20170731141625-washington-nationals.yaml
-20170731141908-arizona-diamondbacks.yaml
-20170731142237-colorado-rockies.yaml
-20170731143033-los-angeles-dodgers.yaml
-20170731143425-san-diego-padres.yaml
-20170731154135-baltimore-orioles.yaml
-20170731154404-boston-red-sox.yaml
-20170731154645-new-york-yankees.yaml
-20170731154837-tampa-bay-rays.yaml
-20170731155132-toronto-blue-jays.yaml
-20170731155613-chicago-grey-sox.yaml
-20170731160002-cleveland-indians.yaml
-20170731160508-detroit-tigers.yaml
-20170731160722-kansas-city-royals.yaml
-20170731160940-minnesota-twins.yaml
-20170731161550-houston-astros.yaml
-20170731161927-los-angeles-angels.yaml
-20170731162502-oakland-athletics.yaml
-20170731162806-seattle-mariners.yaml
-20170731163040-texas-rangers.yaml
-```
+$ ls zettels/baseball
+ls zettels/baseball
+arizona-diamondbacks.yaml  milwaukee-brewers.yaml
+atlanta-braves.yaml        minnesota-twins.yaml
+baltimore-orioles.yaml     new-york-mets.yaml
+boston-red-sox.yaml        new-york-yankees.yaml
+chicago-cubs.yaml          oakland-athletics.yaml
+chicago-grey-sox.yaml      philadelphia-phillies.yaml
+cincinnati-reds.yaml       pittsburgh-pirates.yaml
+cleveland-indians.yaml     san-diego-padres.yaml
+colorado-rockies.yaml      seattle-mariners.yaml
+detroit-tigers.yaml        st-louis-cardinals.yaml
+houston-astros.yaml        tampa-bay-rays.yaml
+kansas-city-royals.yaml    texas-rangers.yaml
+los-angeles-angels.yaml    toronto-blue-jays.yaml
+los-angeles-dodgers.yaml   washington-nationals.yaml
+miami-marlins.yaml```
 
-You may see more files than what is shown here. It's ok!
+You may see more files than what is shown here. It's ok! There are also files in other folders in `zg-tutorial` itself.
+This, too, is ok.
 
-Let's import these files for indexing purposes:
 
 ```shell
-zimport --database mlb.db --zettel-dir example/mlb
-Importing 20170731132024-chicago-cubs.yaml
-Importing 20170731133642-cincinnati-reds.yaml
-Importing 20170731134823-milwaukee-brewers.yaml
-Importing 20170731135121-pittsburgh-pirates.yaml
-Importing 20170731135823-st-louis-cardinals.yaml
-Importing 20170731140433-atlanta-braves.yaml
-Importing 20170731140750-miami-marlins.yaml
-Importing 20170731141025-new-york-mets.yaml
-Importing 20170731141248-philadelphia-phillies.yaml
-Importing 20170731141625-washington-nationals.yaml
-Importing 20170731141908-arizona-diamondbacks.yaml
-Importing 20170731142237-colorado-rockies.yaml
-Importing 20170731143033-los-angeles-dodgers.yaml
-Importing 20170731143425-san-diego-padres.yaml
-Importing 20170731154135-baltimore-orioles.yaml
-Importing 20170731154404-boston-red-sox.yaml
-Importing 20170731154645-new-york-yankees.yaml
-Importing 20170731154837-tampa-bay-rays.yaml
-Importing 20170731155132-toronto-blue-jays.yaml
-Importing 20170731155613-chicago-grey-sox.yaml
-Importing 20170731160002-cleveland-indians.yaml
-Importing 20170731160508-detroit-tigers.yaml
-Importing 20170731160722-kansas-city-royals.yaml
-Importing 20170731160940-minnesota-twins.yaml
-Importing 20170731161550-houston-astros.yaml
-Importing 20170731161927-los-angeles-angels.yaml
-Importing 20170731162502-oakland-athletics.yaml
-Importing 20170731162806-seattle-mariners.yaml
-Importing 20170731163040-texas-rangers.yaml
-Ignoring README.md; add .yaml extension to import this file.
+zimport --database mlb.db --dir $(pwd)
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/baltimore-orioles.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/kansas-city-royals.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/los-angeles-angels.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/miami-marlins.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/milwaukee-brewers.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/seattle-mariners.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/arizona-diamondbacks.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/st-louis-cardinals.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/houston-astros.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/oakland-athletics.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/boston-red-sox.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/new-york-yankees.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/pittsburgh-pirates.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/detroit-tigers.yaml
+Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/cincinnati-reds.yaml
+[...]
 ```
 
-Upon successful import of a file, you'll see only the line of output with Importing and nothing else.
-This means that the file was imported into the index successfully.
+What you see will differ slightly. Where you see `/Users/gkt/Work`, you are likely to see the path to your own checkout directory.
 
-Let's take a look at one of these files, `example/mlb/20170731132024-chicago-cubs.yaml`.
+Let's look at one of these zettels.
 
 ```yaml
 title: MLB Teams
-url: https://en.wikipedia.org/wiki/Chicago_Cubs
-summary: Chicago Cubs
-note: "The Chicago Cubs are an American professional baseball team based in Chicago,\
-  \ Illinois. The Cubs compete in Major League Baseball (MLB) as a member club of\
-  \ the National League (NL) Central division, where they are the defending World\
-  \ Series champions. The team plays its home games at Wrigley Field, located on the\
-  \ city's North Side. The Cubs are one of two major league teams in Chicago; the\
-  \ other, the Chicago White Sox, is a member of the American League (AL) Central\
-  \ division. The Cubs, first known as the White Stockings, was a founding member\
-  \ of the NL in 1876, becoming the Chicago Cubs in 1903.[2] The Cubs have appeared\
-  \ in a total of eleven World Series. The 1906 Cubs won 116 games, finishing 116\u2013\
-  36 and posting a modern-era record winning percentage of .763, before losing the\
-  \ World Series to the Chicago White Sox by four games to two. The Cubs won back-to-back\
-  \ World Series championships in 1907 and 1908, becoming the first major league team\
-  \ to play in three consecutive World Series, and the first to win it twice. Most\
-  \ recently, the Cubs won the 2016 National League Championship Series and 2016 World\
-  \ Series, which ended a 71-year National League pennant drought and a 108-year World\
-  \ Series championship drought,"
+summary: Arizona Diamondbacks
+note: |
+  The Arizona Diamondbacks, often shortened as the D-backs, are an American professional
+  baseball franchise based in Phoenix, Arizona. The club competes in Major League
+  Baseball (MLB) as a member of the National League (NL) West division. Since the
+  team's inception in 1998, the franchise has played home games at Chase Field, formerly
+  known as Bank One Ballpark. The Diamondbacks have won one World Series championship
+  (in 2001), becoming the fastest expansion team in the Major Leagues to win a championship,
+  doing it in only the fourth season since the franchise's inception in the 1998 Major
+  League Baseball season.
 tags:
 - MLB
 - National League
-- NL East
+- NL West
+cite:
+  bibkey: arizona-diamondbacks-wikipedia
+  page: web page
 ```
 
-Each of these has title, url, summary, and tags field. We're going to use these in some of the
-search examples below.
+Each of these zettels contains some information one might typically place on a note card. In our view of the world, notes would include
+important basics. The note will often be one of the longer fields. It can be written using what is known as the YAML block style. This means
+that all lines of input are taken, provided they maintain the same indentation level and/or blank. Everything will be taken as input until
+the next field or end of file is found.
+
+Also shown here are how you can maintain a list of tags. The `tags` field allows you to specify one or more tags. While we hope one day to
+build an auto-classifier (someday, someday...), we find that we actually need to assign labels, especially in our own book project that is
+actually making use of these tools.
 
 ## Search Examples
 
