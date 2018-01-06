@@ -88,6 +88,8 @@ text editors, and the command line. If this is not you, you will probably not li
   - Install
   ```
 
+- Then you should proceed to the [Getting Started](/gs) page.
+
 ## Developer Install
 
 Coming soon.
