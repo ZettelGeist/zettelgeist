@@ -77,7 +77,7 @@ def offsets_gen(int_offsets, text):
                'substring': text[pos:pos + size]}
 
 
-def process_offsets(filename, text, offsets, context=250):
+def process_offsets(filename, text, offsets, context=2000):
     int_offsets = [int(offset) for offset in offsets.split()]
     results = []
 
