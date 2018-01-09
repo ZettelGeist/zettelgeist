@@ -216,7 +216,7 @@ def main():
             z = None
 
         snips_written = set()
-        snip_size = min(args.snip_size, 250)
+        snip_size = max(args.snip_size, 250)
         for field in zettel.ZettelFields:
             show_field = "show_" + field
             if argsd.get(show_field, None):
