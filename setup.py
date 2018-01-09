@@ -28,7 +28,7 @@ setup(
             'zcreate = zettelgeist.zcreate:main',
             'zimport = zettelgeist.zimport:main',
             'zfilter = zettelgeist.zfilter:main',
-            'zquicksearch = zettelgeist.zquicksearch:main',
+            'zfind = zettelgeist.zfind:main',
             'zettel = zettelgeist.zettel:main'
             ]
     }

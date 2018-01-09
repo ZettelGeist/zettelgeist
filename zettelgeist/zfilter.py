@@ -17,10 +17,6 @@ def get_argparse():
                             action='store_const', const=True, default=False,
                             help="include field <%s> in output" % field)
 
-        parser.add_argument('--context-%s' % field,
-                            type=int, default=32,
-                            help="Set context width for field %s (default 32)" % field)
-
     parser.add_argument(
         '--count', action='store_const', const=True, default=False,
         help="write number of zettels matched to statistics file")
@@ -48,6 +44,10 @@ def get_argparse():
     parser.add_argument(
         '--output',
         help="add text to output folder name", default="zfind")
+
+    parser.add_argument(
+        '--snip-size',
+        help="snippet size", type=int, default=2500)
 
     return parser
 
@@ -77,7 +77,7 @@ def offsets_gen(int_offsets, text):
                'substring': text[pos:pos + size]}
 
 
-def process_offsets(filename, text, offsets, context=2000):
+def process_offsets(filename, text, offsets, context):
     int_offsets = [int(offset) for offset in offsets.split()]
     results = []
 
@@ -216,17 +216,17 @@ def main():
             z = None
 
         snips_written = set()
+        snip_size = min(args.snip_size, 250)
         for field in zettel.ZettelFields:
             show_field = "show_" + field
-            context_field = "context_" + field
             if argsd.get(show_field, None):
-                for query in semantics2.get_field_query_sql(field, argsd[context_field], docid):
+                for query in semantics2.get_field_query_sql(field, snip_size, docid):
                     field_query_generator = db.fts_query(query)
                     write_data(args.trace_sql, "a", "", query)
                     for result in field_query_generator:
                         if query.find("offsets(") >= 0:
                             snippets = process_offsets(current_filename,
-                                                       result[field + "_verbatim"], result[field + "_offsets"])
+                                                       result[field + "_verbatim"], result[field + "_offsets"], snip_size)
                             snippets_count = snippets_count + len(snippets)
 
                             # Write text version
