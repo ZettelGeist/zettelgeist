@@ -1,6 +1,9 @@
 import sys
 import argparse
-from zettelgeist import zdb, zettel, zquery
+from time import strftime
+
+from . import zdb, zettel, zquery
+from .zutils import *
 
 
 def get_argparse():
@@ -23,6 +26,16 @@ def get_argparse():
 
     parser.add_argument(
         '--query', help="query from command line (use single quotes)", default=None)
+
+    parser.add_argument(
+        '--label', help="label for --fileset, --stats (default: zfind)", default="zfind")
+
+    parser.add_argument(
+        '--fileset', help="write fileset", action="store_const", const=True, default=False)
+
+    parser.add_argument(
+        '--stats', help="write fileset", action="store_const", const=True, default=False)
+
     return parser
 
 
@@ -50,9 +63,11 @@ def main():
         sys.exit(1)
 
     search_count = 0
+    match_filenames = []
     for row in gen:
         search_count = search_count + 1
         printed_something = False
+        match_filenames.append(row['filename'])
         if args.use_zettel:
             loader = zettel.ZettelLoader(row['filename'])
             zettels = loader.getZettels()
@@ -78,6 +93,18 @@ def main():
 
     if args.count:
         print("%d Zettels matched search" % search_count)
+
+    basename = strftime("%Y%m%d%H%M%S")
+    if args.fileset:
+        fileset = "-".join([basename, args.label, "fileset"]) + '.txt'
+        write_to_file(fileset, "\n".join(
+            match_filenames), mode="w", newlines=1)
+
+    if args.stats:
+        stats = "-".join([basename, args.label, "stats"]) + '.txt'
+        doc = {'count': search_count,
+               'query': input_line.strip()}
+        write_to_file(stats, zettel.dict_as_yaml(doc), mode="w", newlines=1)
 
 
 if __name__ == '__main__':
