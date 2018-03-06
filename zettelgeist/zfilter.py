@@ -43,7 +43,7 @@ def get_argparse():
 
     parser.add_argument(
         '--output',
-        help="add text to output folder name", default="zfind")
+        help="add text to output folder name", default="zfilter")
 
     parser.add_argument(
         '--snip-size',
@@ -81,11 +81,18 @@ def process_offsets(filename, text, offsets, context):
     int_offsets = [int(offset) for offset in offsets.split()]
     results = []
 
+    previous = (len(text), 0)
     for info in offsets_gen(int_offsets, text):
         pos = info['pos']
         offset = info['size']
         low_pos = max(pos - offset - context, 0)
         high_pos = min(pos + offset + context, len(text))
+        if pos >= previous[0] and pos + offset <= previous[1]:
+           #print("skipping already output snippet [%d,%d]" % (pos, offset))
+           continue
+        else:
+           previous = (low_pos, high_pos)
+        #print("match @ [%s,%d] - snippet at [%d,%d]" % (pos, offset, low_pos, high_pos))
         results.append(text[low_pos:high_pos])
     return results
 
@@ -225,6 +232,7 @@ def main():
                     write_data(args.trace_sql, "a", "", query)
                     for result in field_query_generator:
                         if query.find("offsets(") >= 0:
+                            #print("Processing offsets for %s" % field)
                             snippets = process_offsets(current_filename,
                                                        result[field + "_verbatim"], result[field + "_offsets"], snip_size)
                             snippets_count = snippets_count + len(snippets)
