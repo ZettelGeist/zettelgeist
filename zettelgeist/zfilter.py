@@ -68,8 +68,11 @@ def counter():
 
 def offsets_gen(int_offsets, text):
     iterations = len(int_offsets) // 4
-    for i in range(0, iterations):
-        (column, term, pos, size) = int_offsets[i * 4:i * 4 + 4]
+    grouped = [tuple(int_offsets[i * 4:i * 4 + 4]) for i in range(0, iterations)]
+    grouped = sorted(grouped, key=lambda item: item[2])
+     
+    for group in grouped:
+        (column, term, pos, size) = group
         yield {'column': column,
                'term': term,
                'pos': pos,
@@ -88,11 +91,9 @@ def process_offsets(filename, text, offsets, context):
         low_pos = max(pos - offset - context, 0)
         high_pos = min(pos + offset + context, len(text))
         if pos >= previous[0] and pos + offset <= previous[1]:
-           #print("skipping already output snippet [%d,%d]" % (pos, offset))
            continue
         else:
            previous = (low_pos, high_pos)
-        #print("match @ [%s,%d] - snippet at [%d,%d]" % (pos, offset, low_pos, high_pos))
         results.append(text[low_pos:high_pos])
     return results
 
@@ -126,6 +127,15 @@ def dirname(path):
 def basename(path):
     return os.path.split(path)[1]
 
+def get_match_clause(query):
+    try:
+       match_pos = query.find("MATCH")
+       query = query[match_pos+len("MATCH"):]
+       and_pos = query.find("AND")
+       query = query[:and_pos]
+    except:
+       pass
+    return query
 
 def main():
     parser = get_argparse()
@@ -152,7 +162,7 @@ def main():
     else:
         print("No query to process: Use --prompt or --query")
         return
-    print("zfind writing results to folder %s" % output_dir)
+    print("zfilter writing results to folder %s" % output_dir)
 
     (ast2, semantics2) = zquery.compile2(input_line)
     db = zdb.get(args.database)
@@ -187,7 +197,7 @@ def main():
         base_path = os.path.join(output_dir, base_name)
         yaml_path = base_path + '.yaml.in'
 
-        print("... " + basename(yaml_path))
+        print("... " + yaml_path)
 
         write_to_file(
             yaml_path, "# Note: This is a generated .yaml.in file intended for editing (editor or zettel command)", mode="w", newlines=0)
@@ -245,6 +255,7 @@ def main():
                                               current_filename, mode="a", newlines=1)
                                 write_to_file(snip_path, "# field = %s" %
                                               field, mode="a", newlines=2)
+                                write_to_file(snip_path, "# query = %s" % get_match_clause(query), mode="a", newlines=2)
                                 write_to_file(snip_path, snip, mode="a", newlines=2)
 
                             snip_id = ":".join([snip_path, field])
