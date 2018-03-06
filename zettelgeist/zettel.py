@@ -446,6 +446,11 @@ def main():
     args = parser.parse_args()
     z_generator = gen_new_zettels(args)
 
+    try:
+        first_zettel = next(z_generator)
+    except ParseError as error:
+        print(error)
+
     extension = '.yaml'
     if args.in_place:
         if not args.file:
@@ -483,9 +488,9 @@ def main():
 
     try:
         if extension in ZettelMarkdownExtensions:
-            outfile.write(next(z_generator).get_text() + '\n')
+            outfile.write(first_zettel.get_text() + '\n')
         else:
-            outfile.write(next(z_generator).get_yaml() + '\n')
+            outfile.write(first_zettel.get_yaml() + '\n')
     except ParseError as error:
         print(error)
 
