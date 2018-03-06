@@ -245,8 +245,7 @@ def main():
                                               current_filename, mode="a", newlines=1)
                                 write_to_file(snip_path, "# field = %s" %
                                               field, mode="a", newlines=2)
-                                write_to_file(snip_path, get_context(
-                                    snip), mode="a", newlines=2)
+                                write_to_file(snip_path, snip, mode="a", newlines=2)
 
                             snip_id = ":".join([snip_path, field])
                             if snip_id not in snips_written:
