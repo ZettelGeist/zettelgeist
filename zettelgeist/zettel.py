@@ -8,6 +8,7 @@ import readline  # for input()
 import yaml
 import os
 import os.path
+import shutil
 
 from time import strftime
 
@@ -225,11 +226,16 @@ def get_argparse():
                             help="prompt for input of %s" % field,
                             default=False)
 
-    parser.add_argument('--file', nargs='?',
-                        help='Zettel file (.yaml) to process (or check syntax)')
+    parser.add_argument(
+        '--file', help='Zettel file (.yaml) to process (or check syntax)')
 
-    parser.add_argument('--save', nargs=1,
-                        help='Write output to specified file.')
+    parser.add_argument('--save', help='Write output to specified file.')
+
+    parser.add_argument('--in-place', action="store_true", default=False,
+                        help="overwrite original file specified by --file")
+
+    parser.add_argument(
+        '--backup-id', help='backup suffix for original filename (onlyu applies to --in-place)', default="orig")
 
     parser.add_argument('--now', action="store_true", default=False,
                         help="Write output to file named by current time (must not exist a priori)")
@@ -441,12 +447,30 @@ def main():
     z_generator = gen_new_zettels(args)
 
     extension = '.yaml'
-    if args.save:
-        filename = args.save[0]
+    if args.in_place:
+        if not args.file:
+            print("--in-place requires --file")
+            sys.exit(1)
+        filename = args.file
+        filename_parts = os.path.splitext(filename)
+        if filename_parts[1] != '.yaml':
+            print("Input file not .yaml: %s" % filename)
+            sys.exit(1)
+        backup_filename = ".".join([filename, args.backup_id])
+        print("Creating backup: %s" % backup_filename)
+        shutil.copyfile(filename, backup_filename)
+        print("saving in place: %s" % args.file)
+        outfile = open(args.file, "w")
+    elif args.save:
+        filename = args.save
+        if args.file == args.save:
+            print(
+                "Use --in-place instead of --save if you want to replace input file (from ---file)")
+            sys.exit(1)
         (basename, extension) = os.path.splitext(filename)
         print("Zettel being saved to %s (mode = %s)" %
-              (args.save[0], extension))
-        outfile = open(args.save[0], "w")
+              (args.save, extension))
+        outfile = open(args.save, "w")
     elif args.now:
         if args.now_id:
             filename = strftime("%Y%m%d%H%M%S") + "-%s.yaml" % args.now_id[0]
@@ -480,7 +504,8 @@ def gen_new_zettels(args):
         loader = ZettelLoader(args.file)
         last_z = None
         for z in loader.getZettels():
-            last_z = process_zettel_command_line_options(z, vargs, next(id_gen))
+            last_z = process_zettel_command_line_options(
+                z, vargs, next(id_gen))
             yield last_z
         if not last_z:
             yield process_zettel_command_line_options(Zettel(), vargs, next(id_gen))
