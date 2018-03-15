@@ -8,8 +8,6 @@ from .zutils import *
 
 def get_argparse():
     parser = zdb.get_argparse()
-    parser.add_argument('--use-zettel', action='store_const',
-                        const=True, default=False)
 
     for field in zdb.ZettelSQLFields:
         parser.add_argument('--show-%s' % field,
@@ -25,16 +23,13 @@ def get_argparse():
         '--query-file', help="load query from file", default=None)
 
     parser.add_argument(
-        '--query', help="query from command line (use single quotes)", default=None)
+        '--query', help="query from command line (use single quotes to surround query)", default=None)
 
     parser.add_argument(
-        '--label', help="label for --fileset, --stats (default: zfind)", default="zfind")
+        '--fileset', help="write fileset to filename", default=None)
 
     parser.add_argument(
-        '--fileset', help="write fileset", action="store_const", const=True, default=False)
-
-    parser.add_argument(
-        '--stats', help="write fileset", action="store_const", const=True, default=False)
+        '--stats', help="write statistics and parameters to filename", default=None)
 
     return parser
 
@@ -68,12 +63,9 @@ def main():
         search_count = search_count + 1
         printed_something = False
         match_filenames.append(row['filename'])
-        if args.use_zettel:
-            loader = zettel.ZettelLoader(row['filename'])
-            zettels = loader.getZettels()
-            z = next(zettels)
-        else:
-            z = None
+        loader = zettel.ZettelLoader(row['filename'])
+        zettels = loader.getZettels()
+        z = next(zettels)
 
         for field in row.keys():
             show_field = "show_" + field
@@ -94,18 +86,19 @@ def main():
     if args.count:
         print("%d Zettels matched search" % search_count)
 
-    basename = strftime("%Y%m%d%H%M%S")
     if args.fileset:
-        fileset = "-".join([basename, args.label, "fileset"]) + '.txt'
-        write_to_file(fileset, "\n".join(
-            match_filenames), mode="w", newlines=1)
+        if not os.path.exists(args.fileset):
+           write_to_file(args.fileset, "\n".join(match_filenames), mode="w", newlines=1)
+        else:
+           print("Filename %s exists; will not overwrite." % args.fileset)
 
     if args.stats:
-        stats = "-".join([basename, args.label, "stats"]) + '.txt'
-        doc = {'count': search_count,
+        if not os.path.exists(args.stats):
+           doc = {'count': search_count,
                'query': input_line.strip()}
-        write_to_file(stats, zettel.dict_as_yaml(doc), mode="w", newlines=1)
-
+           write_to_file(args.stats, zettel.dict_as_yaml(doc), mode="w", newlines=1)
+        else:
+           print("Filename %s exists; will not overwrite." % args.stats)
 
 if __name__ == '__main__':
     main()
