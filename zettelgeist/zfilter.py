@@ -22,12 +22,15 @@ def get_argparse():
         help="write number of zettels matched to statistics file")
 
     parser.add_argument(
-        '--prompt', action='store_const', const=True, default=False,
-        help="enter query interactively (overrides --input))")
+        '--query-prompt', action='store_const', const=True, default=False,
+        help="prompt for ZQL query (overrides --query, --query-file))")
 
     parser.add_argument(
-        '--query',
-        help="load query from file", default=None)
+        '--query-file', help="load ZQL query from file (overrides --query)", default=None)
+
+    parser.add_argument(
+        '--query-string',
+        help="load ZQL from string", default=None)
 
     parser.add_argument(
         '--save-query',
@@ -70,7 +73,7 @@ def offsets_gen(int_offsets, text):
     iterations = len(int_offsets) // 4
     grouped = [tuple(int_offsets[i * 4:i * 4 + 4]) for i in range(0, iterations)]
     grouped = sorted(grouped, key=lambda item: item[2])
-     
+
     for group in grouped:
         (column, term, pos, size) = group
         yield {'column': column,
@@ -153,15 +156,17 @@ def main():
         print("Failed to create %s. Please check permissions to write this folder." % output_dir)
         sys.exit(2)
 
-    if args.prompt:
-        input_line = input("zquery> ")
-
-    elif args.query:
-        with open(args.query) as infile:
+    if args.query_prompt:
+        input_line = input("zfilter> ")
+    elif args.query_file:
+        with open(args.query_file) as infile:
             input_line = infile.read()
+    elif args.query_string:
+        input_line = args.query_string
     else:
-        print("No query to process: Use --prompt or --query")
+        print("No query option (--query, --query-file, or --prompt) found")
         return
+
     print("zfilter writing results to folder %s" % output_dir)
 
     (ast2, semantics2) = zquery.compile2(input_line)

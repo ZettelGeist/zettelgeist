@@ -16,14 +16,17 @@ def get_argparse():
 
     parser.add_argument('--count', action='store_const', const=True,
                         default=False, help="Show number of Zettels matching this search")
-    parser.add_argument('--query-prompt', action='store_const', const=True,
-                        default=False, help="enter query interactively (overrides --input))")
 
     parser.add_argument(
-        '--query-file', help="load query from file", default=None)
+        '--query-prompt', action='store_const', const=True, default=False,
+        help="prompt for ZQL query (overrides --query-string, --query-file))")
 
     parser.add_argument(
-        '--query', help="query from command line (use single quotes to surround query)", default=None)
+        '--query-file', help="load ZQL query from file (overrides --query)", default=None)
+
+    parser.add_argument(
+        '--query-string',
+        help="load ZQL from string", default=None)
 
     parser.add_argument(
         '--fileset', help="write fileset to filename", default=None)
@@ -40,14 +43,15 @@ def main():
     argsd = vars(args)
 
     if args.query_prompt:
-        input_line = input("zfind:zql> ")
+        input_line = input("zfind> ")
     elif args.query_file:
         with open(args.query_file) as infile:
             input_line = infile.read()
-    elif args.query:
-        input_line = args.query
+    elif args.query_string:
+        input_line = args.query_string
     else:
-        input_line = None
+        print("No query option (--query-string, --query-file, or --query-prompt) found")
+        return
 
     if input_line:
         ast = zquery.compile(input_line)
