@@ -18,6 +18,10 @@ def main():
     parser = zdb.get_argparse()
     parser.add_argument(
         '--dir', help="location of Zettels (path to folder)", required=True)
+
+    parser.add_argument('--fullpath', action="store_true",
+                        help="store full path to file in index", default=False)
+
     parser.add_argument('--validate', action="store_true",
                         help="check Zettels only (don't import)", default=False)
 
@@ -25,7 +29,11 @@ def main():
     db = zdb.get(args.database)
     zettel_dir = args.dir
 
-    for filepath in get_zettels(zettel_dir):
+    for entry in get_zettels(zettel_dir):
+        if args.fullpath:
+            filepath = os.path.abspath(entry)
+        else:
+            filepath = entry
         if not filepath.endswith('.yaml'):
             print("Ignoring %s; add .yaml extension to import this file." % filepath)
             continue
