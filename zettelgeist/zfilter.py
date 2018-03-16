@@ -45,8 +45,8 @@ def get_argparse():
         help="save compiled SQL to file (for developers only)", default=None)
 
     parser.add_argument(
-        '--output',
-        help="add text to output folder name", default="zfilter")
+        '--save',
+        help="save to output folder", required=True)
 
     parser.add_argument(
         '--snip-size',
@@ -145,16 +145,16 @@ def main():
     args = parser.parse_args()
     argsd = vars(args)
 
-    output_dir = strftime("%Y%m%d%H%M%S") + "-%s" % args.output
+    output_dir = args.save
     if os.path.exists(output_dir):
-        print("Please remove directory %s. This error should never happen." % output_dir)
+        print("Will not overwrite existing directory %s (exiting)." % output_dir)
         sys.exit(1)
 
     try:
         os.mkdir(output_dir)
     except:
-        print("Failed to create %s. Please check permissions to write this folder." % output_dir)
-        sys.exit(2)
+        print("Could not create output folder %s (exiting)." % output_dir)
+        sys.exit(1)
 
     if args.query_prompt:
         input_line = input("zfilter> ")
@@ -164,8 +164,8 @@ def main():
     elif args.query_string:
         input_line = args.query_string
     else:
-        print("No query option (--query, --query-file, or --prompt) found")
-        return
+        print("No query option (--query, --query-file, or --prompt) found (exiting).")
+        sys.exit(1)
 
     print("zfilter writing results to folder %s" % output_dir)
 
@@ -192,13 +192,12 @@ def main():
 
     search_result_generator = db.fts_query(select_sql)
 
-    current_time = strftime("%Y%m%d%H%M%S")
     all_results = list(search_result_generator)
     format_d_length = len(str(len(all_results)))
     match_filenames = []
     for search_result in all_results:
         docid = search_result['docid']
-        base_name = current_time + ("-%%0%dd" % format_d_length) % search_count
+        base_name = output_dir + ("-%%0%dd" % format_d_length) % search_count
         base_path = os.path.join(output_dir, base_name)
         yaml_path = base_path + '.yaml.in'
 
