@@ -4,6 +4,7 @@ import re
 import os
 import os.path
 import yaml
+import json
 from time import strftime
 
 from . import zdb, zettel, zquery
@@ -18,8 +19,8 @@ def get_argparse():
                             help="include field <%s> in output" % field)
 
     parser.add_argument(
-        '--count', action='store_const', const=True, default=False,
-        help="write number of zettels matched to statistics file")
+        '--metadata', action='store_const', const=True, default=False,
+        help="write metadata")
 
     parser.add_argument(
         '--query-prompt', action='store_const', const=True, default=False,
@@ -195,6 +196,8 @@ def main():
     all_results = list(search_result_generator)
     format_d_length = len(str(len(all_results)))
     match_filenames = []
+    snips_written = set()
+
     for search_result in all_results:
         docid = search_result['docid']
         base_name = output_dir + ("-%%0%dd" % format_d_length) % search_count
@@ -236,7 +239,6 @@ def main():
                   row['filename'])
             z = None
 
-        snips_written = set()
         snip_size = max(args.snip_size, 250)
         for field in zettel.ZettelFields:
             show_field = "show_" + field
@@ -262,7 +264,7 @@ def main():
                                 write_to_file(snip_path, "# query = %s" % get_match_clause(query), mode="a", newlines=2)
                                 write_to_file(snip_path, snip, mode="a", newlines=2)
 
-                            snip_id = ":".join([snip_path, field])
+                            snip_id = (field, snip_path)
                             if snip_id not in snips_written:
                                 write_to_file(yaml_path,
                                               "# %s -> See %s for snippets." % (field, snip_path), mode="a", newlines=2)
@@ -281,15 +283,16 @@ def main():
         for g in gen:
             pass
 
-    if args.count:
-        stats_path = base_path + '-stats.yaml'
-        files_path = base_path + '-fileset.yaml'
+    if args.metadata:
+        stats_path = os.path.join(output_dir, output_dir + '-stats.json')
+        files_path = os.path.join(output_dir, output_dir + '-fileset.txt')
 
         doc = {'count': search_count,
-               'query': input_line.strip()}
+               'query': input_line.strip(),
+               'snips': list(snips_written)}
 
-        write_to_file(stats_path, zettel.dict_as_yaml(
-            doc), mode="w", newlines=1)
+        write_to_file(stats_path,
+            json.dumps(doc, indent=4, sort_keys=True), mode="w", newlines=1)
         write_to_file(files_path, "\n".join(
             match_filenames), mode="w", newlines=1)
 
