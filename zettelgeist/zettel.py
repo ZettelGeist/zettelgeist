@@ -235,7 +235,7 @@ def get_argparse():
                         help="overwrite original file specified by --file")
 
     parser.add_argument(
-        '--backup-id', help='backup suffix for original filename (onlyu applies to --in-place)', default="orig")
+        '--backup-id', help='backup suffix for original filename (only applies to --in-place)', default="orig")
 
     parser.add_argument('--name', nargs='+', help="order of components, e.g. id, seq, or timestamp")
     parser.add_argument('--id', help="human-understandable id to include in filename")
