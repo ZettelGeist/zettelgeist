@@ -242,10 +242,6 @@ def get_argparse():
     parser.add_argument('--seq', type=int, help="sequence number")
     parser.add_argument('--seq-digits', type=int, help="digits in sequence number (default=4)", default=4)
 
-    parser.add_argument('--timestamp', action="store_true", default=False,
-                        help="include timestamp in filename")
-
-
     parser.add_argument('--separator', type=str, help="separate components with delimiter (default is '-')", default="-")
 
     return parser
@@ -452,6 +448,7 @@ def main():
     parser = get_argparse()
     args = parser.parse_args()
     argsd = vars(args)
+    argsd['timestamp'] = True
     z_generator = gen_new_zettels(args)
 
     try:
@@ -501,8 +498,8 @@ def main():
             digits = max(len(seq_text), digits)
             pad_text = "0" * (digits - len(seq_text))
             name_components['seq'] = pad_text + seq_text
-        if args.timestamp:
-            name_components['timestamp'] = strftime("%Y%m%d%H%M%S")
+
+        name_components['timestamp'] = strftime("%Y%m%d%H%M%S")
 
         name_template = args.separator.join(["%%(%s)s" % name for name in args.name]) + ".yaml"
         filename = name_template % name_components
