@@ -237,10 +237,17 @@ def get_argparse():
     parser.add_argument(
         '--backup-id', help='backup suffix for original filename (onlyu applies to --in-place)', default="orig")
 
-    parser.add_argument('--now', action="store_true", default=False,
-                        help="Write output to file named by current time (must not exist a priori)")
-    parser.add_argument('--now-id', nargs=1,
-                        help="Append suffix to now filename")
+    parser.add_argument('--name', nargs='+', help="order of components, e.g. id, seq, or timestamp")
+    parser.add_argument('--id', help="human-understandable id to include in filename")
+    parser.add_argument('--seq', type=int, help="sequence number")
+    parser.add_argument('--seq-digits', type=int, help="digits in sequence number (default=4)", default=4)
+
+    parser.add_argument('--timestamp', action="store_true", default=False,
+                        help="include timestamp in filename")
+
+
+    parser.add_argument('--separator', type=str, help="separate components with delimiter (default is '-')", default="-")
+
     return parser
 
 
@@ -444,6 +451,7 @@ class ZettelLoader(object):
 def main():
     parser = get_argparse()
     args = parser.parse_args()
+    argsd = vars(args)
     z_generator = gen_new_zettels(args)
 
     try:
@@ -469,19 +477,35 @@ def main():
     elif args.save:
         filename = args.save
         if args.file == args.save:
-            print(
-                "Use --in-place instead of --save if you want to replace input file (from ---file)")
+            print("Use --in-place instead of --save if you want to replace input file (from ---file)")
             sys.exit(1)
         (basename, extension) = os.path.splitext(filename)
         print("Zettel being saved to %s (mode = %s)" %
               (args.save, extension))
         outfile = open(args.save, "w")
-    elif args.now:
-        if args.now_id:
-            filename = strftime("%Y%m%d%H%M%S") + "-%s.yaml" % args.now_id[0]
-        else:
-            filename = strftime("%Y%m%d%H%M%S.yaml")
-        print("Zettel saved to %s" % filename)
+    elif args.name:
+        name_components = {}
+        for arg in args.name:
+            if arg not in ['id','seq','timestamp']:
+                print("--name may only use id, seq, and timestamp (%s found)" % arg)
+                sys.exit(1)
+            if not argsd.get(arg, None) != None:
+                print("--name %s requires --%s" % (args.name, arg))
+                print(argsd)
+                sys.exit(1)
+        if args.id != None:
+            name_components['id'] = args.id
+        digits = args.seq_digits
+        if args.seq != None:
+            seq_text = str(args.seq)
+            digits = max(len(seq_text), digits)
+            pad_text = "0" * (digits - len(seq_text))
+            name_components['seq'] = pad_text + seq_text
+        if args.timestamp:
+            name_components['timestamp'] = strftime("%Y%m%d%H%M%S")
+
+        name_template = args.separator.join(["%%(%s)s" % name for name in args.name]) + ".yaml"
+        filename = name_template % name_components
         outfile = open(filename, "w")
     else:
         outfile = sys.stdout
