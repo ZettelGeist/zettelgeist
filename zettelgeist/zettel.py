@@ -289,7 +289,10 @@ class Zettel(object):
         parse_zettel(self.zettel)
 
     def delete_field(self, name):
-        del(self.zettel[name])
+        try:
+            del(self.zettel[name])
+        except:
+            pass
         parse_zettel(self.zettel)
 
     def reset_list_field(self, name):
