@@ -222,6 +222,7 @@ def get_argparse():
 
     parser.add_argument('--set-dates', nargs='+', type=str, metavar=('YEAR', 'ERA'),
                         help="set dates; YEAR required - ERA is optional (extra arguments beyond the 2nd are ignored but allowed")
+
     for field in ZettelFieldsOrdered:
         parser.add_argument('--prompt-%s' % field, action="store_true",
                             help="prompt for input of %s" % field,
@@ -247,6 +248,12 @@ def get_argparse():
     parser.add_argument('--counter', type=str, help="counter name")
     parser.add_argument('--counter-path', type=str, help="counter filename/path to filename", default=".counter.dat")
 
+    parser.add_argument('--restrict-output-fields',
+                            nargs="+", help="restrict output fields (list of Zettel field names)",
+                            default=ZettelFieldsOrdered)
+
+    parser.add_argument('--omit-markdown-header', action="store_true", default=False,
+                        help="add markdown header when writing Markdown for each YAML field")
 
     return parser
 
@@ -388,7 +395,7 @@ class Zettel(object):
                 yaml_zettel[key] = self.zettel[key].copy()
         return yaml.dump(yaml_zettel, default_flow_style=False)
 
-    def get_text(self, restrict_to_fields=ZettelFieldsOrdered):
+    def get_text(self, omit_markdown_header, restrict_to_fields=ZettelFieldsOrdered):
         text = []
         parse_zettel(self.zettel)
         for key in ZettelFieldsOrdered:
@@ -396,7 +403,8 @@ class Zettel(object):
                 continue
             if key not in restrict_to_fields:
                 continue
-            text.append(markdown_h1(key))
+            if not omit_markdown_header:
+               text.append(markdown_h1(key))
             if key in ZettelStringFields:
                 text.append(self.zettel[key].strip())
             elif key in ZettelListFields:
@@ -528,9 +536,9 @@ def main():
 
     try:
         if extension in ZettelMarkdownExtensions:
-            outfile.write(first_zettel.get_text() + '\n')
+            outfile.write(first_zettel.get_text(args.omit_markdown_header, args.restrict_output_fields) + '\n')
         else:
-            outfile.write(first_zettel.get_yaml() + '\n')
+            outfile.write(first_zettel.get_yaml(args.restrict_output_fields) + '\n')
     except ParseError as error:
         print(error)
 
