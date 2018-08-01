@@ -2,7 +2,7 @@
 # ZettelGeist Version for Python
 #
 
-__version__ = "1.0.17"
+__version__ = "1.0.18"
 
 def version():
     return __version__
