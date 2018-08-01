@@ -375,7 +375,9 @@ class Zettel(object):
         text = []
         with open(filename, 'r') as infile:
             text = infile.readlines()
-        self.set_field(name, ''.join(text))
+        text = ''.join(text)
+        text = text.strip()
+        self.set_field(name, text)
         parse_zettel(self.zettel)
 
     def get_yaml(self, restrict_to_fields=ZettelFieldsOrdered):
