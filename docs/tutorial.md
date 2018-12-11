@@ -4,6 +4,8 @@ title: Tutorial
 permalink: /tutorial/
 ---
 
+**This page is under construction. Pardon the sketchiness for now.**
+
 ## Installation
 
 - Introduction to Zettel --help in general.
