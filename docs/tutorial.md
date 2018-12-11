@@ -60,7 +60,14 @@ zettel --file  last.filename.yaml --append-tags "Analytical Engine" --set-cite "
 zettel --campbell-kelly-template.yaml --set-cite ""  "p. 33" --prompt-note --prompt-tags --id campbell-kelly --counter campbell-kelly next --name
 ```
 
-- this will have you enter note and tags as you create on command line. [--prompt-cite will ask for both bibkey and pages -- using "" for former lets you just change the page in the command]  
+- This will have you enter note and tags as you create on command line. 
+
+- **Avoid trailing space at the end of lines, when possible.  It will work but result in \n between lines.**
+
+  - BTW, --prompt-cite will ask for both bibkey and pages, so you would need to keep entering bibkey. 
+
+  - But using --set-cite "" "pp. 56-60" for former lets you just change the page in the command itself before you ask for prompts.  
+
 
 - To eliminate previous tags on a template 
 
@@ -82,81 +89,6 @@ zettel --campbell-kelly-template.yaml --set-cite ""  "p. 48" --prompt-note --app
  
 ```
 
-## See the tags you have used already. 
-
-[TODO: revive zdb_tags]
-
-```
-zcreate --database index.db
-```
-```
-zimport --database index.db $(pwd) 
-```
-
-- This can be done in any folder, with any database name. Use $(pwd) to do that an all under it. 
-
-- List all the tags you have used in the system
-
-```
-zdb-tags index.db 
-```
-
-- Do a query of the notes you have. All those that have tag of "Analytical Engine"
-
-```
-zfind --database index.db --find-tags "analytical engine" --count --show-filename --show-title --show-note 
-```
-
-- to just see tags
-
-```
---show-tags
-```
-
-- to see as it looks in zettel 
-
-```
---use-zettel
-```
-
-Then you can copy and paste into a new zettel. 
-
-Search result shows up in zettel format... 
-
-## Looking at tags to see how you phrased the previous one.  
-
-- Use zdb_tags index.db 
-
-- Use UNIX to be more selective.
-
-```
-zdb_tags index.db | grep -i engine 
-```
-
-[would find "analytical engine" and "difference engine", etc.
-
-```
-zdb_tags index.db | grep -i bab 
-```
-
-[Would find "charles babbage"]
-
-```
-zdb_tags index.db | grep -i babb 
-```
-
-babbage, babbage failure, babbage summary of achievement 
-
-- Now you can see what you used for a tag about babbage.... 
-
-- Then you could zFind to find the note(s) that have a certain tag.  
-
-```
-zfind --database index.db --find-tags "babbage summary of achievement" --count --show-filename --showtitle --show-note --show-tags 
-```
-
-[Don't always need to see it in zettel format--search format shows you what is there.  Then add --use-zettel to get it in the zettel form.] 
-
 ## Do search with more results.
 
 
@@ -176,11 +108,14 @@ Results have dashed lines between each
 
 Linux way is to redirect 
 
+```
 add "> results.txt" to command to make the result.txt file with eveything in it.
+```
 
 [TODO: add zFind command option to make headings into markdown. Put everything into a nice markdown format.] 
 
 ## To have _just_ the basic stuff to pull into a document, just include 
+
 - notes and citations are really all you need if you search on good tags that you have created. 
 
 ```
@@ -195,24 +130,12 @@ zfind --database index.db --find-tags "babbage" --show-note --show-cite
 
 [TODO: future lecture process for teaching -- do zfind on everything on a topic. then just go through the results.   This is the memory extender that lets you pull up information through a retrieval system.   The retrieval system is what is the new and the best of the system.  This is what Onenote is lacking. ] 
 
-## Discussion of the error messages you built in to make sure that zettels are written properly... 
 
-## any editor can be used: command line, sublime text, vim.... Just follow conventions and save as .yaml 
+## Any editor can be used: command line, sublime text, vim.... Just follow conventions and save as .yaml 
 
-## processing forum entries from fall Comp111 class 
+### Some recipes for using VIM to make Zettel commands and work with PDFS.
 
-## If we want to collaborate we can actually just work on a Google Doc but format it with the fields, etc.  No real reason to be killing ourselves to do it with Authorea, etc.  
-
-# Some recipes for using VIM to make Zettel commands and work with PDFS.
-
-## Alias to create basic Zettel from command [alias "zet"]
-
-```
-zettel --now --prompt-note --prompt-title --prompt-tags --prompt-cite
-```
-```
-
-## Use VIM to edit command
+### Use VIM to edit command
 
 In Oh-My-Zsh: add "vi-mode" to plugins in .zshrc   [plugins=(git vi-mode)]
 
@@ -231,7 +154,6 @@ ci"    will replace everything within quotation marks.  [Do this between note: a
 ```
 :wq 
 [enter]
-
 ```
 Arrow up, REPEAT endlessly
 
@@ -247,28 +169,6 @@ zcreate --database Zettels-Today.db"
 ```
 alias zimporttoday="zimport --database Zettels-Today.db --zettel-dir ~/zettels/hocz/dbdz"
 ```
-
-### Importing PDFs from Office Lens
-
-- Download and unzip pdfs from OneDrive
-
-- Do this "loop" command:
-
-```
-for file in *.pdf; do pdftotext "$file" "$file.txt"; done
-```
-
-- to merge them into single file 
-
-```
-cat *.txt > merged-file
-```
-- then rename the resulting file
-
-```
-mv merged-file "newfilename.ext" 
-```
-
 # From Video Session 2017-12-20 13.47.55 ZG INSTRUCTIONS-ZFind-filter[?]-Demo
 
 ## Starting
