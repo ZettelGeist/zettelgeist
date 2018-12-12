@@ -8,19 +8,31 @@ permalink: /tutorial/
 
 ## What do you want to do?
 
-### Take research notes for a paper in order to be able to search them for ... anything.  
+- Take research notes for a paper in order to be able to search them for ... anything.  
 
-### Follow the traditional (and ever-valid) methods of writing a note with a title, some keywords (tags), a note (with comment or summary if desired), and some bibliographical information (book or article title and page number[s]).  
+- Follow the traditional (and ever-valid) methods of writing a note with a title, some keywords (tags), a note (with comment or summary if desired), and some bibliographical information (book or article title and page number[s]).  
+
+- Find particular notes on particular themes and issues. 
+
+- Send those particular notes to a file that will be the basis for a portion of your outline or draft. 
+
+## All of these basic research, organization, and writing steps are steeped in traditional methods. As researchers and writers of papers, articles, books, from grade school, high school, college, graduate school, through our professional writings -- as well as teachers and editors of countless efforts by others, we know the game. 
+
+- We made ZettelGeist to do the most important, fundamental steps of research and writing as clear and straightforward as possible, based on the systems that our mentors used to write the great books before computers came into being.  
+
+- But because we are also computerized, we have brought these techniques into the computer world -- more directly than any program has before. 
+
+- And, the basis for all of this all already in the computer and the internet sites.  You don't have to go and buy anything new.  You already have _supercomputers_ compared to anything the great writers ever used.  This system will just help you to take advantage of it better in ways consistent with the key principles of research and organization. 
 
 ## The first thing to know is that with ZettelGeist you can do ALL this with ANY SOFTWARE YOU WANT TO USE!!  
 
-### Many programs suggest they are "app-gnostic" (agnostic or indifferent about which app you use), but that usually just means you can save your work into another format (doc, txt, etc.).  ZettelGeist is truly app neutral in the sense that you can make notes (zettels) with any software, as long as you make them according to a certain pattern (indicating note section, title section, etc...) and save or download them in good old ".txt" format.  
+- Many programs suggest they are "app-gnostic" (agnostic or indifferent about which app you use), but that usually just means you can save your work into another format (doc, txt, etc.).  ZettelGeist is truly app neutral in the sense that you can make notes (zettels) with any software, as long as you make them according to a certain pattern (indicating note section, title section, etc...) and save or download them in good old ".txt" format.  
 
-### The "pattern" is exactly what you would use to write out a notecard in the traditional way (by hand, or typed on paper or computer), so it really isn't that big a deal.  Plus, once you make one card (or zettel), you can just edit the same card to make any necessary changes for the next card (change the note, change the page numbers, etc.) then save the new card with a new filename, eg. "note02.txt" and move on...
+- The "pattern" is exactly what you would use to write out a notecard in the traditional way (by hand, or typed on paper or computer), so it really isn't that big a deal.  Plus, once you make one card (or zettel), you can just edit the same card to make any necessary changes for the next card (change the note, change the page numbers, etc.) then save the new card with a new filename, eg. "note02.txt" and move on...
 
-### You can do this with ANY word processor you want to use: Google Docs, Microsoft Word, LibreOffice.  In fact, you could just use the most basic editor that is already residing on your computer: Notepad, Wordpad (on Windows), TextEdit (Mac), Vim, Emacs, etc. 
+- You can do this with ANY word processor you want to use: Google Docs, Microsoft Word, LibreOffice.  In fact, you could just use the most basic editor that is already residing on your computer: Notepad, Wordpad (on Windows), TextEdit (Mac), Vim, Emacs, etc. 
 
-#### If that last sentence confuses you, don't worry.  Just use Google Docs or Word or whatever you are used to. (The surprise is that you don't actually have to buy any word processor at all because the above basic text editors come with your system and ZettelGeist would allow you to use those for free to research, organize, and write any great work you need to produce -- but let's set that aside for the moment.) 
+- If that last sentence confuses you, don't worry.  Just use Google Docs or Word or whatever you are used to. (The surprise is that you don't actually have to buy any word processor at all because the above basic text editors come with your system and ZettelGeist would allow you to use those for free to research, organize, and write any great work you need to produce -- but let's set that aside for the moment.) 
 
 ## Let's try it out with Google Docs since we all have access to that. 
 
