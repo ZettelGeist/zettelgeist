@@ -46,9 +46,9 @@ permalink: /tutorial/
 
 - If you want the other elements, like title: summary: or comment: great, just add them too. As long as you name sections according to the list on the "Note Format" page, or listed in "zettel -- help", you can create notes however you prefer, with sections in whatever order you like.  Basically, you are making up your own system (based on these universally valid "fields") and can treat any "file" as a blank notecard, just as you do when you buy a pack of 3 x 5 notecards at the pharmacy and make flash cards for a high school class.  Fill them out as you like!
 
-## So, with that flexibilty in mind, let's make your first note.  i
+## So, with that flexibilty in mind, let's make your first note.
 
-### For now, just go to Google Docs (or Word, or...your choice -- but we will use Google Docs as the main example here since we all have access and some familiarity with this editor.)  
+## For now, just go to Google Docs (or Word, or...your choice -- but we will use Google Docs as the main example here since we all have access and some familiarity with this editor.)  
 
 - Start a new Doc.  
 
@@ -203,7 +203,7 @@ cite:
   
   - This is waaaaaaay different from having all of your notes in a single document or having them on a few "Onenote" or "Evernote" pages, but then having difficulty selecting the particular cards or notes you need in particular.  This is where the ZettelGeist system becomes an electronic version of "moving the cards around" when you start to outline or write the paper.  
 
-## OK.  Let's process our notes.  
+## Let's process our notes.  
 
 - First, think about whether you want to keep working in the directory where your browser saved the cards, or somewhere else.  It's probably best to move them.  (This is more an issue for people using GDocs as the editor since it saves to the default Downloads directory or folder.  If you have been doing it with Word or, etc. then you could have been using "save as" to put them in a directory for your project, say "Gatsby-Paper."  
 
