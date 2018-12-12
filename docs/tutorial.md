@@ -48,13 +48,13 @@ permalink: /tutorial/
 
 - There are a number of those (see Note Format page) because, as researchers, we know you might also want to "comment:" or write a "summary:" or add bibliographical information "bibkey:" and "pages:", and so on.  
 
-- BUT this is completely up to you. You can add any of these in any order according to your needs.  A completely valid note would just start with "note:" and then write the text of your note, including all the information you want to produce or record. That would work just fine.  You could then save it as "note-01.txt" and it could be processed in ZettelGeist without a problem (after a couple of changes to the filename so it can be searched and used in the system -- more on that in a minute). 
+- BUT this is completely up to you. You can add any of these in any order according to your needs.  A completely valid note would just start with "note:" and then just consist of the text of your note in the next line surrounded by quotations, including all the information you want to produce or record. That would work just fine.  You could then save it as "note-01.txt" and it could be processed in ZettelGeist without a problem (after a couple of changes to the filename so it can be searched and used in the system -- more on that in a minute). 
 
-- If you want the other elements, like title: summary: or comment: great, just add them too. As long as you name sections according to the list on the "Note Format" page, or listed in "zettel -- help", you can create notes however you prefer, with sections in whatever order you like.  Basically, you are making up your own system (based on these universally valid "fields") and can treat any "file" as a blank notecard, just as you do when you buy a pack of 3 x 5 notecards at the pharmacy and make flash cards for a high school class.  Fill them out as you like!
+- If you want the other elements, like title: summary: or comment: great, just add them too. As long as you name sections according to the list on the "Note Format" page, or listed in "zettel --help", you can create notes however you prefer, with sections in whatever order you like.  Basically, you are making up your own system (based on these universally valid "fields") and can treat any "file" as a blank notecard, just as you do when you buy a pack of 3 x 5 notecards at the pharmacy and make flash cards for a high school class.  Fill them out as you like!
 
 ## So, with that flexibilty in mind, let's make your first note.
 
-## For now, just go to Google Docs (or Word, or...your choice -- but we will use Google Docs as the main example here since we all have access and some familiarity with this editor.)  
+### For now, just go to Google Docs (or Word, or...your choice -- but we will use Google Docs as the main example here since we all have access and some familiarity with this editor.)  
 
 - Start a new Doc.  
 
@@ -62,13 +62,13 @@ permalink: /tutorial/
 
   - Go to "Tools>Preferences" and **uncheck** most of the automatic styling elements.  
   
-  - Uncheck "Automatically capitalize" "Use smart quotes" "Automatically detect lists" and the main "Automatic substitution."  
+`Uncheck "Automatically capitalize" "Use smart quotes" "Automatically detect lists" and the main "Automatic substitution."` 
   
   - We want as simple and plain characters as possible (most programs add fancier "unicode" characters with these features -- but we don't need them and they actually mess up searching and finding later).  
   
   - You can always turn these back on later, but you probably wouldn't miss most of these anyway.
 
-- Close preferences and then just start on a plain Doc page. But now you can think of it a little differently. This is now a _notecard_ (right out of your 3 x 5 package)!  Even though it is on a supercomputer linked to the internet, it is just a "card" now. Let's just fill it in like we would by hand. 
+- Close preferences and then just start on a plain Doc page. But now you can think of it a little differently. This is now a _notecard_ (right out of your 3 x 5 package)!  Even though it is on a supercomputer in the "cloud" linked to the internet, it is just a "card" now. Let's just fill it in like we would by hand. 
 
 - Let's say you want to give it a title (remember, it's up to you whether you need a title, but this will remind you what this card and other subsequent ones in this research session are about).  
 
@@ -78,13 +78,13 @@ permalink: /tutorial/
 
 - Ok. That's the top line of your note, just like on the "red" line of your good old notecard.  
 
-- Now, let's put in something about the book you are reading (for instance -- you could be taking notes for anything including your own  novel or writing poetry or writing a shopping list -- but we are thinking research paper for now).  
+- Now, let's put in something about the book you are reading, for instance (you could be taking notes for anything including your own novel or writing poetry or writing a shopping list, but we are thinking research paper for now).  
 
 - Make a new line and type: 
 
 `note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  Written during The Jazz Age, it is a masterpiece of American Literature."`
 
-- Notice that I put the text part of this note:"inside quotation marks."  This is just necessary when you write longer notes because it means you can put quotes and colons and multiple lines into your plain text card.  Just a formality, but not a big deal.
+- Notice that I put the text part of this note:"inside quotation marks."  This is necessary when you write longer notes because it means you can put quotes and colons and multiple lines into your plain text card.  Just a formality, but not a big deal.
 
 - For now, let's just stop there and see what we can do with that very first note. 
 
@@ -106,13 +106,13 @@ permalink: /tutorial/
 
 - Let's change the note: (obviously).  Just highlight from the quotation mark to the last, delete the original note, and write another.
 
-`note: "The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1)`
+`note: "The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. 'Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1)"`
 
 - Note that you should surround quoted material in single quotation marks within your outside quotes... That's just a matter of form. Normal rules apply. No biggy. 
 
-- We just added a quote from the book.  So you might want to write something about that citatio (your own opinion of its importance, etc.) as well. (Teachers want to hear your voice, and you want to remember why you took the note.)
+- We just added a quote from the book.  So you might want to write something about that citation (your own opinion of its importance, etc.) as well. (Teachers want to hear your voice, and you want to remember why you took the note.)
 
-- That's simple: You could just add something to the "note:" section itself
+- That's simple: You could just add something to the "note:" section itself:
 
 `"The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1) Comment: This is a famous first line and my teacher says that we should analyze it carefully."`
 
@@ -120,11 +120,11 @@ permalink: /tutorial/
 
 - Just click "File>Download>Plain Text (.txt) again.  It will automatically download (and get a new name with "(1)" added by Google Docs) -- so you don't have to do anything to change the filename, etc.  Just click.
 
-- Cool.  Two notes are now in your research "card stack" for processing.  If we did pull them into the system, they would be completely searchable and usable.  Again.  You could just take notes with "notes:" or "title:" and "note:" and that will do the job.  
+- Cool.  Two notes are now in your research "card stack" for processing.  If we did pull them into the system, they would be completely searchable and usable.  Again: you could just take notes with "notes:" or "title:" and "note:" and that will do the job.  
 
 - But, you can do a lot more if you want to.  ZettelGeist allows you to break up these elements of research notes into each of the traditional elements listed on the "Note Format" page!  
 
-## So let's go back to our GDocs page and adjust this note to make a third with a little more -- zing! 
+## So let's go back to our GDocs page and adjust this note to make a third with a little more...zing! 
 
 - Highlight "Comment: This is a famous first line and my teacher says that we should analyze it carefully." Then cut it. 
 
@@ -274,7 +274,7 @@ Let's do the last one:
 
 ## In conclusion, for GDocs, Word (etc.) users...
 
-- **Your notetaking system is still there, ready for you to continue with your project.  Just take a look back at the GDocs (Word) page -- the cards are ever-ready for your next idea, and your next, and ... **
+**Your notetaking system is still there, ready for you to continue with your project!  Just take a look back at the GDocs (Word) page you were working on -- the card is ever-ready for you to edit and save your next idea, and your next, and ... (fractals, baby!!) **
 
 ## Now, for those who might be more comfortable -- or interested in -- doing all of your writing of notes or zettels at the command line itself (not using an outside editor at all -- free or not).  
 
