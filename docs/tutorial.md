@@ -16,13 +16,15 @@ permalink: /tutorial/
 
 - Send those particular notes to a file that will be the basis for a portion of your outline or draft. 
 
-## All of these basic research, organization, and writing steps are steeped in traditional methods. As researchers and writers of papers, articles, books, from grade school, high school, college, graduate school, through our professional writings -- as well as teachers and editors of countless efforts by others, we know the game. 
+## All of these basic research, organization, and writing steps are steeped in traditional methods. 
 
-- We made ZettelGeist to do the most important, fundamental steps of research and writing as clear and straightforward as possible, based on the systems that our mentors used to write the great books before computers came into being.  
+- As researchers and writers of papers, articles, books -- from grade school, high school, college, graduate school, through our professional writings -- as well as teachers and editors of countless efforts by others, we know the game. Indeed, we are the coaches and referees and main players of the game!  And our own coaches told us how to do it! 
 
-- But because we are also computerized, we have brought these techniques into the computer world -- more directly than any program has before. 
+- On the basis of this experience, we made ZettelGeist to do the most important, fundamental steps of research and writing as clear and straightforward as possible, based on the methods that our mentors used to write the great books before personal computers came into being.  
 
-- And, the basis for all of this all already in the computer and the internet sites.  You don't have to go and buy anything new.  You already have _supercomputers_ compared to anything the great writers ever used.  This system will just help you to take advantage of it better in ways consistent with the key principles of research and organization. 
+- But because we are ourselves computerized (coming into professional life just as the pc revolution occurred and, therefore, having played _that game_ ever since), we have brought these techniques into the computer world -- more directly than any program has before.  (Believe us: we know because we have tried and deployed every option out there, from 1980 until yesterday -- as a matter of professional need.) 
+
+- Because we know the frustration that so many so-called "notetaking programs" have caused, we have made a fundamental decision to ensure that the basis for all of this all already in the computer and the internet sites.  You don't have to go and buy anything new.  You already have _supercomputers_ compared to anything the great writers ever used.  This system will just help you to take advantage of it better in ways consistent with the key principles of research and organization. 
 
 ## The first thing to know is that with ZettelGeist you can do ALL this with ANY SOFTWARE YOU WANT TO USE!!  
 
