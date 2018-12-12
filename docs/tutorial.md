@@ -214,15 +214,12 @@ cite:
 
 - First create a database name. 
 
-```
-zcreate --database gatsby.db
-```
+`zcreate --database gatsby.db`
 
 - Then import all of the new yaml notecards (or zettels) into your database.
 
-```
-zimport --database --dir $(pwd)
-```
+`zimport --database --dir $(pwd)`
+
 - This can be done right in the same directory you are working in.
 
 - The output will show each of your notes being pulled into the database. 
@@ -237,25 +234,20 @@ zimport --database --dir $(pwd)
 
 - To do that, at the command line, type:
 
-```
-zfind --database Gatsby.db --query-string 'comment:"First World War"' --show-title --show-note --show-comment
-```
+`zfind --database Gatsby.db --query-string 'comment:"First World War"' --show-title --show-note --show-comment`
 
 - When you enter this, the output will be the card that included the "string" First World War in the "commment:" field. See? 
 
 - There are a zillion things to be done now that you have this searching ability.  Again, it really comes into play when you have a bunch of notes and want to search on them.  But this is the start.  Let's do one more. 
 
-```
-zfind --database Gatsby.db --query-string 'tags:"First Line"' --show-title --show-note --show-comment
-```
+`zfind --database Gatsby.db --query-string 'tags:"First Line"' --show-title --show-note --show-comment`
 
 - Take a look at what each of those commands is doing.  `zfind` is starting the search engine. It is looking in the `--database Gatsby.db`. It is searching for particular strings of letters in particular fields `--query-string 'comment:"First World War"' and --query-string 'tags:"First line"'`.  Then, for each card that has those elements, it is showing the title, showing the note, and showing the comment.   That is what is showing up on the output.  
 
-- The real power of zfind (searching in ZettelGeist) comes from combining these things (in as many ways as you want to use for your purposes).  Here is an example.  Let's search for _both_ of these elements in your cards: those with tags with First Line and those with commments with First World War.  To do that, you just use the "or" command (the vertical bar created by [shift-\]) in the query string, as in:
+- The real power of zfind (searching in ZettelGeist) comes from combining these things (in as many ways as you want to use for your purposes).  Here is an example.  Let's search for _both_ of these elements in your cards: those with tags with First Line and those with commments with First World War.  To do that, you just use the "or" command (the vertical bar created by [shift-backslash] in the query string, as in:
 
-```
-zfind --database Gatsby.db --query-string 'tags:"First Line" | comment:"First World War"' --show-title --show-note --show-comment
-```
+`zfind --database Gatsby.db --query-string 'tags:"First Line" | comment:"First World War"' --show-title --show-note --show-comment`
+
 - Hit enter, and both of those cards will flash by (or the parts you specified: title, note, and comment -- though you could have asked for tags and cite and... any elements you include). 
 
 - But, you want to use them for a portion of your paper on those themes, right?  
@@ -264,9 +256,7 @@ zfind --database Gatsby.db --query-string 'tags:"First Line" | comment:"First Wo
 
 Let's do the last one:
 
-```
-zfind --database Gatsby.db --query-string 'tags:"First Line" | comment:"First World War"' --show-title --show-note --show-comment > Gatsby-Body-Part-1.txt
-```
+`zfind --database Gatsby.db --query-string 'tags:"First Line" | comment:"First World War"' --show-title --show-note --show-comment > Gatsby-Body-Part-1.txt`
 
 - Hit enter, and in an instant you will have a file with all the searched data under that name.  Open Gatsby-Body-Part-1.txt with your editor.  Or upload it to GDocs and open it there.  It will have your notes on those issues all in one place for you to put into your paper document where you need it. 
 
