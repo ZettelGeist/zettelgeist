@@ -18,19 +18,23 @@ permalink: /tutorial/
 
 ## All of these basic research, organization, and writing steps are steeped in traditional methods. 
 
-- As researchers and writers of papers, articles, books -- from grade school, high school, college, graduate school, through our professional writings -- as well as teachers and editors of countless efforts by others, we know the game. Indeed, we are the coaches and referees and main players of the game!  And our own coaches taught us how to do it! 
+- As researchers and writers of papers, articles, books -- from grade school, high school, college, graduate school, through our professional writings -- as well as teachers and editors of countless efforts by others, we know the game. Indeed, we are the coaches and referees and main players of the game!  And our own coaches taught us how to do it right! 
 
 - On the basis of this experience, we made ZettelGeist to do the most important, fundamental steps of research and writing as straightforwardly as possible, based on the methods that our mentors used to write great books before personal computers came into being.  
 
-- But because we are ourselves computerized (having come into professional life just as the pc revolution occurred and, therefore, having played _that game_ ever since), we have merged these techniques into the computer world more directly than any program has before.  (Believe us: we know!  Because we have tried and deployed every option out there, from 1980 until yesterday -- as a matter of professional need.) 
+- But because we are ourselves computerized (having come into professional life just as the pc revolution occurred and, therefore, having played _that game_ ever since), we have merged these techniques into the computer world more directly than any program has before.  (Believe us: we know!  We have tried and deployed every option out there, from 1980 until yesterday -- as a matter of professional need.) 
 
-- Since we know the frustration that many so-called "notetaking programs" have caused, we have made a fundamental decision to ensure that the basis for all of this is already in the computer you own and the internet sites have access to.  You don't have to go and buy anything new.  You already have _supercomputers_ that the great writers could never have imagined.  This system will just help you to take advantage of them in ways consistent with the key principles of research and organization that the great writers developed, but most computer programs have left out.  
+- Since we know the frustration that many so-called "notetaking programs" have caused, we have made a fundamental decision to ensure that the basis for all of this is already in the computer you own and the internet sites have access to.  
+
+- You don't have to go and buy anything new.  You already have _supercomputers_ that the great writers could never have imagined.  This system will just help you to take advantage of them in ways consistent with the key principles of research and organization that the great writers developed, but most computer programs have left out.  
 
 - This is the research-writing-computer singularity we have been waiting for! 
 
 ## The first thing to know is that with ZettelGeist you can do ALL of the above by starting (and finishing) your writing with ANY SOFTWARE YOU WANT TO USE!!  The ZettelGeist program works with and _between_ your preference. 
 
-- Many programs suggest they are "app-gnostic" (agnostic or indifferent about which app you use), but that usually just means you can save your work into another format (doc, txt, etc.).  ZettelGeist is truly app neutral in the sense that you can make notes (zettels) with any software, as long as you make them according to a certain pattern (indicating note section, title section, etc...) and save or download them in good old ".txt" format.  
+- Many programs suggest they are "app-gnostic" (agnostic or indifferent about which app you use), but that usually just means you can save your work into another format (doc, txt, etc.).  
+
+- ZettelGeist is truly app neutral in the sense that you can make notes (zettels) with any software, as long as you make them according to a certain pattern (indicating note section, title section, etc...) and save or download them in good old ".txt" format.  
 
 - The "pattern" is exactly what you would use to write out a notecard in the traditional way (by hand, or typed on paper or computer), so it really isn't that big a deal.  Plus, once you make one card (or zettel), you can just edit the same card to make any necessary changes for the next card (change the note, change the page numbers, etc.) then save the new card with a new filename, eg. "note02.txt" and move on...
 
@@ -250,7 +254,7 @@ cite:
 
 - Hit enter, and both of those cards will flash by (or the parts you specified: title, note, and comment -- though you could have asked for tags and cite and... any elements you include). 
 
-- But, you want to use them for a portion of your paper on those themes, right?  
+## But, you want to use them for a portion of your paper on those themes, right?  
 
 - To do that, just add one more basic element into your search command: "> search-results.txt" That's all you need.  The ">" sign (like an arrow) means "send that output into a file" -- as in, your results file...  Or your Gatsby-results.txt file...  Or your "Gatsby-Body-Part-1.txt" file, depending on how you want to arrange your information.  
 
@@ -268,8 +272,13 @@ Let's do the last one:
 
 - It is as flexible as paper notecards (were), but as powerful as any supercomputer is.  That's what we are talking about!!!!  
 
+## In conclusion, for GDocs, Word (etc.) users...
 
-## Now, for those who might be more comfortable -- or interested in -- doing all of your writing of notes or zettels at the command line itself (not using an outside editor at all -- free or not)
+- **Your notetaking system is still there, ready for you to continue with your project.  Just take a look back at the GDocs (Word) page -- the cards are ever-ready for your next idea, and your next, and ... **
+
+## Now, for those who might be more comfortable -- or interested in -- doing all of your writing of notes or zettels at the command line itself (not using an outside editor at all -- free or not).  
+
+**There are some advantages to doing it in the most immediate, plain-text way: mainly because it avoids the issues of "fancy" characters and their problems.**
 
 ## Set up note with title, keywords, tags, citation/bibtex, page numbers. 
 
