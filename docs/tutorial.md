@@ -72,7 +72,7 @@ permalink: /tutorial/
 
 - Let's say you want to give it a title (remember, it's up to you whether you need a title, but this will remind you what this card and other subsequent ones in this research session are about).  
 
-- So, type 
+- So, type:
 
 `title: Reading notes on The Great Gatsby` 
 
