@@ -16,23 +16,25 @@ permalink: /tutorial/
 
 ### Many programs suggest they are "app-gnostic" (agnostic or indifferent about which app you use), but that usually just means you can save your work into another format (doc, txt, etc.).  ZettelGeist is truly app neutral in the sense that you can make notes (zettels) with any software, as long as you make them according to a certain pattern (indicating note section, title section, etc...) and save or download them in good old ".txt" format.  
 
-### The "pattern" is exactly what you would use to write out a notecard in the traditional way (by hand, or typed on paper or computer), so it really isn't that big a deal.  Plus, once you make one card (or zettel), you can just edit the same card to make any necessary changes for the next card (change the note, change the page numbers, etc.) then save with a new filename, eg. "note02.txt" and move on...
+### The "pattern" is exactly what you would use to write out a notecard in the traditional way (by hand, or typed on paper or computer), so it really isn't that big a deal.  Plus, once you make one card (or zettel), you can just edit the same card to make any necessary changes for the next card (change the note, change the page numbers, etc.) then save the new card with a new filename, eg. "note02.txt" and move on...
 
-### You can do this with ANY word processor you want to use: Google Docs, Microsoft Word, LibreOffice.  In fact, you could just use the most basic editor that is already residing on your computer: Notepad, Wordpad (on Windows), TextEdit (Mac), Vim, Emacs, etc. If that last clause confuses you, don't worry.  Just use Google Docs or Word or whatever you are used to. (The surprise is that you don't actually have to buy any word processor at all because the above basic text editors come with your system and ZettelGeist would allow you to use those for free to research, organize, and write any great work you need to produce -- but let's set that aside for the moment.) 
+### You can do this with ANY word processor you want to use: Google Docs, Microsoft Word, LibreOffice.  In fact, you could just use the most basic editor that is already residing on your computer: Notepad, Wordpad (on Windows), TextEdit (Mac), Vim, Emacs, etc. 
 
-## Let's try it out with Google Docs. 
+#### If that last sentence confuses you, don't worry.  Just use Google Docs or Word or whatever you are used to. (The surprise is that you don't actually have to buy any word processor at all because the above basic text editors come with your system and ZettelGeist would allow you to use those for free to research, organize, and write any great work you need to produce -- but let's set that aside for the moment.) 
 
-- As you can see on the "Get Started" and "Note Format" page, a note in ZettelGeist is just a set of sections marked (usually) with "section:" -- as in title: or note: or tags:, etc.  
+## Let's try it out with Google Docs since we all have access to that. 
+
+- As you can see on the "Get Started" and "Note Format" page above, a note in ZettelGeist is just a set of information put together in sections marked with a colon  -- as in title: or note: or tags:, etc.  
 
 - There are a number of those (see Note Format page) because, as researchers, we know you might also want to "comment:" or write a "summary:" or add bibliographical information "bibkey:" and "pages:", and so on.  
 
-- BUT this is completely up to you. You can add any of these in any order according to your needs.  A completely valid note would just start with "note:" and then have the text of your note. That would work just fine.  You could save it as "note-01.txt" and it would work just fine (after a couple of changes to the filename so it can be searched and used in the system -- more on that in a minute). 
+- BUT this is completely up to you. You can add any of these in any order according to your needs.  A completely valid note would just start with "note:" and then write the text of your note, including all the information you want to produce or record. That would work just fine.  You could then save it as "note-01.txt" and it could be processed in ZettelGeist without a problem (after a couple of changes to the filename so it can be searched and used in the system -- more on that in a minute). 
 
-- If you want the other elements, like title: summary: or comment: great.  Just add them. But as long as you name sections according to the list on the "note format" page, or listed in "zettel -- help" we created, you can create notes however you prefer, in whatever order you like.  Basically, you are making up your own system (based on these universally valid "fields") and can treat any "file" as a blank notecard, just as you do when you buy a pack of 3 x 5 notecards at the pharmacy and make flash cards for a high school class.  Fill them out as you like!
+- If you want the other elements, like title: summary: or comment: great, just add them too. As long as you name sections according to the list on the "Note Format" page, or listed in "zettel -- help", you can create notes however you prefer, with sections in whatever order you like.  Basically, you are making up your own system (based on these universally valid "fields") and can treat any "file" as a blank notecard, just as you do when you buy a pack of 3 x 5 notecards at the pharmacy and make flash cards for a high school class.  Fill them out as you like!
 
 ## So, with that flexibilty in mind, let's make your first note.  i
 
-### For now, just go to Google Docs (or Word, or...your choice -- but we will use Google Docs as the main example here since we all have that.)  
+### For now, just go to Google Docs (or Word, or...your choice -- but we will use Google Docs as the main example here since we all have access and some familiarity with this editor.)  
 
 - Start a new Doc.  
 
@@ -46,9 +48,9 @@ permalink: /tutorial/
   
   - You can always turn these back on later, but you probably wouldn't miss most of these anyway.
 
-- Close preferences and then just start on a plain Doc page.  This is now a notecard (right out of your 3 x 5 package)!   Let's just fill it in like we would by hand. 
+- Close preferences and then just start on a plain Doc page. But now you can think of it a little differently. This is now a _notecard_ (right out of your 3 x 5 package)!  Even though it is on a supercomputer linked to the internet, it is just a "card" now. Let's just fill it in like we would by hand. 
 
-- Let's say you want to give it a title (remember, it's up to you, but this will remind you what it's about).  
+- Let's say you want to give it a title (remember, it's up to you whether you need a title, but this will remind you what this card and other subsequent ones in this research session are about).  
 
 - So, type 
 
@@ -58,30 +60,32 @@ title: Reading notes on The Great Gatsby
 
 - Ok. That's the top line of your note, just like on the "red" line of your good old notecard.  
 
-- Now, let's put in something about the book you are reading (for instance).  Make a new line and type: 
+- Now, let's put in something about the book you are reading (for instance -- you could be taking notes for anything including your own  novel or writing poetry or writing a shopping list -- but we are thinking research paper for now).  
+
+- Make a new line and type: 
 
 ```
 note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  Written during The Jazz Age, it is a masterpiece of American Literature." 
 ``` 
 - Notice that I put the text part of this note:"inside quotation marks."  This is just necessary when you write longer notes because it means you can put quotes and colons and multiple lines into your plain text card.  Just a formality, but not a big deal.
 
-- Let's just stop there and see what we can do with that first note. 
+- For now, let's just stop there and see what we can do with that very first note. 
 
-- Let's name the file, on Google Docs, by just clicking in the file name box above (as usual) and typing "Gatsby-Note."
+- Let's name the file, on Google Docs, by simply clicking in the file name box above (as usual -- you know) and typing "Gatsby-Note."
 
-- Now let's download it to our computer so we can make it into a Zettel. 
+- Now let's download it to your computer so we can soon make it into a zettel for research processing. 
 
 - Click "File>Download as" and select "Plain Text (.txt)"
 
 - Immediately, it will save to your computer (into the directory set by your browser for downloads -- usually Downloads). 
 
-- You can click on the download tab at the bottom of your browser to open it, or go into the directory to see it there. It will look just like your original, but maybe a little simpler in a plain text editor (which is retro-cool).
+- If you want, you can click on the download tab at the bottom of your browser to open it, or go into the directory to see it there. It will look just like your original, but maybe a little simpler in a plain text editor (which is retro-cool).
 
 - But let's make a couple of more notes (zettels) before we do any more.  
 
-- All you need to do is edit your existing Google Doc!  You don't have to create a new one or anything. You already saved your first card, so now just edit your next one on the basis of this. 
+- All you need to do to make your next note(s) is edit your existing Google Doc!  You don't have to create a new one or anything. You already saved your first card, so it is safe. Now just edit your next one on the basis of this start, and save the new iteration as the next note. 
 
-- Let's leave the title: the same... So no changes there.
+- We can leave the title: the same... So no changes there.
 
 - Let's change the note: (obviously).  Just highlight from the quotation mark to the last, delete the original note, and write another.
 
@@ -89,26 +93,26 @@ note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  W
 note: "The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1)"
 ```
 
-- Note that you should put in single quotation marks within your outside quotes... Normal rules apply. No biggy. 
+- Note that you should surround quoted material in single quotation marks within your outside quotes... That's just a matter of form. Normal rules apply. No biggy. 
 
-- That's a quote from the book.  So you might want to write something about it (your own opinion of its importance, etc.) as well. (Teachers want to hear your voice, and you want to remember why you took the note.)
+- We just added a quote from the book.  So you might want to write something about that citatio (your own opinion of its importance, etc.) as well. (Teachers want to hear your voice, and you want to remember why you took the note.)
 
-- Simple: You could just add something to the "note:" section itself
+- That's simple: You could just add something to the "note:" section itself
 
 ```
 "The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1) Comment: This is a famous first line and my teacher says that we should analyze it carefully."
 ```
-- That would do it.  You have title, note, citation-page, and a comment (inside that last quotation mark). All the elements of a traditional notecard are there. So let's save that as a second note. 
+- See the "Comment" at the end? That would do it.  As a result, you have title, note, citation-page (Gatsby, 1), and a comment (inside that last quotation mark). All the elements of a traditional notecard are there, just within the "note:" field. So let's save that as a second note. 
 
 - Just click "File>Download>Plain Text (.txt) again.  It will automatically download (and get a new name with "(1)" added by Google Docs) -- so you don't have to do anything to change the filename, etc.  Just click.
 
-- Cool.  Two notes are now in your research "card stack" for processing.  If we did pull them into the system, they would be completely searchable and usable.  Again.  You could just take notes with "notes:" or "title: and note:" and that will do the job.  
+- Cool.  Two notes are now in your research "card stack" for processing.  If we did pull them into the system, they would be completely searchable and usable.  Again.  You could just take notes with "notes:" or "title:" and "note:" and that will do the job.  
 
-- But, you can do a lot more if you want to.  ZettelGeist allows you to break up these elements of research notes in to each of the traditional elements listed on the "Note Format" page!  
+- But, you can do a lot more if you want to.  ZettelGeist allows you to break up these elements of research notes into each of the traditional elements listed on the "Note Format" page!  
 
 - So let's go back to our GDocs page and adjust this note to make a third with a little more -- zing! 
 
-- Highlight "Comment: This is a famous first line and my teacher says that we should analyze it carefully." and cut it. 
+- Highlight "Comment: This is a famous first line and my teacher says that we should analyze it carefully." Then cut it. 
 
 - Make a new line and paste it. Then make the capital "C" into a lowercase "c" and put your comment in quotations, resulting in: 
 
@@ -116,11 +120,13 @@ note: "The novel opens with the lines 'In my younger and more vulnerable years m
 comment: This is a famous first line and my teacher says that we should analyze it carefully."
 ```
 
-- You just set up a new "comment:" field that can be searched separately if you want.  Not necessary (as above) but it does allow you to separate, let's say, the quotes you take from the source (in "note:") and your ideas (in "comment:"). Up to you, but just in case you like it, it's that easy.  
+- You just set up a new "comment:" field that can be searched separately if you want.  This is not necessary (as above) but it does allow you to separate, let's say, the quotes you take from the source (in "note:") and your ideas (in "comment:"). It's up to you, but just in case you like it, it's that easy to add more fields (per the "Note Format" page).  
 
 - Now, let's do something else that is key to research.  Add "tags" to the note.  This is another traditional part of any notecard system.  It allows you to mark each note as being relevant to a theme or a keyword or a part of your paper (Intro, Body 1, Body 2, Conclusion, etc.).  Adding tags is also really easy with the ZettelGeist method.  
 
-- Continue with the GDoc. (See? Making new "cards" just means editing and then re-saving your existing card in .txt format with a new name -- done automatically in GDocs. But the process is essentially the same for Word or whatever editor you are using -- just give each new "save as" a different number: Gatsby-Note-01.txt, Gatsby-Note-02.txt, Gatsby-Note-03.txt, etc. The original just gets reused over and over as you save every new version to your "stack.")
+- Continue with the existing GDoc. 
+
+  - (See? Making new "cards" just means editing and then re-saving your existing card in .txt format with a new name -- done automatically in GDocs. But the process is essentially the same for Word or whatever editor you are using -- just give each new "save as" a different number: Gatsby-Note-01.txt, Gatsby-Note-02.txt, Gatsby-Note-03.txt, etc. The original just gets reused over and over as you save every new version to your "stack.")
 
 - Add a new line under the "comment:" line. 
 
@@ -136,11 +142,11 @@ tags:
 
 - Let's save that fancier note, just as above: "File>Download>Plain Text."  (Or, in Word, etc.: "Save as>Gatsby-Note-03.txt," and so on.)
 
-- The research stack is growing!  Let's do one more, adding one more feature.  Again, it isn't necessary, but "It's there!"  So what the heck?  
+- Your research stack is growing!  Let's do one more, adding one more feature.  Again, it isn't necessary, but "It's there!"  So what the heck?  
 
-- Edit GDoc again. 
+- Edit the GDoc again. 
 
-- Let's just find a new line from the book and put it in the "note:" section (between quotes) and write a new "comment:"  Just cut the old material and add the new, resulting in something like:
+- Let's just find a new citation from the book and put it in the "note:" section (between quotes) and write a new "comment:"  Just cut the old material and add the new, resulting in something like:
 
 ```
 title: Reading notes on The Great Gatsby
@@ -170,23 +176,32 @@ cite:
 
 - Now let's save this new card, as above.
 
-- OK!  Now we have a "Stack" of cards in our "Downloads" directory, each named "Gatsby-Note....txt"   You could write a million more.  Just change the elements that need to be changed and save the new version as a new card: copy or type out new quotes from your book (copying and pasting from electronic sources should work, but if you do this, then _highlight_ the whole note and click the "Clear formatting" button to zap weird characters --also make sure you are pasting things are inside those quotation marks); add comments; just write out notes; change tags; change page(s); change title if you want, etc.
+- OK!  Now we have a "Stack" of cards in our "Downloads" directory, each named "Gatsby-Note....txt"   You could write a million more.  Just change the elements that need to be changed and save the new version as a new card: copy or type out new quotes from your book; add comments; just write out notes; change tags; change page(s); change title if you want, etc.
 
-- But based on our start, let's begin to process them.  (Just think about how you would start shuffling or organizing a stack of notecards you have written on paper.) 
 
-- This is actually where the real power of this system starts.  Remember, the idea is to make a notecard for every idea for your project, then be able to find them, select the ones you need, then print them out for your paper or for each section of your paper, according to themes or keywords or...  This is waaaaaaay different from having all of your notes in a single document or having them on a few "Onenote" or "Evernote" pages, but then having difficulty selecting the particular cards or notes you need in particular.  This is where the ZettelGeist system becomes an electronic version of "moving the cards around" when you start to outline or write the paper.  
+  - *Quick tip*: copying and pasting from electronic sources can be a little tricky because you don't know about the "fancy characters" that will end up in your note. It's best to just type out a quote.  But if you do this, then _highlight_ the whole note and click the "Clear formatting" button to zap weird characters --also make sure you are pasting things are inside those quotation marks).  You might end up, after processing below, with some strange charcters like "\u201\" in your notecards.  They can be deleted, but are a little bit of a pain (and why plain text writing prefers plain text). 
 
-- OK.  Let's process.  
+- Anyway, based on our start, let's begin to process the notes we have made.  (Just think about how you would start shuffling or organizing a stack of notecards you have written on paper.) 
+
+- This is actually where the real power of this system starts.  
+
+  - Remember, the idea is to make a notecard for every idea for your project, then be able to find them, select the ones you need, then print them out for your paper or for each section of your paper, according to themes or keywords or...  
+  
+  - This is waaaaaaay different from having all of your notes in a single document or having them on a few "Onenote" or "Evernote" pages, but then having difficulty selecting the particular cards or notes you need in particular.  This is where the ZettelGeist system becomes an electronic version of "moving the cards around" when you start to outline or write the paper.  
+
+## OK.  Let's process our notes.  
 
 - First, think about whether you want to keep working in the directory where your browser saved the cards, or somewhere else.  It's probably best to move them.  (This is more an issue for people using GDocs as the editor since it saves to the default Downloads directory or folder.  If you have been doing it with Word or, etc. then you could have been using "save as" to put them in a directory for your project, say "Gatsby-Paper."  
 
-- If you want to move them, make a new directory called Gatsby-Paper and move the notes there.  
+- If you want to move them out of Downloads, make a new directory called Gatsby-Paper and move the notes there.  
 
-- Now, we just need to rename these ".txt" files so they are understood as ".yaml" files by the system.  That's the "format" that the ZettelGeist system needs to work with.  This can be done a number of ways.  Since we only have a few cards now, we can just do it with File Manager (or whatever) individually.  You can also do them in bulk with some File Managers (on Mac) or with a command in the terminal.  But for now, just change them by hand.  
+- Now, we just need to rename these ".txt" files so they are understood as ".yaml" files by the system.  That's the "format" that the ZettelGeist system needs to work with.  
 
-- So, in your new Gatsby-Paper directory, change the names of each ".txt" file to "Gatsby-Note.yaml".  For GDocs users, you might also adjust the numbers automatically added, removing the parentheses but not the numbers.  So, Gatsby-Note (1).txt becomes Gatsby-Note-1.yaml.   It's just neater that way. 
+  - This can be done a number of ways.  Since we only have a few cards now, we can just do it with File Manager (or whatever) individually.  You can also do them in bulk with some File Managers (on Mac) or with a command in the terminal.  But for now, just change them by hand.  
 
-- When this done, you are ready to rock, just as you could do with the "test" materials on the "Getting Started" page, but with your own research notes written in GDocs or Word or... 
+  - So, in your new Gatsby-Paper directory, change the names of each ".txt" file to "Gatsby-Note.yaml".  For GDocs users, you might also adjust the numbers automatically added, removing the parentheses but not the numbers.  So, Gatsby-Note (1).txt becomes Gatsby-Note-1.yaml.   It's just neater that way. 
+
+- When this done, you are ready to rock, as you could do with the "test" materials on the "Getting Started" page, but with your own research notes written in GDocs or Word or... 
 
 - Everything from this point on assumes you have installed ZettelGeist and have your zenv environment working as explained on the Installation page. 
 
@@ -207,7 +222,7 @@ zimport --database --dir $(pwd)
 
 - Once that is done, you are ready to start searching and organizing your notes. 
 
-- Of course, with only a few it isn't super exciting.  But if you have taken notes on every thought you had when reading The Great Gatsby, the game would be on!!  
+- Of course, with only a few it isn't super exciting.  But if you have taken notes on every thought you had when reading The Great Gatsby, the game would really be on!!  
 
 - Let's search for something in our stack. To do this, you use "zfind." To see all the elements of zfind, you could type "zfind --help".  But we will keep things simple now.  
 
@@ -227,16 +242,18 @@ zfind --database Gatsby.db --query-string 'comment:"First World War"' --show-tit
 zfind --database Gatsby.db --query-string 'tags:"First Line"' --show-title --show-note --show-comment
 ```
 
-- Let's just look at what each of those commands is doing.  `zfind` is starting the search engine. It is looking in the `--database Gatsby.db`. It is searching for particular strings of letters in particular fields `--query-string 'comment:"First World War"' and --query-string 'tags:"First line"'`.  Then, for each card that has those elements, it is showing the title, showing the note, and showing the comment.   That is what is showing up on the output.  
+- Take a look at what each of those commands is doing.  `zfind` is starting the search engine. It is looking in the `--database Gatsby.db`. It is searching for particular strings of letters in particular fields `--query-string 'comment:"First World War"' and --query-string 'tags:"First line"'`.  Then, for each card that has those elements, it is showing the title, showing the note, and showing the comment.   That is what is showing up on the output.  
 
-- The real power of zfind (searching in ZettelGeist) comes from combining these things (in as many ways as you want to use for your purposes).  Here is an example.  Let's search for _both_ of these elements in your cards: those with tags with First Line and those with commments with First World War.  To do that, you just use the "or" command (|) in the query string, as in:
+- The real power of zfind (searching in ZettelGeist) comes from combining these things (in as many ways as you want to use for your purposes).  Here is an example.  Let's search for _both_ of these elements in your cards: those with tags with First Line and those with commments with First World War.  To do that, you just use the "or" command (the vertical bar created by [shift-\]) in the query string, as in:
 
 ```
 zfind --database Gatsby.db --query-string 'tags:"First Line" | comment:"First World War"' --show-title --show-note --show-comment
 ```
 - Hit enter, and both of those cards will flash by (or the parts you specified: title, note, and comment -- though you could have asked for tags and cite and... any elements you include). 
 
-- But, you want to use them for a portion of your paper on those themes, right?  To do that, just add one more basic element into your search command: "> search-results.txt" That's all you need.  The ">" sign (like an arrow) means "send that output into a file" -- as in, your results file.  Or your Gatsby-results.txt file.  Or your "Gatsby-Body-Part-1.txt" file, depending on how you want to arrange your information.  
+- But, you want to use them for a portion of your paper on those themes, right?  
+
+- To do that, just add one more basic element into your search command: "> search-results.txt" That's all you need.  The ">" sign (like an arrow) means "send that output into a file" -- as in, your results file...  Or your Gatsby-results.txt file...  Or your "Gatsby-Body-Part-1.txt" file, depending on how you want to arrange your information.  
 
 Let's do the last one:
 
