@@ -18,17 +18,17 @@ permalink: /tutorial/
 
 ## All of these basic research, organization, and writing steps are steeped in traditional methods. 
 
-- As researchers and writers of papers, articles, books -- from grade school, high school, college, graduate school, through our professional writings -- as well as teachers and editors of countless efforts by others, we know the game. Indeed, we are the coaches and referees and main players of the game!  And our own coaches told us how to do it! 
+- As researchers and writers of papers, articles, books -- from grade school, high school, college, graduate school, through our professional writings -- as well as teachers and editors of countless efforts by others, we know the game. Indeed, we are the coaches and referees and main players of the game!  And our own coaches taught us how to do it! 
 
-- On the basis of this experience, we made ZettelGeist to do the most important, fundamental steps of research and writing as clear and straightforward as possible, based on the methods that our mentors used to write the great books before personal computers came into being.  
+- On the basis of this experience, we made ZettelGeist to do the most important, fundamental steps of research and writing as straightforwardly as possible, based on the methods that our mentors used to write great books before personal computers came into being.  
 
-- But because we are ourselves computerized (coming into professional life just as the pc revolution occurred and, therefore, having played _that game_ ever since), we have brought these techniques into the computer world -- more directly than any program has before.  (Believe us: we know because we have tried and deployed every option out there, from 1980 until yesterday -- as a matter of professional need.) 
+- But because we are ourselves computerized (having come into professional life just as the pc revolution occurred and, therefore, having played _that game_ ever since), we have merged these techniques into the computer world more directly than any program has before.  (Believe us: we know!  Because we have tried and deployed every option out there, from 1980 until yesterday -- as a matter of professional need.) 
 
-- Because we know the frustration that so many so-called "notetaking programs" have caused, we have made a fundamental decision to ensure that the basis for all of this is already in the computer and the internet sites you own or have access to.  You don't have to go and buy anything new.  You already have _supercomputers_ that the great writers could never have imagined.  This system will just help you to take advantage of it better in ways consistent with the key principles of research and organization that the great writers developed, but most computer programs have left out.  
+- Since we know the frustration that many so-called "notetaking programs" have caused, we have made a fundamental decision to ensure that the basis for all of this is already in the computer you own and the internet sites have access to.  You don't have to go and buy anything new.  You already have _supercomputers_ that the great writers could never have imagined.  This system will just help you to take advantage of them in ways consistent with the key principles of research and organization that the great writers developed, but most computer programs have left out.  
 
-- This is the research-writing-computer synthesis we all need! 
+- This is the research-writing-computer singularity we have been waiting for! 
 
-## The first thing to know is that with ZettelGeist you can do ALL this with ANY SOFTWARE YOU WANT TO USE!!  
+## The first thing to know is that with ZettelGeist you can do ALL of the above by starting (and finishing) your writing with ANY SOFTWARE YOU WANT TO USE!!  The ZettelGeist program works with and _between_ your preference. 
 
 - Many programs suggest they are "app-gnostic" (agnostic or indifferent about which app you use), but that usually just means you can save your work into another format (doc, txt, etc.).  ZettelGeist is truly app neutral in the sense that you can make notes (zettels) with any software, as long as you make them according to a certain pattern (indicating note section, title section, etc...) and save or download them in good old ".txt" format.  
 
