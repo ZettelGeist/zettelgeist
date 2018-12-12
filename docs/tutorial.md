@@ -70,9 +70,7 @@ permalink: /tutorial/
 
 - So, type 
 
-```
-title: Reading notes on The Great Gatsby
-``` 
+`title: Reading notes on The Great Gatsby` 
 
 - Ok. That's the top line of your note, just like on the "red" line of your good old notecard.  
 
@@ -80,9 +78,8 @@ title: Reading notes on The Great Gatsby
 
 - Make a new line and type: 
 
-```
-note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  Written during The Jazz Age, it is a masterpiece of American Literature." 
-``` 
+`note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  Written during The Jazz Age, it is a masterpiece of American Literature."`
+
 - Notice that I put the text part of this note:"inside quotation marks."  This is just necessary when you write longer notes because it means you can put quotes and colons and multiple lines into your plain text card.  Just a formality, but not a big deal.
 
 - For now, let's just stop there and see what we can do with that very first note. 
@@ -97,7 +94,7 @@ note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  W
 
 - If you want, you can click on the download tab at the bottom of your browser to open it, or go into the directory to see it there. It will look just like your original, but maybe a little simpler in a plain text editor (which is retro-cool).
 
-- But let's make a couple of more notes (zettels) before we do any more.  
+## But let's make a couple of more notes (zettels) before we do any more.  
 
 - All you need to do to make your next note(s) is edit your existing Google Doc!  You don't have to create a new one or anything. You already saved your first card, so it is safe. Now just edit your next one on the basis of this start, and save the new iteration as the next note. 
 
@@ -105,9 +102,7 @@ note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  W
 
 - Let's change the note: (obviously).  Just highlight from the quotation mark to the last, delete the original note, and write another.
 
-```
-note: "The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1)"
-```
+`note: "The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1)`
 
 - Note that you should surround quoted material in single quotation marks within your outside quotes... That's just a matter of form. Normal rules apply. No biggy. 
 
@@ -115,9 +110,8 @@ note: "The novel opens with the lines 'In my younger and more vulnerable years m
 
 - That's simple: You could just add something to the "note:" section itself
 
-```
-"The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1) Comment: This is a famous first line and my teacher says that we should analyze it carefully."
-```
+`"The novel opens with the lines 'In my younger and more vulnerable years my father gave me some advice that I’ve been turning over in my mind ever since. “Whenever you feel like criticizing any one,' he told me, 'just remember that all the people in this world haven’t had the advantages that you’ve had.' (Gatsby, 1) Comment: This is a famous first line and my teacher says that we should analyze it carefully."`
+
 - See the "Comment" at the end? That would do it.  As a result, you have title, note, citation-page (Gatsby, 1), and a comment (inside that last quotation mark). All the elements of a traditional notecard are there, just within the "note:" field. So let's save that as a second note. 
 
 - Just click "File>Download>Plain Text (.txt) again.  It will automatically download (and get a new name with "(1)" added by Google Docs) -- so you don't have to do anything to change the filename, etc.  Just click.
@@ -126,15 +120,13 @@ note: "The novel opens with the lines 'In my younger and more vulnerable years m
 
 - But, you can do a lot more if you want to.  ZettelGeist allows you to break up these elements of research notes into each of the traditional elements listed on the "Note Format" page!  
 
-- So let's go back to our GDocs page and adjust this note to make a third with a little more -- zing! 
+## So let's go back to our GDocs page and adjust this note to make a third with a little more -- zing! 
 
 - Highlight "Comment: This is a famous first line and my teacher says that we should analyze it carefully." Then cut it. 
 
 - Make a new line and paste it. Then make the capital "C" into a lowercase "c" and put your comment in quotations, resulting in: 
 
-```
-comment: This is a famous first line and my teacher says that we should analyze it carefully."
-```
+`comment: This is a famous first line and my teacher says that we should analyze it carefully."`
 
 - You just set up a new "comment:" field that can be searched separately if you want.  This is not necessary (as above) but it does allow you to separate, let's say, the quotes you take from the source (in "note:") and your ideas (in "comment:"). It's up to you, but just in case you like it, it's that easy to add more fields (per the "Note Format" page).  
 
@@ -158,7 +150,7 @@ tags:
 
 - Let's save that fancier note, just as above: "File>Download>Plain Text."  (Or, in Word, etc.: "Save as>Gatsby-Note-03.txt," and so on.)
 
-- Your research stack is growing!  Let's do one more, adding one more feature.  Again, it isn't necessary, but "It's there!"  So what the heck?  
+## Your research stack is growing!  Let's do one more, adding one more feature.  Again, it isn't necessary, but "It's there!"  So what the heck?  
 
 - Edit the GDoc again. 
 
@@ -193,7 +185,6 @@ cite:
 - Now let's save this new card, as above.
 
 - OK!  Now we have a "Stack" of cards in our "Downloads" directory, each named "Gatsby-Note....txt"   You could write a million more.  Just change the elements that need to be changed and save the new version as a new card: copy or type out new quotes from your book; add comments; just write out notes; change tags; change page(s); change title if you want, etc.
-
 
   - *Quick tip*: copying and pasting from electronic sources can be a little tricky because you don't know about the "fancy characters" that will end up in your note. It's best to just type out a quote.  But if you do this, then _highlight_ the whole note and click the "Clear formatting" button to zap weird characters --also make sure you are pasting things are inside those quotation marks).  You might end up, after processing below, with some strange charcters like "\u201\" in your notecards.  They can be deleted, but are a little bit of a pain (and why plain text writing prefers plain text). 
 
