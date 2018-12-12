@@ -24,7 +24,9 @@ permalink: /tutorial/
 
 - But because we are ourselves computerized (coming into professional life just as the pc revolution occurred and, therefore, having played _that game_ ever since), we have brought these techniques into the computer world -- more directly than any program has before.  (Believe us: we know because we have tried and deployed every option out there, from 1980 until yesterday -- as a matter of professional need.) 
 
-- Because we know the frustration that so many so-called "notetaking programs" have caused, we have made a fundamental decision to ensure that the basis for all of this all already in the computer and the internet sites.  You don't have to go and buy anything new.  You already have _supercomputers_ compared to anything the great writers ever used.  This system will just help you to take advantage of it better in ways consistent with the key principles of research and organization. 
+- Because we know the frustration that so many so-called "notetaking programs" have caused, we have made a fundamental decision to ensure that the basis for all of this is already in the computer and the internet sites you own or have access to.  You don't have to go and buy anything new.  You already have _supercomputers_ that the great writers could never have imagined.  This system will just help you to take advantage of it better in ways consistent with the key principles of research and organization that the great writers developed, but most computer programs have left out.  
+
+- This is the research-writing-computer synthesis we all need! 
 
 ## The first thing to know is that with ZettelGeist you can do ALL this with ANY SOFTWARE YOU WANT TO USE!!  
 
