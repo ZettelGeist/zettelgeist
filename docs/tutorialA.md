@@ -279,5 +279,5 @@ Let's do the last one:
 
 ## In conclusion, for GDocs, Word (etc.) users...
 
-**Your notetaking system:is still there, ready for you to continue with your project!  Just take a look back at the GDocs (Word) page you were working on -- the card is ever-ready for you to edit and save your next idea, and your next, and ... (fractals, baby!!)**
+**Your notetaking system is still there, ready and waiting for you to continue with your project!  Just take a look back at the GDocs (Word) page you were working on -- the master "card" is ever-ready for you to edit and save your next idea, and your next, and ... (Fractals, baby!!)**
 
