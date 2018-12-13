@@ -214,7 +214,7 @@ cite:
 
 - *If you have been using Word or another resident editor on your computer to make notes, then the above steps can be eliminated if you saved each zettel with the ".yaml" extension from the start.* 
 
-- When this done, you are ready to rock, as you could do with the "test" materials on the "Getting Started" page, but with your own research notes written in GDocs or Word or... 
+- When this is done, you are ready to rock. Now you can do everything that is demonstrated with the "test" materials on the "Getting Started" page, but with your own research notes written in GDocs or Word or... 
 
 - Everything from this point on assumes you have installed ZettelGeist and have your zenv environment working as explained on the Installation page. 
 
