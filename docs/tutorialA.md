@@ -92,7 +92,7 @@ permalink: /tutorialA/
 
 - Now let's download it to your computer so we can soon make it into a zettel for research processing. 
 
-- Click "File>Download as" and select "Plain Text (.txt)"
+- Click "File>Download as" and select "Plain Text (.txt)". If you are using Word or another resident editor, just save the file as "Gatsby-Note.yaml". [See instructions below about saving notes with ".yaml" extension.]
 
 - Immediately, it will save to your computer (into the directory set by your browser for downloads -- usually Downloads). 
 
@@ -118,7 +118,7 @@ permalink: /tutorialA/
 
 - See the "Comment" at the end? That would do it.  As a result, you have title, note, citation-page (Gatsby, 1), and a comment (inside that last quotation mark). All the elements of a traditional notecard are there, just within the "note:" field. So let's save that as a second note. 
 
-- Just click "File>Download>Plain Text (.txt) again.  It will automatically download (and get a new name with "(1)" added by Google Docs) -- so you don't have to do anything to change the filename, etc.  Just click.
+- Just click "File>Download>Plain Text (.txt) again.  It will automatically download (and get a new name with "(1)" added by Google Docs) -- so you don't have to do anything to change the filename, etc.  Just click. If you are using Word or another resident editor, just save the file as "Gatsby-Note-1.yaml". [See instructions below about saving notes with ".yaml" extension.]
 
 - Cool.  Two notes are now in your research "card stack" for processing.  If we did pull them into the system, they would be completely searchable and usable.  Again: you could just take notes with "notes:" or "title:" and "note:" and that will do the job.  
 
@@ -138,7 +138,8 @@ permalink: /tutorialA/
 
 - Continue with the existing GDoc. 
 
-  - (See? Making new "cards" just means editing and then re-saving your existing card in .txt format with a new name -- done automatically in GDocs. But the process is essentially the same for Word or whatever editor you are using -- just give each new "save as" a different number: Gatsby-Note-01.txt, Gatsby-Note-02.txt, Gatsby-Note-03.txt, etc. The original just gets reused over and over as you save every new version to your "stack.")
+  - (See? Making new "cards" just means editing and then re-saving your existing card in .txt format with a new name -- done automatically in GDocs. But the process is essentially the same for Word or whatever editor you are using -- just give each new "save as" a different number: Gatsby-Note-01.yaml, Gatsby-Note-02.yaml, Gatsby-Note-03.yaml, etc. The original just gets reused over and over as you save every new version to your "stack.") Word or resident word-processor users: [See instructions below about saving notes with ".yaml" extension.]
+
 
 - Add a new line under the "comment:" line. 
 
@@ -152,7 +153,7 @@ tags:
 ```
 - Could it be simpler? Ha!  "tags:" is the new section, just as above.  But each tag is separate, so you just start the line for each tag with a hyphen to indicate this is the case. That's all!!!  (BTW: This is why we turned off "automatic lists," because that would make those hyphens into bullet points. We just want clean hyphens.) 
 
-- Let's save that fancier note, just as above: "File>Download>Plain Text."  (Or, in Word, etc.: "Save as>Gatsby-Note-03.txt," and so on.)
+- Let's save that fancier note, just as above: "File>Download>Plain Text."  (Or, in Word, etc.: "Save as>Gatsby-Note-03.yaml," and so on.)
 
 ## Your research stack is growing!  Let's do one more, adding one more feature.  Again, it isn't necessary, but "It's there!"  So what the heck?  
 
@@ -202,7 +203,9 @@ cite:
 
 ## Let's process our notes.  
 
-- First, think about whether you want to keep working in the directory where your browser saved the cards, or somewhere else.  It's probably best to move them.  (This is more an issue for people using GDocs as the editor since it saves to the default Downloads directory or folder.  If you have been doing it with Word or, etc. then you could have been using "save as" to put them in a directory for your project, say "Gatsby-Paper."  
+- First, think about whether you want to keep working in the directory where your browser saved the cards, or somewhere else.  It's probably best to move them.  
+
+- This is more an issue for people using GDocs as the editor since it saves to the default Downloads directory or folder.  If you have been doing it with Word or, etc. then you could have been using "save as" to put them in a directory for your project, say "Gatsby-Paper."  
 
 - If you want to move them out of Downloads, make a new directory called Gatsby-Paper and move the notes there.  
 
@@ -211,6 +214,8 @@ cite:
   - This can be done a number of ways.  Since we only have a few cards now, we can just do it with File Manager (or whatever) individually.  You can also do them in bulk with some File Managers (on Mac) or with a command in the terminal.  But for now, just change them by hand.  
 
   - So, in your new Gatsby-Paper directory, change the names of each ".txt" file to "Gatsby-Note.yaml".  For GDocs users, you might also adjust the numbers automatically added, removing the parentheses but not the numbers.  So, Gatsby-Note (1).txt becomes Gatsby-Note-1.yaml.   It's just neater that way. 
+
+- *If you have been using Word or another resident editor on your computer to make notes, then the above steps can be eliminated if you saved each zettel with the ".yaml" extension from the start.* 
 
 - When this done, you are ready to rock, as you could do with the "test" materials on the "Getting Started" page, but with your own research notes written in GDocs or Word or... 
 
