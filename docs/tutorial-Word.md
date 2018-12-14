@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Tutorial A level
-permalink: /tutorialA/
+title: Tutorial-Word
+permalink: /tutorial-word/
 ---
 
 **This page is under construction. Pardon the sketchiness for now.**
@@ -42,7 +42,7 @@ permalink: /tutorialA/
 
 - If that last sentence confuses you, don't worry.  Just use Google Docs or Word or whatever you are used to. (The surprise is that you don't actually have to buy any word processor at all because the above basic text editors come with your system and ZettelGeist would allow you to use those for free to research, organize, and write any great work you need to produce -- but let's set that issue aside for the moment.) 
 
-## Let's try it out with Google Docs since we all have access to that. 
+## Let's try it out with Microsoft Word.
 
 - As you can see on the "Get Started" and "Note Format" page above, a note in ZettelGeist is just a set of information put together in sections marked with a colon, like title: or note: or tags:, etc.  
 
@@ -54,21 +54,23 @@ permalink: /tutorialA/
 
 ## So, with that flexibilty in mind, let's make your first note.
 
-### For now, just go to Google Docs (or Word, or...your choice -- but we will use Google Docs as the main example here since we all have access and some familiarity with this editor.)  
+### For now, just go to Word, or GDocs (on the other tab)...your choice.
 
-- Start a new Doc.  
+- Start a new document.  
 
 - Then take one step that will help with this experiment. 
 
-  - Go to "Tools>Preferences" and **uncheck** most of the automatic styling elements.  
+  - Go to "Tools>Preferences>AutoCorrect" and **uncheck** most of the automatic styling elements.  (This is based on the Mac version, but it should be about the same on the PC.)
   
-`Uncheck "Automatically capitalize" "Use smart quotes" "Automatically detect lists" and the main "Automatic substitution."` 
+    - Uncheck "Capitalize first letter of sentences"
+
+    -  Under "AutoFormat As You Type" uncheck "Automatic bulleted lists" and ""Straight quotes with smart quotes" and all the others. 
   
   - We want the simplest and plainest characters possible (most programs add fancier "unicode" characters with these features -- but we don't need them and they actually mess up searching and finding later).  
   
   - You can always turn these back on later, but you probably wouldn't miss most of these anyway.
 
-- Close preferences and then just look at your plain Doc page. But now you can think of it a little differently. This is now a _notecard_ (right out of your 3 x 5 package)!  Even though it is on a supercomputer in the "cloud" linked to the internet, it is just a "card" now. Let's just fill it in as we would by hand. 
+- Close preferences and then just look at your plain document page. But now you can think of it a little differently. This is now a _notecard_ (right out of your 3 x 5 package)!  Even though it is on a supercomputer in the "cloud" linked to the internet, it is just a "card" now. Let's just fill it in as we would by hand. 
 
 - Let's say you want to give it a title (remember, it's up to you whether you need a title, but this will remind you what this field and other subsequent ones in this research session are about).  
 
@@ -84,23 +86,26 @@ permalink: /tutorialA/
 
 `note: "This is a note about The Great Gatsby, a novel by F. Scott Fitzgerald.  Written during The Jazz Age, it is a masterpiece of American Literature."`
 
-- Notice that I put the text part of this note: "inside quotation marks."  This is necessary when you write longer notes because it means you can put quotes and colons and multiple lines into your plain text card.  Just a formality, but not a big deal.  If you just write a single line without colons and other such things, you don't need the quotes.  But it works better with them if you are making notes this initial way with GDocs or another word processer.
+- Notice that I put the text part of this note: "inside quotation marks."  This is necessary when you write longer notes because it means you can put quotes and colons and multiple lines into your plain text card.  Just a formality, but not a big deal.  If you just write a single line without colons and other such things, you don't need the quotes.  But it works better with them if you are making notes this initial way with Word or another word processer.
 
 - For now, let's just stop there and see what we can do with that very first note. 
 
 - Let's name the file, on Google Docs, by simply clicking in the file name box above (as usual -- you know) and typing "Gatsby-Note".
 
-- Now let's download it to your computer so we can soon make it into a zettel for research processing. 
+- Now let's save it so we can soon make it into a zettel for research processing. 
 
-- Click "File>Download as" and select "Plain Text (.txt)". If you are using Word or another resident editor, just save the file as "Gatsby-Note.yaml". (There is an explanation below about saving notes with the ".yaml" extension.]
+- Click File> Save As, then, under file format "Plain Text.txt." 
+
+- Then name the file "Gatsby-Note-1.yaml" and save it to a directory called "Gatsby-Reading-Notes" (for this project): ".yaml" is the "format" that the ZettelGeist system needs to work with.  
+
+- If it asks about "text encoding," select "Western (ASCII) 
 
 - Immediately, it will save to your computer (into the directory set by your browser for downloads -- usually Downloads). 
 
-- If you want, you can click on the download tab at the bottom of your browser to open it, or go into the directory to see it there. It will look just like your original, but maybe a little simpler in a plain text editor (which is retro-cool).
 
 ## But let's make a couple of more notes (zettels) before we do any more.  
 
-- All you need to do to make your next note(s) is edit your existing Google Doc!  You don't have to create a new one or anything. You already saved your first card, so it is safe. Now just edit your next one on the basis of this start, and save the new iteration as the next note. 
+- All you need to do to make your next note(s) is edit your existing document!  You don't have to create a new one or anything. You already saved your first card, so it is safe. Now just edit your next one on the basis of this start, and save the new iteration as the next note. 
 
 - We can leave title: the same... So no changes there.
 
@@ -116,13 +121,13 @@ permalink: /tutorialA/
 
 - See the "Comment" at the end? That would do it.  As a result, you have title, note, citation-page (Gatsby, 1), and a comment (inside that last quotation mark). All the elements of a traditional notecard are there, just within the "note:" field. So let's save that as a second note. 
 
-- Just click "File>Download>Plain Text (.txt) again.  It will automatically download (and get a new name with "(1)" added by Google Docs) -- so you don't have to do anything to change the filename, etc.  Just click. If you are using Word or another resident editor, just save the file as "Gatsby-Note-1.yaml". (More explanation below about saving notes with ".yaml" extension.)
+- Just click "File>Save As" again.  You don't have to change settings again. Just change the name to "Gatsby-Note-2.yaml". 
 
 - Cool.  Two notes are now in your research "card stack" for processing.  If we did pull them into the system, they would be completely searchable and usable.  Again: you could just take notes with "notes:" or "title:" and "note:" and that will do the job.  
 
 - But, you can do a lot more if you want to.  ZettelGeist allows you to break up these elements of research notes into each of the traditional elements listed on the "Note Format" page!  
 
-## So let's go back to our GDocs page and adjust this note to make a third with a little more...zing! 
+## So let's go back to our document and adjust this note to make a third with a little more...zing! 
 
 - Highlight "Comment: This is a famous first line and my teacher says that we should analyze it carefully." Then cut that (not delete). 
 
@@ -134,9 +139,9 @@ permalink: /tutorialA/
 
 - Now, let's do something else that is key to research.  Add "tags" to the note.  This is another traditional part of any notecard system.  It allows you to mark each note as being relevant to a theme or a keyword or a part of your paper (Intro, Body 1, Body 2, Conclusion, etc.).  Adding tags is also really easy with the ZettelGeist method.  
 
-- Continue with the existing GDoc. 
+- Continue with the existing document. 
 
-  - (See? Making new "cards" just means editing and then re-saving your existing card in .txt format with a new name -- done automatically in GDocs. But the process is essentially the same for Word or whatever editor you are using -- just give each new "save as" a different number: Gatsby-Note-01.yaml, Gatsby-Note-02.yaml, Gatsby-Note-03.yaml, etc. The existing elements just get reused over and over as you save every new version to your "stack.") Word or resident word-processor users: Instructions below about saving notes with ".yaml" extension.
+  - (See? Making new "cards" just means editing and then re-saving your existing card in .yaml format with a new numbered name. Just give each new "save as" a different number: Gatsby-Note-01.yaml, Gatsby-Note-02.yaml, Gatsby-Note-03.yaml, etc. The existing elements just get reused over and over as you save every new version to your "stack.") 
 
 - To add tags, start a new line under the "comment:" line. 
 
@@ -150,11 +155,11 @@ tags:
 ```
 - Could it be simpler? Ha!  "tags:" is the new section, just as above.  But each tag is separate, so you just start the line for each tag with a hyphen to indicate this is the case. That's all!!!  (BTW: This is why we turned off "automatic lists," because that feature would make those hyphens into bullet points. We just want clean hyphens.) 
 
-- Let's save that fancier note, just as above: "File>Download>Plain Text."  (Or, in Word, etc.: "Save as>Gatsby-Note-03.yaml," and so on.)
+- Let's save that fancier note, just as above: "File>Save as>Gatsby-Note-03.yaml," and so on.)
 
 ## Your research stack is growing!  Let's do one more, adding one more feature.  Again, it isn't necessary, but "It's there!"  So what the heck?  
 
-- Edit the GDoc again. 
+- Edit the document again. 
 
 - Let's find a new citation from the book and put it in the "note:" section (between quotes) and write a new "comment:"  Just zap the old material and add the new, adjusting only what is necessary for the new note, resulting in something like:
 
@@ -186,9 +191,9 @@ cite:
 
 - Now let's save this new card, as above.
 
-- OK!  Now we have a "Stack" of cards in our "Downloads" directory, each named "Gatsby-Note....txt"   You could write a million more.  Just change the elements that need to be changed and save the new version as a new card: copy or type out new quotes from your book; add comments; just write out notes; change tags; change page(s); change title if you want, etc.
+- OK!  Now we have a "Stack" of cards in our "Gatsby-Reading-Notes" directory, each named "Gatsby-Note....txt"   You could write a million more.  Just change the elements that need to be changed and save the new version as a new card: copy or type out new quotes from your book; add comments; just write out notes; change tags; change page(s); change title if you want, etc.
 
-  - *Quick tip*: copying and pasting from electronic sources can be a little tricky because you don't know about the "fancy characters" that will end up in your note. It's best to just type out a quote (and paraphrase more than quoting, as the masters say).  But if you do this, then _highlight_ the whole note and click the "Clear formatting" button to zap weird characters (as much as it will).  Also make sure you are pasting things are inside those quotation marks).  You might end up, after processing below, with some strange charcters like "\u201\" in your notecards.  They can be deleted, but are a little bit of a pain (and why plain text writing emphasizes plain text). 
+  - *Quick tip*: copying and pasting from electronic sources can be a little tricky because you don't know about the "fancy characters" that will end up in your note. It's best to just type out a quote (and paraphrase more than quoting, as the masters say).  But if you do this, saving as plain text and Western (ASCII) should take care of it. Also make sure you are pasting things are inside those quotation marks).  You might end up, after processing below, with some strange charcters like "\u201\" in your notecards.  They can be deleted, but are a little bit of a pain (and why plain text writing emphasizes plain text). 
 
 ## Let's process our notes.  
 
@@ -200,21 +205,7 @@ cite:
   
   - This is waaaaaaay different from having all of your notes in a single document or having them on a few "Onenote" or "Evernote" pages, but then having difficulty selecting the particular cards or notes you need in particular.  This is where the ZettelGeist system becomes an electronic version of "moving the cards around" when you start to outline or write the paper.  
 
-- First, think about whether you want to keep working in the directory where your browser saved the cards, or somewhere else.  It's probably best to move them.  
-
-- This is more an issue for people using GDocs as the editor since it saves to the default Downloads directory or folder.  If you have been doing it with Word or, etc. then you could have been using "save as" to put them in a directory for your project, say "Gatsby-Paper."  
-
-- If you want to move them out of Downloads, make a new directory called Gatsby-Paper and move the notes there.  
-
-- Now, we just need to rename these ".txt" files so they are understood as ".yaml" files by the system.  That's the "format" that the ZettelGeist system needs to work with.  
-
-  - This can be done a number of ways.  Since we only have a few cards now, we can just do it with File Manager (or whatever) individually.  You can also do them in bulk with some File Managers (on Mac) or with a command in the terminal.  But for now, just change them by hand.  
-
-  - So, in your new Gatsby-Paper directory, change the names of each ".txt" file to "Gatsby-Note.yaml".  For GDocs users, you might also adjust the numbers automatically added, removing the parentheses but not the numbers.  So, Gatsby-Note (1).txt becomes Gatsby-Note-1.yaml. It's just neater that way. 
-
-- *If you have been using Word or another resident editor on your computer to make notes, then the above steps can be eliminated if you saved each zettel with the ".yaml" extension from the start.* 
-
-- When this is done, you are ready to rock. Now you can do everything that is demonstrated with the "test" materials on the "Getting Started" page, but with your own research notes written in GDocs or Word or... 
+- OK: you are ready to rock. Now you can do everything that is demonstrated with the "test" materials on the "Getting Started" page, but with your own research notes written in Word or GDocs or ... 
 
 - Everything from this point on assumes you have installed ZettelGeist and have your zenv environment working as explained on the Installation page. 
 
@@ -266,7 +257,7 @@ Let's do the last one:
 
 `zfind --database Gatsby.db --query-string 'tags:"First Line" | comment:"First World War"' --show-title --show-note --show-comment > Gatsby-Body-Part-1.txt`
 
-- Hit enter, and in an instant you will have a file with all the searched data under that name.  Open Gatsby-Body-Part-1.txt with your editor.  Or upload it to GDocs and open it there.  It will have your notes on those issues all in one place for you to put into your paper document where you need it. 
+- Hit enter, and in an instant you will have a file with all the searched data under that name.  Open Gatsby-Body-Part-1.txt with Word or any editor.  It will have your notes on those issues all in one place for you to put into your paper document where you need it. 
 
 - THAT'S how to use the _notecard_ notetaking system to take notes, mark them for particular content, find them, collect them, and then pull them into your paper -- all using the computer instead of paper notecards (not that there is anything wrong with paper notecards, they still rock, but we are digital writers now).  
 
@@ -276,7 +267,7 @@ Let's do the last one:
 
 - It is as flexible as paper notecards were, but as powerful as any supercomputers are.  That's what we are talking about!!!!  
 
-## In conclusion, for GDocs, Word (etc.) users...
+## In conclusion, for Word (etc.) users...
 
-**Your notetaking system is still there, ready and waiting for you to continue with your project!  Just take a look back at the GDocs (Word) page you were working on -- the master "card" is ever-ready for you to edit and save your next idea, and your next, and ... (Fractals, baby!!)**
+**Your notetaking system is still there, ready and waiting for you to continue with your project!  Just take a look back at the Word document you were working on -- the master "card" is ever-ready for you to edit and "save as" your next idea, and your next, and ... (Fractals, baby!!)**
 

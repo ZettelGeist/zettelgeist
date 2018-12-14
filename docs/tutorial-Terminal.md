@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Tutorial B level
-permalink: /tutorialB/
+title: Tutorial-Terminal
+permalink: /tutorial-term/
 ---
 
 **This page is under construction. Pardon the sketchiness for now.**
