@@ -5,7 +5,13 @@
 import sys
 import argparse
 import readline  # for input()
+
 import yaml
+try:
+   from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+   from yaml import Loader, Dumper
+
 import os
 import os.path
 import pickle
@@ -436,7 +442,7 @@ class ZettelLoader(object):
                 raise ZettelLoaderError(
                     "%s: I/O error - Encoding must be UTF-8" % filename)
         try:
-            self.ydocs = yaml.load_all(text)
+            self.ydocs = yaml.load_all(text, Loader=Loader)
         except:
             raise ZettelLoaderError("%s: YAML load failure" % filename)
 
@@ -670,7 +676,7 @@ def dict_as_yaml(data):
             presented_data[key] = literal(data[key])
         else:
             presented_data[key] = data[key]
-    return yaml.dump(presented_data, default_flow_style=False)
+    return yaml.dump(presented_data, default_flow_style=False, Dumper=Dumper)
 
 
 if __name__ == '__main__':

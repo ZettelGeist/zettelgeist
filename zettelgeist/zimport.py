@@ -3,8 +3,15 @@
 import os
 import os.path
 import sys
-import yaml
+
+
 from . import zdb, zettel
+
+import yaml
+try:
+   from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+   from yaml import Loader, Dumper
 
 
 def get_zettels(dir):
@@ -45,7 +52,7 @@ def main():
                 print("- I/O error on %s: Encoding must be UTF-8" % filepath)
                 continue
             try:
-                ydocs = yaml.load_all(text)
+                ydocs = yaml.load_all(text, Loader=Loader)
             except:
                 print("- YAML load failure (run yamllint on this file)")
                 continue
