@@ -35,6 +35,7 @@ If this is not you, you will probably not like ZettelGeist.
    ```
 
    The prompt will now be prefixed by `(zenv)`, the environment created in (1).
+   The command `deactivate` returns you to the system environment.
 
 3. Confirm that you are picking up the right `python` and `pip`.
 
@@ -45,7 +46,7 @@ If this is not you, you will probably not like ZettelGeist.
    /path/to/zenv/bin/python
    ```
 
-  In place of `path/to/` you should see the absolute path to the environment created in (1). 
+   In place of `path/to/` you should see the absolute path to the environment created in (1). 
 
 4. Install ZettelGeist
 
@@ -77,13 +78,7 @@ If this is not you, you will probably not like ZettelGeist.
    /path/to/zenv/bin/zettel
    ```
 
-You may now proceed to the page [Getting Started](/gs).
-
-To return to the system environment execute `deactivate`:
-
-```
-(zenv) $ deactivate
-```
+   You may now proceed to the page [Getting Started](/gs).
 
 <!--
 ## Developer Install
