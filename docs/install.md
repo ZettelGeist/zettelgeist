@@ -78,7 +78,7 @@ If this is not you, you will probably not like ZettelGeist.
    /path/to/zenv/bin/zettel
    ```
 
-   You may now proceed to the page [Getting Started](/gs).
+   You may now proceed to the [User's Guide](/gs).
 
 <!--
 ## Developer Install
