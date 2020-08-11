@@ -23,11 +23,11 @@ We will assume that your virtual environment is named `zenv`.
 
 ## Synopsis
 
-`zettel` [--file *input-file*] \[*options*] ...
+`zettel` [`--file` *INPUT-FILE*] \[*OPTIONS*] [`--save` *OUTPUT-FILE* | `--name` *ARGUMENT...*]
 
 If no input file is specified, input is read from the options passed to `zettel` in standard input.
 Output goes by default to standard output.
-For output to a file, use the option `--save` (to write the filename yourself) or `--name` (to have `zettel` write the filename for you).
+For output to a file, use `--save` (to write the filename yourself) or `--name` (to have `zettel` write the filename for you).
 
 ## Getting help
 
@@ -207,11 +207,14 @@ We now describe tools for selectively retrieving cards.
 
 ## Synopsis
 
-```zcreate --database <NAME>.db```
+`zcreate --database` *NAME*`.db`
 
-```zimport --database <NAME>.db --dir $(pwd)```
+`zimport --database` *NAME*`.db --dir $(pwd)`
 
-```zfind --database <NAME>.db  --query-string 'FIELD:"VALUE"' ``` [*options*]
+`zfind --database` *NAME*`.db  --query-string '`*FIELD*`:"`*VALUE*`" [& | ! `*FIELD*`:"`*VALUE*`"]...' ` [*OPTIONS*]
+
+With `zfind`, multiple search criteria are concatenated with the operators `& | !` (respectively AND, OR, NOT).
+At least one option is required, telling `zfind` what to do with matches.
 
 ## A tutorial
 
