@@ -4,18 +4,20 @@ title: User's Guide
 permalink: /gs/
 ---
 
+# Summary
+
 ZettelGeist performs two basic operations: writing note cards and retrieving them.
 The tool for writing cards is `zettel`.
-Since cards are stored as [`yaml` documents](https://en.wikipedia.org/wiki/YAML), `zettel` is essentially a command-line tool for writing new `yaml` documents and editing existing ones.
+Since cards are stored as [`yaml`](https://en.wikipedia.org/wiki/YAML), `zettel` is essentially a command-line tool for writing new `yaml` documents and editing existing ones.
 The functionality of this tool will be illustrated first.
 We will turn then to `zcreate`, `zimport`, and `zfind`, the tools for collecting cards into a database and running queries on it.
 
 # Prerequisites
 
-This tutorial assumes that you have installed ZettelGeist and confirmed its tools are available in a Python virtual environment.
+This user's guide assumes that you have installed ZettelGeist and confirmed its tools are available in a Python virtual environment.
 See the [Installation](/install) page for instructions. 
-You must source the virtualenv to use ZettelGeist.
-We will assume that your virtualenv is named `zenv`.
+You must source the virtual environment to use ZettelGeist.
+We will assume that your virtual environment is named `zenv`.
 
 # Writing cards with `zettel`
 
@@ -33,7 +35,7 @@ For output to a file, use the option `--save` (to write the filename yourself) o
 (zenv) $ zettel --help
 ```
 
-Most options have a regular verb-object syntax and instruct `zettel` to do a specified operation (`set`, `append`, `prompt`, `load` or `delete`) on the specified field.
+Most options have a regular verb-object syntax and instruct `zettel` to do a specified action (`set`, `append`, `prompt`, `load` or `delete`) on a field-value.
 Examples will be given below.
 
 ## Create and save a simple zettel
@@ -69,7 +71,7 @@ note: A Zettel with a note
 ```
 
 Writing long strings in command line arguments is inconvenient, so ZettelGeist provides two alternatives.
-The option `--prompt-<FIELD>` divides note-card creation into steps.
+The option `--prompt-<FIELD>` divides card-writing into steps.
 When this option is invoked, `zettel` will request input for the specified field before creating a new card.
 Text is entered within the terminal.
 Newlines and blank lines are permitted.
@@ -98,10 +100,10 @@ To serialize cards rather assigning a timestamp to them, use the `--counter` opt
 (zenv) $ zettel --file template.yaml --id tutorial --counter tutorial --name id counter
 ```
 
-This command initiates a count of cards with the `id` 'tutorial'.
-The default number of digits is four;
-the count is maintained in a new binary file `.counter.dat`.
-The values `id`, `counter`, and `timestamp` can be combined in any order.
+This command initiates a count of cards with the `id` "tutorial".
+The count is maintained in a new binary file `.counter.dat`.
+The default number of digits is four and the count starts at `0000`.
+The values `id`, `counter`, and `timestamp` may be combined in any order.
 
 ## ZettelGeist fields
 
@@ -149,7 +151,7 @@ When calling a template card with the `--file` option, the following syntax will
 --set-cite "" "pp. 103-4"
 ```
 
-This command retains the `bibkey` value in the input file but replaces the previous `page` value with "pp. 1-2".
+This command retains the `bibkey` value in the input file but replaces the previous `page` value with "pp. 103-4".
 
 ### `comment`
 
@@ -161,10 +163,23 @@ Any comment you want to make about the zettel in general.
 A `year` (string) and `era` (string) as a nested dictionary.
 Syntax follows `cite`.
 
-### `title`
+### `mentions`
+
+(List.)
+One or more mentions.
+Use the option `--append-mentions` and put each within quotes. 
+For instance: `--append-mentions "Sievers, Eduard" "Lachmann, Karl"`.
+
+### `note`
+
 (String.)
-A human-readable title for a sequence of note cards. 
-We set this title in the template card for a source and retain it in all note cards on that source.
+This is the core element of the note card.
+Usually it is a quotation extracted from the source and page identified in the `cite` field.
+
+### `summary`
+
+(String.)
+A concise summary of the note (by convention).
 
 ### `tags`
 
@@ -173,22 +188,10 @@ One or more keywords.
 Use the option `--append-tags` and put each keyword within quotes. 
 For instance: `--append-tags "Charles Babbage" "Ada Lovelace" "Victorian Era"`.
 
-### `mentions`
-
-(List.)
-One or more mentions.
-Syntax follows `tags`.
-
-### `summary`
-
+### `title`
 (String.)
-A concise summary of the note (by convention).
-
-### `note`
-
-(String.)
-This is the core element of the note card.
-Usually it is a quotation extracted from the source and page identified in the `cite` field.
+A human-readable label for a sequence of note cards. 
+We set this label in the template card for a source and retain it in all note cards on that source.
 
 ### `url`
 
@@ -197,7 +200,6 @@ Useful for bookmarking websites.
 
 # Retrieving cards
 
-The previous section has described `zettel`, the ZettelGeist tool for writing note cards.
 We now describe tools for selectively retrieving cards.
 `zcreate` creates a new empty database.
 `zimport` populates the database with note cards.
@@ -254,7 +256,7 @@ cite:
   page: web page
 ```
 
-### Creating a database
+### Create a database
 
 We will now import the cards into a database.
 First, create a new database: 
@@ -272,7 +274,7 @@ Next, populate the database:
 
 We are now ready to run queries on the database and selectively retrieve cards from it.
 
-## Running queries
+### Run queries
 
 Searching is done with the `zfind` tool.
 The option `--query-string` tells `zfind` what to look for.
@@ -281,7 +283,7 @@ The options `--count` and `--show-<FIELD>` tell `zfind` what to do with matches:
 - `--count` counts the cards matching the search criteria and prints that number to standard output.
 - `--show-<FIELD>` prints the specified field to standard output.
 
-These output options may be combined. `--show-<FIELD>` can be repeated with different fields.
+These output options may be combined. `--show-<FIELD>` may be repeated with different fields.
 
 The basic syntax of `--query-string` is `'KEY:"VALUE"'`.
 This syntax is illustrated in the following examples: 
@@ -355,12 +357,24 @@ summary: Kansas City Royals
 (zenv) $ zfind --database mlb.db --query-string 'note:"Cubs"' --show-note
 
 note: |
-  The Chicago Cubs are an American professional baseball team based in Chicago, Illinois. The Cubs compete in Major League Baseball (MLB) as a member club of the National League (NL) Central division, where they are the defending World Series champions. The team plays its home games at Wrigley Field, located on the city's North Side. The Cubs are one of two major league teams in Chicago; the other, the Chicago White Sox, is a member of the American League (AL) Central division. The Cubs, first known as the White Stockings, was a founding member of the NL in 1876, becoming the Chicago Cubs in 1903.[2] The Cubs have appeared in a total of eleven World Series. The 1906 Cubs won 116 games, finishing 116–36 and posting a modern-era record winning percentage of .763, before losing the World Series to the Chicago White Sox by four games to two. The Cubs won back-to-back World Series championships in 1907 and 1908, becoming the first major league team to play in three consecutive World Series, and the first to win it twice. Most recently, the Cubs won the 2016 National League Championship Series and 2016 World Series, which ended a 71-year National League pennant drought and a 108-year World Series championship drought,
+  The Chicago Cubs are an American professional baseball team based in Chicago, Illinois. The Cubs
+  compete in Major League Baseball (MLB) as a member club of the National League (NL) Central
+  division, where they are the defending World Series champions. The team plays its home games at
+  Wrigley Field, located on the city's North Side. The Cubs are one of two major league teams in
+  Chicago; the other, the Chicago White Sox, is a member of the American League (AL) Central
+  division. The Cubs, first known as the White Stockings, was a founding member of the NL in 1876,
+  becoming the Chicago Cubs in 1903.[2] The Cubs have appeared in a total of eleven World Series.
+  The 1906 Cubs won 116 games, finishing 116–36 and posting a modern-era record winning percentage
+  of .763, before losing the World Series to the Chicago White Sox by four games to two. The Cubs
+  won back-to-back World Series championships in 1907 and 1908, becoming the first major league
+  team to play in three consecutive World Series, and the first to win it twice. Most recently,
+  the Cubs won the 2016 National League Championship Series and 2016 World Series, which ended a
+  71-year National League pennant drought and a 108-year World Series championship drought,
 
 ---
 ```
 
-To save this output, redirect it from standard output to a file with `>`: 
+To save this output, redirect standard output to a file with `>`: 
 
 ```shell
 (zenv) $ zfind --database mlb.db --query-string 'note:"Cubs"' --show-note > new-file.txt
