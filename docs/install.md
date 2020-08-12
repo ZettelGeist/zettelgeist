@@ -6,90 +6,82 @@ permalink: /install/
 
 ## Prerequisites for All Installations
 
-Python 3 is _required_ to use ZettelGeist. We don't have resources to support multiple versions of Python.
+We support Unix/Linux, OS X using [Homebrew](https://brew.sh/), and Windows using [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
-We also recommend installing [bibutils](https://sourceforge.net/p/bibutils/home/Bibutils/) and 
-[sqlite3 with full-text search](https://www.sqlite.org/fts3.html). You may not need either of these, but should you
-run into issues, we may ask you to share some output from sqlite3 commands with us in your bug reports.
+Python 3 is required. We do not yet support multiple versions of Python.
 
-We only support Unix/Linux, OS X using [Homebrew](https://brew.sh/), and Windows using [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+We recommend installing [bibutils](https://sourceforge.net/p/bibutils/home/Bibutils/) and 
+[sqlite3 with full-text search](https://www.sqlite.org/fts3.html). 
+Neither is required, but we may ask you to share output from sqlite3 commands with us in bug reports.
 
-Please also note that ZettelGeist is not a web-based or GUI program (yet). This system is for people who _prefer_ working with plaintext, 
-text editors, and the command line. If this is not you, you will probably not like ZettelGeist and should proceed at your own peril.
+Please note that ZettelGeist is a command line application built for people who prefer working with the command line, plaintext, and text editors.
+If this is not you, you will probably not like ZettelGeist.
 
 ## Installation for General Users
 
-- Create a virtual environment for running ZettelGeist:
+1. Create a virtual environment for running ZettelGeist:
 
-  ```shell
-  python3 -m venv ~/zenv
-  ```
+   ```shell
+   $ python3 -m venv ~/zenv
+   ```
 
-  You can install your environment wherever you like, but we are going to assume `~/zenv` in the remaining discussion
-  and in our tutorial to _avoid_ having to talk about user-specific details.
+   You may install your environment wherever you like.
+   We will assume `~/zenv`.
 
-- Source the virtual environment
+2. Source the virtual environment
 
-  ```shell
-  . ~/zenv/bin/activate
-  ```
+   ```shell
+   $ . ~/zenv/bin/activate
+   ```
 
-- And _ensure_ that you are picking up the right `python` and `pip`.
+   The prompt will now be prefixed by `(zenv)`, the environment created in (1).
+   The command `deactivate` returns you to the system environment.
 
-  ```shell
-  ~ . ~/zenv/bin/activate
-  (zenv) ~ which pip
-  /Users/gkt/zenv/bin/pip
-  (zenv) ~ which python
-  /Users/gkt/zenv/bin/python
-  ```
+3. Confirm that you are picking up the right `python` and `pip`.
 
-  Your username would likely appear above instead of _gkt_, unless you share my initials.
+   ```shell
+   (zenv) $ which pip
+   /path/to/zenv/bin/pip
+   (zenv) $ which python
+   /path/to/zenv/bin/python
+   ```
 
-- Now install ZettelGeist
+   In place of `path/to/` you should see the absolute path to the environment created in (1). 
 
-  ```shell
-  (zenv) ~ pip install zettelgeist
-  Collecting zettelgeist
-    Downloading zettelgeist-0.12.2-py3-none-any.whl
-  Collecting tatsu (from zettelgeist)
-    Using cached TatSu-4.2.5-py2.py3-none-any.whl
-  Collecting PyYAML (from zettelgeist)
-  Installing collected packages: tatsu, PyYAML, zettelgeist
-  Successfully installed PyYAML-3.12 tatsu-4.2.5 zettelgeist-0.12.2
-  ```
+4. Install ZettelGeist
 
-  If you see `zettelgeist-<version>` in the above output, you should have a successful install. 
-  Let's verify:
+   ```shell
+   (zenv) $ pip install zettelgeist
+   Collecting zettelgeist
+     Downloading zettelgeist-0.12.2-py3-none-any.whl
+   Collecting tatsu (from zettelgeist)
+     Using cached TatSu-4.2.5-py2.py3-none-any.whl
+   Collecting PyYAML (from zettelgeist)
+   Installing collected packages: tatsu, PyYAML, zettelgeist
+   Successfully installed PyYAML-3.12 tatsu-4.2.5 zettelgeist-0.12.2
+   ```
+ 
+   If you see `zettelgeist-<version>` in the output, you should have a successful install. 
 
-  ```shell
-  (zenv) ~ which zcreate
-  /Users/gkt/zenv2/bin/zcreate
-  (zenv) ~ which zimport
-  /Users/gkt/zenv2/bin/zimport
-  (zenv) ~ which zquicksearch
-  /Users/gkt/zenv2/bin/zquicksearch
-  (zenv) ~ which zfilter
-  /Users/gkt/zenv2/bin/zfilter
-  (zenv) ~ which zettel
-  /Users/gkt/zenv2/bin/zettel
-  ```
+5. Verify the installation
 
+   ```shell
+   (zenv) $ which zcreate
+   /path/to/zenv/bin/zcreate
+   (zenv) $ which zimport
+   /path/to/zenv/bin/zimport
+   (zenv) $ which zfind
+   /path/to/zenv/bin/zfind
+   (zenv) $ which zfilter
+   /path/to/zenv/bin/zfilter
+   (zenv) $ which zettel
+   /path/to/zenv/bin/zettel
+   ```
 
-- And create your first zettel:
+   You may now proceed to the [User's Guide](/gs).
 
-  ```shell
-  zettel --set-title "My First Zettel" --set-summary "I feel empowered." --append-tags "Tutorial" "ZettelGeist" "Install"
-  title: My First Zettel
-  summary: I feel empowered.
-  tags:
-  - Tutorial
-  - ZettelGeist
-  - Install
-  ```
-
-- Then you should proceed to the [Getting Started](/gs) page.
-
+<!--
 ## Developer Install
 
 Coming soon.
+-->

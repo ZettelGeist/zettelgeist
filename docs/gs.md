@@ -1,170 +1,242 @@
 ---
 layout: page
-title: Getting Started
+title: User's Guide
 permalink: /gs/
 ---
 
-## Prerequisites
+# Summary
 
-Please visit the [Installation](/install) before starting the tutorial. This tutorial assumes you have installed 
-ZettelGeist and have confirmed that the tools are available in a Python virtualenv.
+ZettelGeist performs two basic operations: writing note cards and retrieving them.
+The tool for writing cards is `zettel`.
+Since cards are stored as [`yaml`](https://en.wikipedia.org/wiki/YAML), `zettel` is essentially a command-line tool for writing new `yaml` documents and editing existing ones.
+The functionality of this tool will be illustrated first.
+We will turn then to `zcreate`, `zimport`, and `zfind`, the tools for collecting cards into a database and running queries on it.
 
-We assume that your virtualenv is named `zenv` here. Wherever you see `zenv` here, your setup can be different, as long
-as you completed the installation and verified that it is nominally functioning.
+# Prerequisites
 
-This tutorial also depends on sample files, provided at https://github.com/ZettelGeist/zg-tutorial.  You can visit this
-page to download the examples, or you can use `git` to fetch it:
+This user's guide assumes that you have installed ZettelGeist and confirmed its tools are available in a Python virtual environment.
+See the [Installation](/install) page for instructions. 
+You must source the virtual environment to use ZettelGeist.
+We will assume that your virtual environment is named `zenv`.
+
+# Writing cards with `zettel`
+
+## Synopsis
+
+`zettel` [`--file` *INPUT-FILE*] \[*OPTIONS*] [`--save` *OUTPUT-FILE* | `--name` *ARGUMENT...*]
+
+If no input file is specified, input is read from the options passed to `zettel` in standard input.
+Output goes by default to standard output.
+For output to a file, use `--save` (to write the filename yourself) or `--name` (to have `zettel` write the filename for you).
+
+## Getting help
 
 ```shell
-git clone https://github.com/ZettelGeist/zg-tutorial.git
+(zenv) $ zettel --help
 ```
 
-This will create the folder `zg-tutorial`, which we'll reference in this tutorial.
+Most options have a regular verb-object syntax and instruct `zettel` to do a specified action (`set`, `append`, `prompt`, `load` or `delete`) on a field-value.
+Examples will be given below.
 
-## Creating Zettels
-
-The `zettel` command is used to create zettels. You can also create zettels using an ordinary text editor.
-
-### Getting help
+## Create and save a simple zettel
 
 ```shell
-zettel --help
-```
-
-The help shows what at first glance appears to be a bewildering number of options. However, most of the options are *the same* and are just
-being used to do an operation (set, delete, append, etc.) on any given field.
-
-### Create a simple zettel
-
-```shell
-zettel --set-title "My First Zettel"
+(zenv) $ zettel --set-title "Hello, World!"
 ```
 
 This results in the following output:
 
 ```yaml
-title: My First Zettel
+title: Hello, World!
 ```
 
-### Create zettel with multiple fields
-
-A zettel can have as few fields as you wish, including zero. However, a zettel only becomes interesting as you add more information. Let's add a *summary* and a *note*.
+To write this output to a file, invoke the `--save` option:
 
 ```shell
-zettel --set-title "My First Zettel" --set-summary "A Zettel with a note" --set-note "Line 1\nLine 2\nLine 3"
+(zenv) $ zettel --set-title "Hello, World!" --save template.yaml
 ```
 
-This results in
+A basic ZettelGeist workflow consists in writing a template-card to be invoked and edited in subsequent iterations.
+Here is an example: 
+
+```shell
+(zenv) $ zettel --file template.yaml --set-note "A Zettel with a note" --name timestamp
+```
+
+This command reads two input sources, merges them, and saves output to a new file with the following content:
 
 ```yaml
-title: My First Zettel
-summary: A Zettel with a note
-note: |-
-  Line 1
-  Line 2
-  Line 3
+title: Hello, World!
+note: A Zettel with a note
 ```
 
-When setting a field to a string value as we have done for each of these fields, it is permitted to have *embedded newlines* anywhere you like. For the note we have written, we have three input lines, each of which appears on a separate line.
-
-YAML (the format in which Zettels are stored) provides excellent support for this concept and will take your text and indent it using a multiline string. As long as each line is indented consistently relative to the *note* key, it will be valid.
-
-Obviously, writing longer strings using the command line is sometimes impractical, so we created two ways of being able to do this easily: prompting for input (using the `--prompt-<FIELD>` options) or by loading the plaintext from a file (using `--load-<FIELD>`). Each of these is easy to demonstrate.
-
-Let's try loading some text by having `zettel` prompt for it. We'll modify the above command as follows:
+Writing long strings in command line arguments is inconvenient, so ZettelGeist provides two alternatives.
+The option `--prompt-<FIELD>` divides card-writing into steps.
+When this option is invoked, `zettel` will request input for the specified field before creating a new card.
+Text is entered within the terminal.
+Newlines and blank lines are permitted.
+Type `ctrl+d` to complete input.
 
 ```shell
-zettel --set-title "My First Zettel" --set-summary "A Zettel with a note" --prompt-note
+(zenv) $ zettel --file template.yaml --prompt-note --name timestamp
 ```
 
-```
-Enter text for note. ctrl-d to end.
-note> Line 1
-note> Line 2
-note> Line 3
-note>
-note> Even a blank line is allowed.
-note>
-```
-
-Results
-
-```yaml
-title: My First Zettel
-summary: A Zettel with a note
-note: |-
-  Line 1
-  Line 2
-  Line 3
-
-  Even a blank line is allowed.
-```
-
-
-### Load field from another file
-
-TODO
-
-## Indexing Zettels for Search
-
-For this section, we provide you with access to some sample zettels. These can be found in the ZettelGeist tutorial repository
-at https://github.com/ZettelGeist/zg-tutorial.git. (See Prerequisites above.)
-
-You can be in any folder while trying this, but we'll assume you are in the `zettelgeist\docs` after performing an initial clone of our repository.
+The option `--load-<FIELD>` reads input for the specified field from a text file:
 
 ```shell
-$ cd zg-tutorial
-$ zcreate --database mlb.db
-Creating new database mlb.db
+(zenv) $ zettel --file template.yaml --load-note some.txt --name timestamp
 ```
 
+The `timestamp` value ensures that no two cards will have the same file name, but it masks file content.
+The `--id` option feeds a descriptive string into the file name:
 
 ```shell
-$ ls zettels/baseball
-ls zettels/baseball
-arizona-diamondbacks.yaml  milwaukee-brewers.yaml
-atlanta-braves.yaml        minnesota-twins.yaml
-baltimore-orioles.yaml     new-york-mets.yaml
-boston-red-sox.yaml        new-york-yankees.yaml
-chicago-cubs.yaml          oakland-athletics.yaml
-chicago-grey-sox.yaml      philadelphia-phillies.yaml
-cincinnati-reds.yaml       pittsburgh-pirates.yaml
-cleveland-indians.yaml     san-diego-padres.yaml
-colorado-rockies.yaml      seattle-mariners.yaml
-detroit-tigers.yaml        st-louis-cardinals.yaml
-houston-astros.yaml        tampa-bay-rays.yaml
-kansas-city-royals.yaml    texas-rangers.yaml
-los-angeles-angels.yaml    toronto-blue-jays.yaml
-los-angeles-dodgers.yaml   washington-nationals.yaml
-miami-marlins.yaml```
-
-You may see more files than what is shown here. It's ok! There are also files in other folders in `zg-tutorial` itself.
-This, too, is ok.
-
-
-```shell
-zimport --database mlb.db --dir $(pwd)
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/baltimore-orioles.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/kansas-city-royals.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/los-angeles-angels.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/miami-marlins.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/milwaukee-brewers.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/seattle-mariners.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/arizona-diamondbacks.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/st-louis-cardinals.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/houston-astros.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/oakland-athletics.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/boston-red-sox.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/new-york-yankees.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/pittsburgh-pirates.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/detroit-tigers.yaml
-Importing /Users/gkt/Work/zg-tutorial/zettels/baseball/cincinnati-reds.yaml
-[...]
+(zenv) $ zettel --file template.yaml --id tutorial --name id timestamp
 ```
 
-What you see will differ slightly. Where you see `/Users/gkt/Work`, you are likely to see the path to your own checkout directory.
+To serialize cards rather assigning a timestamp to them, use the `--counter` option:
 
-Let's look at one of these zettels.
+```shell
+(zenv) $ zettel --file template.yaml --id tutorial --counter tutorial --name id counter
+```
+
+This command initiates a count of cards with the `id` "tutorial".
+The count is maintained in a new binary file `.counter.dat`.
+The default number of digits is four and the count starts at `0000`.
+The values `id`, `counter`, and `timestamp` may be combined in any order.
+
+## ZettelGeist fields
+
+The preceding section introduced the fields `title` and `note`.
+In this section we provide a full list of ZettelGeist fields and the operations that may be performed on them.
+
+For fields with a string value, the option `--set-<FIELD>` inputs a value for that field, as we saw in the previous section.
+For fields with a list value, use the `--append-<FIELD>` and place each value within quotes.
+Examples will be provided below for the relevant fields. 
+
+All fields are user-defined.
+We provide suggestions based on our own workflows.
+
+### `bibkey`
+
+(String.) 
+A unique identifier for the source from which you have extracted this note.
+Users of the [Better BibTex](https://retorque.re/zotero-better-bibtex/) extension for [Zotero](https://www.zotero.org/) may want to enter the Better BibTex Citation Key in this field.
+
+### `bibtex`
+
+A BibTex citation.
+This field is redundant if you manage your bibliography with Zotero and tie note-cards to Zotero items with Better BibTex Citation Keys in the field `bibkey`.
+<!-- ris, or inline (string) -->
+
+### `cite`
+
+This field has two child fields, `bibkey` (redundant with the field above) and `page`.
+Values must be supplied for both child fields and placed in quotes.
+For instance:
+
+```shell
+--set-cite "FoucaultArchaeologyKnowledgeDiscourse1982" "pp. 103-4"
+```
+
+When creating a template card, enter a dummy value for `page`:
+
+```shell
+--set-cite "FoucaultArchaeologyKnowledgeDiscourse1982" "p."
+```
+
+When calling a template card with the `--file` option, the following syntax will update `cite` values:
+
+```shell
+--set-cite "" "pp. 103-4"
+```
+
+This command retains the `bibkey` value in the input file but replaces the previous `page` value with "pp. 103-4".
+
+### `comment`
+
+(String.)
+Any comment you want to make about the zettel in general.
+
+### `dates`
+
+A `year` (string) and `era` (string) as a nested dictionary.
+Syntax follows `cite`.
+
+### `mentions`
+
+(List.)
+One or more mentions.
+Use the option `--append-mentions` and put each within quotes. 
+For instance: `--append-mentions "Sievers, Eduard" "Lachmann, Karl"`.
+
+### `note`
+
+(String.)
+This is the core element of the note card.
+Usually it is a quotation extracted from the source and page identified in the `cite` field.
+
+### `summary`
+
+(String.)
+A concise summary of the note (by convention).
+
+### `tags`
+
+(List.) 
+One or more keywords.
+Use the option `--append-tags` and put each keyword within quotes. 
+For instance: `--append-tags "Charles Babbage" "Ada Lovelace" "Victorian Era"`.
+
+### `title`
+(String.)
+A human-readable label for a sequence of note cards. 
+We set this label in the template card for a source and retain it in all note cards on that source.
+
+### `url`
+
+(String.)
+Useful for bookmarking websites.
+
+# Retrieving cards
+
+We now describe tools for selectively retrieving cards.
+`zcreate` creates a new empty database.
+`zimport` populates the database with note cards.
+`zfind` runs queries on the database and returns matching cards.
+
+## Synopsis
+
+`zcreate --database` *NAME*`.db`
+
+`zimport --database` *NAME*`.db --dir $(pwd)`
+
+`zfind --database` *NAME*`.db  --query-string '`*FIELD*`:"`*VALUE*`" [& | ! `*FIELD*`:"`*VALUE*`"]...' ` [*OPTIONS*]
+
+With `zfind`, multiple search criteria are concatenated with the operators `& | !` (respectively AND, OR, NOT).
+At least one option is required, telling `zfind` what to do with matches.
+
+## A tutorial
+
+To illustrate the function of these tools, we use sample zettels published 
+at https://github.com/ZettelGeist/zg-tutorial.git. 
+Download the repository with `git clone`:
+
+```shell
+$ git clone https://github.com/ZettelGeist/zg-tutorial.git
+```
+
+This creates a new directory `zg-tutorial`.
+Enter `zg-tutorial/zettels/baseball` and list its contents: 
+
+```shell
+$ cd zg-tutorial/zettels/baseball
+$ ls
+```
+
+<!-- the arguments passed to zimport capture all zetteln in working dir and subdirectories. To import baseball zetteln only, this operation must be performed from the baseball dir -->
+
+Use `cat` to take a look at one of the cards.
 
 ```yaml
 title: MLB Teams
@@ -187,109 +259,126 @@ cite:
   page: web page
 ```
 
-Each of these zettels contains some information one might typically place on a note card. In our view of the world, notes would include
-important basics. The note will often be one of the longer fields. It can be written using what is known as the YAML block style. This means
-that all lines of input are taken, provided they maintain the same indentation level and/or blank. Everything will be taken as input until
-the next field or end of file is found.
+### Create a database
 
-Also shown here are how you can maintain a list of tags. The `tags` field allows you to specify one or more tags. While we hope one day to
-build an auto-classifier (someday, someday...), we find that we actually need to assign labels, especially in our own book project that is
-actually making use of these tools.
+We will now import the cards into a database.
+First, create a new database: 
 
-## Search Examples
-
-Searching is done (at present) using the `zfind` tool. This tool can only perform AND-style queries, but it will soon offer every conceivable possibility. This limitation is similar to what you find in systems like Gmail's search operators, but even Gmail allows for NOT terms.
-
-The `zfind` tool has options to search every field. Once a field matches, you can use the show options to project values from the Zettel. There is also a `--count` option to tell you how many Zettels matched a query.
-
-Find how many Zettels mention Chicago in the `summary` field:
-
+```shell
+(zenv) $ zcreate --database mlb.db
+Creating new database mlb.db
 ```
-zfind --database mlb.db --find-summary Chicago --count
+
+Next, populate the database: 
+
+```shell
+(zenv) $ zimport --database mlb.db --dir $(pwd)
+```
+
+We are now ready to run queries on the database and selectively retrieve cards from it.
+
+### Run queries
+
+Searching is done with the `zfind` tool.
+The option `--query-string` tells `zfind` what to look for.
+The options `--count` and `--show-<FIELD>` tell `zfind` what to do with matches:
+
+- `--count` counts the cards matching the search criteria and prints that number to standard output.
+- `--show-<FIELD>` prints the specified field to standard output.
+
+These output options may be combined. `--show-<FIELD>` may be repeated with different fields.
+
+The basic syntax of `--query-string` is `'KEY:"VALUE"'`.
+This syntax is illustrated in the following examples: 
+
+1. To find how many cards mention Chicago in the `summary` field
+
+```shell
+(zenv) $ zfind --database mlb.db --query-string 'summary:"Chicago"' --count
 2 Zettels matched search
 ```
 
-...and print the `summary and `filename` of the zettels:
+2. To print the matching summaries and filenames
 
-```
-zfind --database mlb.db --find-summary Chicago --count --show-filename
-filename:
-20170731132024-chicago-cubs.yaml
-
-----------------------------------------
+```shell
+(zenv) $ zfind --database mlb.db --query-string 'summary:"Chicago"' --show-filename --show-summary
+summary: Chicago White Sox
 
 filename:
-20170731155613-chicago-grey-sox.yaml
+/path/to/chicago-grey-sox.yaml
 
-----------------------------------------
+---
 
-2 Zettels matched search
-```
-
-...and show the `summary` about the teams:
-
-```
-zfind --database mlb.db --find-summary Chicago --count --show-filename --show-summary
-summary:
-Chicago Cubs
+summary: Chicago Cubs
 
 filename:
-20170731132024-chicago-cubs.yaml
+/path/to/chicago-cubs.yaml
 
-----------------------------------------
-
-summary:
-Chicago White Sox
-
-filename:
-20170731155613-chicago-grey-sox.yaml
-
-----------------------------------------
+---
 ```
 
-Find the terms MLB and Central in the `note` field. Upon finding a  match, show the `filename` and the `summary` fields.
+3. To find the phrase "Central division" in the `note` field and print the `summary` fields
 
-```
-zfind --database mlb.db --find-note "MLB Central" --show-filename --show-summary
-summary:
-Chicago Cubs
+```shell
+(zenv) $ zfind --database mlb.db --query-string 'note:"Central division"' --show-summary
+summary: Minnesota Twins
 
-filename:
-20170731132024-chicago-cubs.yaml
+---
 
-----------------------------------------
+summary: Pittsburgh Pirates
 
-summary:
-Cincinnati Reds
+---
 
-filename:
-20170731133642-cincinnati-reds.yaml
+summary: Cincinnati Reds
 
-----------------------------------------
+---
 
-summary:
-Pittsburgh Pirates
+summary: Detroit Tigers
 
-filename:
-20170731135121-pittsburgh-pirates.yaml
+---
 
-----------------------------------------
+summary: Cleveland Indians
 
-summary:
-St. Louis Cardinals
+---
 
-filename:
-20170731135823-st-louis-cardinals.yaml
+summary: St. Louis Cardinals
 
-----------------------------------------
-```
+---
 
-Find all zettels with Cubs mentioned in the `note` field:
+summary: Chicago Cubs
 
-```
-zfind --database mlb.db --find-note Cubs --show-note
+---
 
-note:
-The Chicago Cubs are an American professional baseball team based in Chicago, Illinois. The Cubs compete in Major League Baseball (MLB) as a member club of the National League (NL) Central division, where they are the defending World Series champions. The team plays its home games at Wrigley Field, located on the city's North Side. The Cubs are one of two major league teams in Chicago; the other, the Chicago White Sox, is a member of the American League (AL) Central division. The Cubs, first known as the White Stockings, was a founding member of the NL in 1876, becoming the Chicago Cubs in 1903.[2] The Cubs have appeared in a total of eleven World Series. The 1906 Cubs won 116 games, finishing 116–36 and posting a modern-era record winning percentage of .763, before losing the World Series to the Chicago White Sox by four games to two. The Cubs won back-to-back World Series championships in 1907 and 1908, becoming the first major league team to play in three consecutive World Series, and the first to win it twice. Most recently, the Cubs won the 2016 National League Championship Series and 2016 World Series, which ended a 71-year National League pennant drought and a 108-year World Series championship drought,
+summary: Kansas City Royals
+
+---
 ```
 
+4. To find all cards with Cubs mentioned in the `note` field and print that field
+
+```shell
+(zenv) $ zfind --database mlb.db --query-string 'note:"Cubs"' --show-note
+
+note: |
+  The Chicago Cubs are an American professional baseball team based in Chicago, Illinois. The Cubs
+  compete in Major League Baseball (MLB) as a member club of the National League (NL) Central
+  division, where they are the defending World Series champions. The team plays its home games at
+  Wrigley Field, located on the city's North Side. The Cubs are one of two major league teams in
+  Chicago; the other, the Chicago White Sox, is a member of the American League (AL) Central
+  division. The Cubs, first known as the White Stockings, was a founding member of the NL in 1876,
+  becoming the Chicago Cubs in 1903.[2] The Cubs have appeared in a total of eleven World Series.
+  The 1906 Cubs won 116 games, finishing 116–36 and posting a modern-era record winning percentage
+  of .763, before losing the World Series to the Chicago White Sox by four games to two. The Cubs
+  won back-to-back World Series championships in 1907 and 1908, becoming the first major league
+  team to play in three consecutive World Series, and the first to win it twice. Most recently,
+  the Cubs won the 2016 National League Championship Series and 2016 World Series, which ended a
+  71-year National League pennant drought and a 108-year World Series championship drought,
+
+---
+```
+
+To save this output, redirect standard output to a file with `>`: 
+
+```shell
+(zenv) $ zfind --database mlb.db --query-string 'note:"Cubs"' --show-note > new-file.txt
+```
