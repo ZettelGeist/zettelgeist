@@ -23,11 +23,12 @@ We will assume that your virtual environment is named `zenv`.
 
 ## Synopsis
 
-`zettel` [`--file` *INPUT-FILE*] \[*OPTIONS*] [`--save` *OUTPUT-FILE* | `--name` *ARGUMENT...*]
+`zettel` [`--file` *INPUT-FILE*] \[*OPTIONS*]
 
-If no input file is specified, input is read from the options passed to `zettel` in standard input.
+If no input file is specified, input is read from the options.
 Output goes by default to standard output.
-For output to a file, use `--save` (to write the filename yourself) or `--name` (to have `zettel` write the filename for you).
+For output to a new file, use `--save` (to write the filename yourself) or `--name` (to have `zettel` write the filename for you).
+To overwrite the input file, use the option `--in-place`.
 
 ## Getting help
 
@@ -117,20 +118,17 @@ Examples will be provided below for the relevant fields.
 All fields are user-defined.
 We provide suggestions based on our own workflows.
 
-### `bibkey`
-
+`bibkey`
 (String.) 
 A unique identifier for the source from which you have extracted this note.
 Users of the [Better BibTex](https://retorque.re/zotero-better-bibtex/) extension for [Zotero](https://www.zotero.org/) may want to enter the Better BibTex Citation Key in this field.
 
-### `bibtex`
-
+`bibtex`
 A BibTex citation.
 This field is redundant if you manage your bibliography with Zotero and tie note-cards to Zotero items with Better BibTex Citation Keys in the field `bibkey`.
 <!-- ris, or inline (string) -->
 
-### `cite`
-
+`cite`
 This field has two child fields, `bibkey` (redundant with the field above) and `page`.
 Values must be supplied for both child fields and placed in quotes.
 For instance:
@@ -153,48 +151,41 @@ When calling a template card with the `--file` option, the following syntax will
 
 This command retains the `bibkey` value in the input file but replaces the previous `page` value with "pp. 103-4".
 
-### `comment`
-
+`comment`
 (String.)
 Any comment you want to make about the zettel in general.
 
-### `dates`
-
+`dates`
 A `year` (string) and `era` (string) as a nested dictionary.
 Syntax follows `cite`.
 
-### `mentions`
-
+`mentions`
 (List.)
 One or more mentions.
 Use the option `--append-mentions` and put each within quotes. 
 For instance: `--append-mentions "Sievers, Eduard" "Lachmann, Karl"`.
 
-### `note`
-
+`note`
 (String.)
 This is the core element of the note card.
 Usually it is a quotation extracted from the source and page identified in the `cite` field.
 
-### `summary`
-
+`summary`
 (String.)
 A concise summary of the note (by convention).
 
-### `tags`
-
+`tags`
 (List.) 
 One or more keywords.
 Use the option `--append-tags` and put each keyword within quotes. 
 For instance: `--append-tags "Charles Babbage" "Ada Lovelace" "Victorian Era"`.
 
-### `title`
+`title`
 (String.)
 A human-readable label for a sequence of note cards. 
 We set this label in the template card for a source and retain it in all note cards on that source.
 
-### `url`
-
+`url`
 (String.)
 Useful for bookmarking websites.
 
@@ -205,18 +196,22 @@ We now describe tools for selectively retrieving cards.
 `zimport` populates the database with note cards.
 `zfind` runs queries on the database and returns matching cards.
 
+After the synopsis, this section presents two tutorials.
+The first illustrates basic functions.
+The second shows how ouput from the database can be fed back into `zettel` to revise and update notes.
+
 ## Synopsis
 
 `zcreate --database` *NAME*`.db`
 
-`zimport --database` *NAME*`.db --dir $(pwd)`
+`zimport --database` *NAME*`.db --dir` *DIRECTORY*
 
-`zfind --database` *NAME*`.db  --query-string '`*FIELD*`:"`*VALUE*`" [& | ! `*FIELD*`:"`*VALUE*`"]...' ` [*OPTIONS*]
+`zfind --database` *NAME*`.db  --query-string '`*FIELD*`:"`*VALUE*`" [(& | !) `*FIELD*`:"`*VALUE*`"]...' ` *OPTION*...
 
 With `zfind`, multiple search criteria are concatenated with the operators `& | !` (respectively AND, OR, NOT).
 At least one option is required, telling `zfind` what to do with matches.
 
-## A tutorial
+## tutorial 1
 
 To illustrate the function of these tools, we use sample zettels published 
 at https://github.com/ZettelGeist/zg-tutorial.git. 
@@ -274,6 +269,9 @@ Next, populate the database:
 ```shell
 (zenv) $ zimport --database mlb.db --dir $(pwd)
 ```
+
+`$(pwd)` means the current directory and everything beneath it.
+This argument puts the entire path to file into the index. 
 
 We are now ready to run queries on the database and selectively retrieve cards from it.
 
@@ -377,8 +375,87 @@ note: |
 ---
 ```
 
-To save this output, redirect standard output to a file with `>`: 
+To save this output, redirect standard output to a file with `>` or `>>`: 
 
 ```shell
 (zenv) $ zfind --database mlb.db --query-string 'note:"Cubs"' --show-note > new-file.txt
 ```
+
+## tutorial 2
+
+In this second tutorial we will use the zettels in `zg-tutorial/zettels/rheingold-examples`.
+Enter that directory and create a database from its zettels, as described in **tutorial 1**.
+We will assume that the database is named `index.db`.
+
+To query this database, we need some idea of its contents.
+For instance, what tags are used?
+ZettelGeist does not currently have an option to output a list of all tags in a database, but Linux users can add the following script to `~/.bashrc`:
+
+```
+# output all tags in a ZettelGeist database
+
+zdb_tags() {
+        sqlite3 $1 'select distinct(lower(tag)) from tags' | sort -f | uniq -i
+}
+```
+
+Save and close, then reload `.bashrc`:
+
+```shell
+$ source ~/.bashrc
+```
+
+This operation deactivates ZettelGeist's virtual environment.
+Source the virtual environment again and output a list of database tags with the new command `zdb_tags`:
+
+```shell
+(zenv) $ zdb_tags index.db | less
+```
+
+To keep an incremental record of the tags used in your database, redirect this output to a new file in a git repository (perhaps the same repository that holds your zettels).
+The incremental record will allow you to check new tags against the existing set and spot errors and redundancies.
+
+Let's now select a tag to investigate:
+
+```shell
+$ zfind --database index.db --query-string 'tags:"Turing"' --count
+```
+
+The output reports 66 matching zettels.
+Narrow the search to cards that mention the Enigma machine in the `note` field and browse the results with `less`:
+
+```shell
+$ zfind --database index.db --query-string 'tags:"Turing" & note:"Enigma"' --show-note --show-tags --count | less
+```
+
+Now suppose that we want to add the tag `crypoanalysis` to the four cards that match this search.
+Revisions can always be made to individual cards with a text editor.
+When just four cards are involved, it is no hardship to add a new tag manually.
+To identify the files to be revised, add the option `--show-filename` to the command above.
+
+Suppose, however, that we want to add a new tag to all 66 cards with the tag "Turning".
+For this, we want automation.
+
+### Adding tags to multiple Zettels 
+
+To a get list of filenames from search results, use `grep`:
+
+```shell
+$ zfind --database index.db --query-string 'tags:"Turing" & note:"Enigma"' --show-filename | grep zg-tutorial
+```
+
+Any portion of the file path should work in the pattern fed to `grep`. The command above uses `zg-tutorial`.
+The output gives the absolute path to each of the matching zettels.
+
+To add the tag `crypoanalysis` to each of the files, use this shell loop:
+
+```shell
+$ for filename in $(zfind --database index.db --query-string 'tags:"Turing" & note:"Enigma"' --show-filename | grep zg-tutorial); do 
+zettel --file $filename --append-tags "crypoanalysis" --in-place
+done 
+```
+
+To view the results, run `git status` and `git diff`.
+Notice that the `--in-place` option creates backups of the overwritten files.
+This is a safety check.
+Delete the backups once you are satisfied with the results of the `for` loop.
