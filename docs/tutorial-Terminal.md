@@ -4,99 +4,69 @@ title: Tutorial-Terminal
 permalink: /tutorial-term/
 ---
 
-**This page is under construction. Pardon the sketchiness for now.**
+\[**ZettelGeist documentation is in development and split between this page and the [User's Guide](/gs).]**
 
-## As made clear in Tutorial A, there is no wrong way to create notes (zettels) for use in a ZettelGeist database, as long as the basic protocols are maintained. 
+# Notetaking with ZettelGeist: a workflow
 
-###  But, some of you might be more comfortable -- or interested in -- doing all of your writing of notes or zettels at the command line itself (not using an outside editor at all -- free or not).  
+**First, create a template card.**
+This is the starting point for notetaking: create a "template" note that you can use to take a series of notes (zettels) on a particular source (book, article, etc.). 
+The subsequent commands will then lead you through various ways to create new notes and adjust tags.
 
-### There are some advantages to doing it in the most immediate, plain-text way: mainly because it avoids the issues of "fancy" characters and their problems.
-
-### This Tutorial Level B will introduce you to the Command Line (terminal) methods to create notes, as well as some more things that can be done with zfind and other aspects of ZettelGeist. 
-
-## Set up note with title, keywords, tags, citation/bibtex, page numbers, using ZettelGeist at the Command Line (terminal). 
-
-- This is the starting point for doing the above: estabilishing a "template" note that you can use to take a series of notes on a particular source (book, article, etc.). The subsequent commands will then lead you through various ways to create new ones, adjust tags, then search, find, and manage information in a set of notes (zettels).
-
-```
-zettel --set-title "My Favorite Ada and Charles Book" --append-tags "Charles Babbage" "Ada Lovelace" Victorian Era" --set-cite Campbell_Kelly_2010 "pp. 1-2" --save campbell-kelly-template.yaml 
+```shell
+(zenv) $ zettel --set-title "My Favorite Ada and Charles Book" --append-tags "Charles Babbage" "Ada Lovelace" "Victorian Era" --set-cite Campbell_Kelly_2010 "pp. 1-2" --save campbell-kelly-template.yaml 
 ```
 
-```
-cat campbell-kelly-template.yaml  [to see]
-```
+View the file: 
 
-- Create new zettel but change the page numbers 
-
-```
-zettel --file campbell-kelly-template.yaml --set-cite "" "pp. 2-4" 
+```shell
+$ cat campbell-kelly-template.yaml
 ```
 
-- Create new zettel and prompt for a note: 
+Now create a new zettel but (1) change the page numbers, (2) prompt for a note, and (3) save the note with a unique identifier:
 
-```
-zettel --file campbell-kelly-template.yaml --set-cite "" "pp. 2-4" --prompt-note 
-```
-
-Save the new note with unique identifiter
-
-```
-zettel --file campbell-kelly-template.yaml --set-cite "" "pp. 2-4" --prompt-note --id campbell-kelly --counter campbell-kelly next --name 
+```shell
+$ zettel --file campbell-kelly-template.yaml --set-cite "" "pp. 2-4" --prompt-note --id campbell-kelly --counter campbell-kelly --name id counter
 ```
 
-- This will save to a zettel with unique id plus suffix.
+When entering the `note`, avoid a trailing space at the end of lines. This will result in `\n` between lines.
+Special characters will cause ZettelGeist to go to "safe" format and add backslashes `\`. The note will look ugly, but it will work. 
 
-```
-cat new filename [to see]
-```
+To take a sequence of notes on a source, use the up arrow or `ctrl p` to retrieve the previous command, then edit the command as needed.
+For example, retrieve the previous command and add a new tag and page numbers:
 
-- Now, use that note but add a tag and change page numbers
-
-```
-zettel --file  last.filename.yaml --append-tags "Analytical Engine" --set-cite "" "pp. 4-5" --prompt-note --id campbell-kelly --counter campbell-kelly next --name
+```shell
+$ zettel --file campbell-kelly-template.yaml --append-tags "Analytical Engine" --set-cite "" "pp. 4-5" --prompt-note --id campbell-kelly --counter campbell-kelly --name id counter
 ```
 
-- Making notes based on prompt sequences 
+(Alternatively, use `ctrl r` to search and retrieve a command from your shell history.)
 
-```
-zettel --campbell-kelly-template.yaml --set-cite ""  "p. 33" --prompt-note --prompt-tags --id campbell-kelly --counter campbell-kelly next --name
-```
+The `prompt-<FIELD>` command can be used for tags: 
 
-- This will have you enter note and tags as you create on command line. 
-
-- **Avoid trailing space at the end of lines, when possible.  It will work but result in \n between lines.**
-
-  - BTW, --prompt-cite will ask for both bibkey and pages, so you would need to keep entering bibkey. 
-
-  - But using --set-cite "" "pp. 56-60" for former lets you just change the page in the command itself before you ask for prompts.  
-
-
-- To eliminate previous tags on a template 
-
-```
-zettel --campbell-kelly-template.yaml --set-cite ""  "p. 33" --reset-tags --prompt-note --prompt-tags --id campbell-kelly --counter campbell-kelly next --name
- 
+```shell
+$ zettel --file campbell-kelly-template.yaml --set-cite "" "p. 33" --prompt-note --prompt-tags --id campbell-kelly --counter campbell-kelly --name id counter
 ```
 
-- `--reset-tags` deletes old ones and --prompt-tags means adding all new, not just appending. 
+This will have you enter a note and tags on the command line.
+The command `--prompt-cite` will ask for both `bibkey` and `page`, so you would need to keep entering `bibkey`.
+Most users will prefer the syntax `--set-cite "" "PAGE"`, which lets you change the page number while reusing the `bibkey` entered in the template file.
 
-- If you use special characters in notes, it will go to "safe" format and add backslashes \ . It will look ugly, but still work. 
+The command `--reset-tags` deletes tags from the template file; 
+`--prompt-tags` prompts you to add new ones:
 
-- you can arrow back or ctrl-p to go to previous command and just edit it for the next note.  [Or open it up in Vim or use Vim-mode in zsh.  see below.]   
+```shell
+$ zettel --file campbell-kelly-template.yaml --set-cite "" "p. 33" --reset-tags --prompt-note --prompt-tags --id campbell-kelly --counter campbell-kelly --name id counter
+```
 
+
+<!--
 - George uses prompt mainly for note:  For the rest, he uses set. 
+-->
 
-```
-zettel --campbell-kelly-template.yaml --set-cite ""  "p. 48" --prompt-note --append-tags "new tags" --id campbell-kelly --counter campbell-kelly next --name
- 
-```
+<!--
+# Process Notes
+[**The remainder of this document is internal process notes**]
 
-## Do search with more results.
-
-
-```
-zfind --database index.db --find-tags "babbage" --count --show-filename --showtitle --show-note --show-tags 
-```
+# Search results
 
 Results have dashed lines between each 
 
@@ -104,15 +74,7 @@ Results have dashed lines between each
 
 [TODO: This line could be a configurable option... Make this configurable?]
 
-## To put these results into a new file... 
-
 [TODO: next tool is a report, with a way to style what you see. Make each field name a markdown heading.] 
-
-Linux way is to redirect 
-
-```
-add "> results.txt" to command to make the result.txt file with eveything in it.
-```
 
 [TODO: add zFind command option to make headings into markdown. Put everything into a nice markdown format.] 
 
@@ -133,9 +95,7 @@ zfind --database index.db --find-tags "babbage" --show-note --show-cite
 [TODO: future lecture process for teaching -- do zfind on everything on a topic. then just go through the results.   This is the memory extender that lets you pull up information through a retrieval system.   The retrieval system is what is the new and the best of the system.  This is what Onenote is lacking. ] 
 
 
-## Any editor can be used: command line, sublime text, vim.... Just follow conventions and save as .yaml 
-
-### Some recipes for using VIM to make Zettel commands and work with PDFS.
+# Some recipes for using VIM to make Zettel commands and work with PDFS.
 
 ### Use VIM to edit command
 
@@ -152,14 +112,13 @@ Hit [esc-v] to edit in VIM [move quickly to delete all between quotation marks, 
 
 ci"    will replace everything within quotation marks.  [Do this between note: and page: and tags:]
 
-
 ```
 :wq 
 [enter]
 ```
 Arrow up, REPEAT endlessly
 
-## Alias to zcreate database [alias "zcreatetoday"]
+# Alias to zcreate database [alias "zcreatetoday"]
 
 ```
 zcreate --database Zettels-Today.db"
@@ -171,31 +130,6 @@ zcreate --database Zettels-Today.db"
 ```
 alias zimporttoday="zimport --database Zettels-Today.db --zettel-dir ~/zettels/hocz/dbdz"
 ```
-# From Video Session 2017-12-20 13.47.55 ZG INSTRUCTIONS-ZFind-filter[?]-Demo
-
-## Starting
-
-```
-zcreate --database index.db
-```
-
-```
-zimport --database index.db --dir $(pwd) 
-```
-
-- $(pwd) means current directory and everything beneath it. 
-
-- also puts entire path to file into the index. 
-
-## zettel 
-
-zettel is making and replacing command itself--and many other functions (append tags, reset tags, etc., etc.)  The "Swiss Army Knife" for notetaking
-
-## zFind
-
-Most of above applies to zFind 
-
-[TODO: make sure the rest of this is actually about zfilter, after name change.] 
 
 ## zFilter 
 
@@ -277,7 +211,7 @@ zettel --file [filepath/filename.yaml]
 --now -now-id ada-programming
 ```
 
-- This creates new zettel with new tag at the end.  
+- This creates new zettel with new tag at the end.
 
 ## Adding tags to multiple Zettels 
 
@@ -1113,9 +1047,11 @@ mv results* ~/Work/zettels/hocz/dbdz/
 
 ## Sample with creation of a Zettel 
 
+```
 vim results-Medieval+Middle-Ages+Gothic.md
 grep -i "The clerks and scribes of the Middle Ages" *note.txt
 zettel --file 20180207135333-010.yaml.in --prompt-note --now --now-id Medieval-Gothic
+```
 
 ## [TODO: searching in zql does not allow use of hyphens, even in quotation marks: "seventeenth-century" doesn't work. 
 
@@ -1134,12 +1070,12 @@ cat *note.txt > temp.md; awk '/^#/ || !a[$0]++' temp.md > results.md; rm temp.md
 
 ## TO remove duplicate lines from files IN zfind directory (retaining each) 
 
-
+```
 for file in *note.txt
 do
   awk '/^#/ || !a[$0]++' "$file" >  "$file.nodups.txt"
   done
-
+```
 
 Then, in vim, do
 
@@ -1164,3 +1100,4 @@ you can really look around at the results and make zettels.
 Using args in VIM you can do a lot of moving around.  But this alone lets you go through each and see what's there. 
 
 
+-->
