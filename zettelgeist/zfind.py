@@ -71,21 +71,26 @@ def main():
         zettels = loader.getZettels()
         z = next(zettels)
 
+        # TODO: This is not good. I think we should only output YAML now that we have Markdown.
+        this_result_output = ['---']
         for field in row.keys():
             show_field = "show_" + field
             if argsd.get(show_field, None):
                 if row[field]:
                     if z and field in zettel.ZettelFields:
-                        print(z.get_yaml([field]))
+                        if field not in zettel.ZettelExtraFields:
+                            this_result_output.append(z.get_yaml([field]).rstrip())
                     else:
-                        print("%s:" % field)
-                        print(row[field])
-                        print()
-                    printed_something = True
+                        this_result_output.append("%s:" % field)
+                        this_result_output.append(row[field])
 
-        if printed_something:
-            print("-" * 3)
-            print()
+        this_result_output.append('---')
+        print('\n'.join(this_result_output))
+
+        if argsd.get("show_document"):
+            document = row['document']
+            if len(document) > 0:
+                print(row['document'])
 
     if args.count:
         print("%d Zettels matched search" % search_count)

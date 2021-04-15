@@ -14,8 +14,7 @@ from . import zettel
 # TODO: 'filename' and 'document' are special fields for stuff not really part of the YAML dictionary
 # but still needing to be indexable and searchable.
 
-ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename', 'document']
-
+ZettelSQLFields = zettel.ZettelFieldsOrdered
 # Default Zettel DB name
 ZDB = 'zettels.db'
 

@@ -17,7 +17,7 @@ except ImportError:
 def get_zettels(dir):
     for (dirpath, dirnames, filenames) in os.walk(dir):
         for filename in filenames:
-            if filename.endswith('.yaml'):
+            if filename.endswith('.yaml') or filename.endswith('.md'):
                 yield os.path.join(dirpath, filename)
 
 
@@ -41,8 +41,9 @@ def main():
             filepath = os.path.abspath(entry)
         else:
             filepath = entry
+        print("Processing %s" % filepath)
         if filepath.endswith('.yaml'):
-            yaml_info = zettel.load_yaml_file(filepath)
+            yaml_info = zettel.load_pure_yaml(filepath)
         elif filepath.endswith('.md'):
             yaml_info = zettel.load_markdown_with_frontmatter(filepath)
         else:
