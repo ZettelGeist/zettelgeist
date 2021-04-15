@@ -125,3 +125,4 @@ scala-2.11/
 # Temporary folders
 
 scratch/
+.vscode/
