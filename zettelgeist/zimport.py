@@ -3,7 +3,7 @@
 import os
 import os.path
 import sys
-
+import frontmatter # to accommodate Markdown with YAML frontmatter
 
 from . import zdb, zettel
 
@@ -41,39 +41,25 @@ def main():
             filepath = os.path.abspath(entry)
         else:
             filepath = entry
-        if not filepath.endswith('.yaml'):
-            print("Ignoring %s; add .yaml extension to import this file." % filepath)
-            continue
-        print("Importing %s" % filepath)
-        with open(filepath) as infile:
-            try:
-                text = infile.read()
-            except:
-                print("- I/O error on %s: Encoding must be UTF-8" % filepath)
-                continue
-            try:
-                ydocs = yaml.load_all(text, Loader=Loader)
-            except:
-                print("- YAML load failure (run yamllint on this file)")
-                continue
+        if filepath.endswith('.yaml'):
+            yaml_info = zettel.load_yaml_file(filepath)
+        elif filepath.endswith('.md'):
+            yaml_info = zettel.load_markdown_with_frontmatter(filepath)
+        else:
+            print("Warning: %s is not .yaml or .md (ignoring)")
 
+        (ydoc, document) = yaml_info
+        if len(ydoc) > 0:
             try:
-                ydoc = next(ydocs)
-            except:
-                print("- YAML loaded but could not be processed")
+                z = zettel.Zettel(ydoc)
+            except zettel.ParseError as error:
+                error_text = str(error)
+                print("%s:\n%s" % (filepath, error_text))
                 continue
 
-            if isinstance(ydoc, dict):
-                try:
-                    z = zettel.Zettel(ydoc)
-                except zettel.ParseError as error:
-                    error_text = str(error)
-                    print("%s:\n%s" % (filepath, error_text))
-                    continue
-
-                if not args.validate:
-                    db.bind(z, filepath)
-                    db.insert_into_table()
+            if not args.validate:
+                db.bind(z, filepath, document)
+                db.insert_into_table()
 
     db.done()
 

@@ -11,7 +11,10 @@ import sqlite3
 
 from . import zettel
 
-ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename']
+# TODO: 'filename' and 'document' are special fields for stuff not really part of the YAML dictionary
+# but still needing to be indexable and searchable.
+
+ZettelSQLFields = zettel.ZettelFieldsOrdered + ['filename', 'document']
 
 # Default Zettel DB name
 ZDB = 'zettels.db'
@@ -48,10 +51,11 @@ class SQLiteFTS(object):
             zip(self.fts_field_names, self.fts_field_init))
         self.zettel = None
 
-    def bind(self, zettel, filename):
+    def bind(self, zettel, filename, document=""):
         self.zettel = zettel
         doc = zettel.get_indexed_representation()
         doc.update({'filename': filename})
+        doc.update({'document': document})
         self.record = self.fts_default_record.copy()
         for k in doc.keys():
             if k in self.record.keys():

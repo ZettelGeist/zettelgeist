@@ -27,7 +27,6 @@ setup(
         'console_scripts': [
             'zcreate = zettelgeist.zcreate:main',
             'zimport = zettelgeist.zimport:main',
-            'zfilter = zettelgeist.zfilter:main',
             'zfind = zettelgeist.zfind:main',
             'zettel = zettelgeist.zettel:main'
             ]
