@@ -675,6 +675,8 @@ def process_zettel_command_line_options(z, vargs, id):
             lines = prompt(prompt_field)
             if prompt_field in ZettelStringFields:
                 z.set_field(prompt_field, "\n".join(lines))
+            elif prompt_field in ZettelExtraFields:
+                z.set_field(prompt_field, "\n".join(lines))
             elif prompt_field in ZettelListFields:
                 for line in lines:
                     z.append_list_field(prompt_field, line)
