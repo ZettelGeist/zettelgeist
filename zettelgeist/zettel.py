@@ -6,6 +6,7 @@ import sys
 import argparse
 import readline  # for input()
 
+import frontmatter # to accommodate Markdown with YAML frontmatter
 import yaml
 try:
    from yaml import CLoader as Loader, CDumper as Dumper
@@ -63,6 +64,7 @@ def parse_zettel(doc):
     parse_string_field(doc, 'summary')
     parse_string_field(doc, 'comment')
     parse_string_field(doc, 'note')
+    parse_string_field(doc, 'document')
 
     # These fields are all optional but, if present, must be list of strings
 
@@ -205,6 +207,8 @@ class ZettelStringRequired(Exception):
 def get_argparse():
     parser = argparse.ArgumentParser()
 
+    # note is being deprecated in future releases to give users time to migrate away from it
+
     for field in ZettelFieldsOrdered:
         parser.add_argument('--delete-%s' % field, action="store_true",
                             help="delete field %s" % field, default=False)
@@ -258,6 +262,7 @@ def get_argparse():
                             nargs="+", help="restrict output fields (list of Zettel field names)",
                             default=ZettelFieldsOrdered)
 
+    # deprecated
     parser.add_argument('--omit-markdown-header', action="store_true", default=False,
                         help="add markdown header when writing Markdown for each YAML field")
 
@@ -403,25 +408,32 @@ class Zettel(object):
                 yaml_zettel[key] = self.zettel[key].copy()
         return yaml.dump(yaml_zettel, default_flow_style=False)
 
-    def get_text(self, omit_markdown_header, restrict_to_fields=ZettelFieldsOrdered):
-        text = []
-        parse_zettel(self.zettel)
-        for key in ZettelFieldsOrdered:
-            if key not in self.zettel:
-                continue
-            if key not in restrict_to_fields:
-                continue
-            if not omit_markdown_header:
-               text.append(markdown_h1(key))
-            if key in ZettelStringFields:
-                text.append(self.zettel[key].strip())
-            elif key in ZettelListFields:
-                for item in self.zettel[key]:
-                    text.append(markdown_listitem(item))
-            else:
-                text.append(self.get_yaml([key]))
-            text.append("\n")
-        return "\n".join(text)
+    def get_document(self):
+        return self.zettel.get('document','')
+
+    def get_filename(self):
+        return self.zettel.get('filename','')
+
+# Unlikely we need this code anymore.
+# def get_text(self, omit_markdown_header, restrict_to_fields=ZettelFieldsOrdered):
+#     text = []
+#     parse_zettel(self.zettel)
+#     for key in ZettelFieldsOrdered:
+#         if key not in self.zettel:
+#             continue
+#         if key not in restrict_to_fields:
+#             continue
+#         if not omit_markdown_header:
+#            text.append(markdown_h1(key))
+#         if key in ZettelStringFields:
+#             text.append(self.zettel[key].strip())
+#         elif key in ZettelListFields:
+#             for item in self.zettel[key]:
+#                 text.append(markdown_listitem(item))
+#         else:
+#             text.append(self.get_yaml([key]))
+#         text.append("\n")
+#     return "\n".join(text)
 
     def get_yaml_subset(self, fields=[]):
         z = Zettel({})
@@ -433,12 +445,12 @@ class Zettel(object):
         return {key: ",".join(flatten(self.zettel[key])) for key in self.zettel}
 
 
-def markdown_h1(text):
-    return "\n".join([text, len(text) * "="]) + "\n"
-
-
-def markdown_listitem(text):
-    return "- %s" % text.strip().replace("\n", "").replace("\r", "")
+# deprecated
+# def markdown_h1(text):
+#     return "\n".join([text, len(text) * "="]) + "\n"
+# deprecated
+#def markdown_listitem(text):
+#    return "- %s" % text.strip().replace("\n", "").replace("\r", "")
 
 
 class ZettelLoaderError(Exception):
@@ -446,21 +458,49 @@ class ZettelLoaderError(Exception):
         self.message = message
 
 
+def load_pure_yaml(filepath):
+    # TODO: Consider using the frontmatter to load the YAML and do all error reporting.
+    print("Importing YAML: %s" % filepath)
+    ydoc = {}
+    with open(filepath) as infile:
+        try:
+            text = infile.read()
+        except:
+            print("- I/O error on %s; is doc UTF-8" % filepath)
+            continue
+        try:
+            ydocs = yaml.load_all(text, Loader=Loader)
+        except:
+            print("- Cannot load YAML from %s; consider running YAML linter" % filepath)
+            continue
+
+        try:
+            ydoc = next(ydocs)
+        except:
+            print("- Cannot load first YAML document from %s" % filepath)
+            continue
+        content = "" # TODO: Consider having command line option to treat note as content, probably ok.
+    return (ydoc, content)
+
+def load_markdown_with_frontmatter(filepath):
+    print("Importing Markdown with Frontmatter: %s" % filepath)
+    post = frontmatter.load(filepath)
+    return (post.metadata, post.content)
+
+
 class ZettelLoader(object):
     def __init__(self, filename):
-        with open(filename) as infile:
-            try:
-                text = infile.read()
-            except:
-                raise ZettelLoaderError(
-                    "%s: I/O error - Encoding must be UTF-8" % filename)
-        try:
-            self.ydocs = yaml.load_all(text, Loader=Loader)
-        except:
-            raise ZettelLoaderError("%s: YAML load failure" % filename)
+        # developer note: When we developed this code, we were thinking about a "fass" of zettels.
+        # Now we just have individual zettels.
+        if infile.endswith('.yaml'):
+            self.ydocs = [load_pure_yaml(infile)]
+        elif infile.endswith('.md'):
+            self.ydocs = [load_markdown_with_frontmatter(infile)]
 
     def getZettels(self):
-        for ydoc in self.ydocs:
+        for yaml_document in self.ydocs:
+            (ydoc, document) = yaml_document
+            ydoc['document'] = document
             if isinstance(ydoc, dict):
                 yield Zettel(ydoc)
             else:
@@ -544,12 +584,13 @@ def main():
 
     try:
         if extension in ZettelMarkdownExtensions:
-            outfile.write(first_zettel.get_text(args.omit_markdown_header, args.restrict_output_fields) + '\n')
+            # markdown means to generate YAML as front matter without the filename/document fields
+            # the the document will be written raw.
+            outfile.write('---\n' + first_zettel.get_yaml(args.restrict_output_fields) + '\n---\n' + first_zettel.get_document())
         else:
             outfile.write(first_zettel.get_yaml(args.restrict_output_fields) + '\n')
     except ParseError as error:
         print(error)
-
 
 def gen_id():
     id = 0
