@@ -590,12 +590,14 @@ def main():
         extension = '.yaml'
 
     try:
-        yaml_repr = first_zettel.get_yaml(args.restrict_output_fields)
+        yaml_repr_stripped = first_zettel.get_yaml(args.restrict_output_fields).rstrip()
         document = first_zettel.get_document()
-        if len(yaml_repr) > 0:
-           outfile.write('\n'.join(['---', yaml_repr.rstrip(), '---', document, '\n']))
+        if len(yaml_repr_stripped) > 0:
+           outfile.write('\n'.join(['---', yaml_repr_stripped, '---', document.rstrip()]))
         else:
-           outfile.write('\n'.join([document.rstrip(), '\n']))
+           doc_stripped = document.rstrip()
+           if len(doc_stripped) > 0:
+               outfile.write(doc_stripped + '\n')
     except ParseError as error:
         print(error)
 
