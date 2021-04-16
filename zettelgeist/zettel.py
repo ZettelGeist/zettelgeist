@@ -214,7 +214,7 @@ def get_argparse():
         parser.add_argument('--delete-%s' % field, action="store_true",
                             help="delete field %s" % field, default=False)
 
-    for field in ZettelStringFields:
+    for field in ZettelStringFields + ZettelExtraFields: # allow for filename, doc
         parser.add_argument('--set-%s' %
                             field, help="set the value of field %s" % field)
         parser.add_argument('--load-%s' %
@@ -410,7 +410,10 @@ class Zettel(object):
                     yaml_zettel[key] = self.zettel[key].copy()
                 except:
                     print("Warning: Cannot copy %s" % key)
-        return yaml.dump(yaml_zettel, default_flow_style=False)
+        if len(yaml_zettel) > 0:
+           return yaml.dump(yaml_zettel, default_flow_style=False)
+        else:
+           return ""
 
     def get_document(self):
         return self.zettel.get('document','')
@@ -587,7 +590,12 @@ def main():
         extension = '.yaml'
 
     try:
-        outfile.write('---\n' + first_zettel.get_yaml(args.restrict_output_fields) + '---\n' + first_zettel.get_document() + '\n')
+        yaml_repr = first_zettel.get_yaml(args.restrict_output_fields)
+        document = first_zettel.get_document()
+        if len(yaml_repr) > 0:
+           outfile.write('\n'.join(['---', yaml_repr.rstrip(), '---', document, '\n']))
+        else:
+           outfile.write('\n'.join([document.rstrip(), '\n']))
     except ParseError as error:
         print(error)
 
