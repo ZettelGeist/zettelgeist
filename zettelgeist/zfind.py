@@ -5,6 +5,7 @@ from time import strftime
 from . import zdb, zettel, zquery
 from .zutils import *
 
+YAML_HEADER = '---'
 
 def get_argparse():
     parser = zdb.get_argparse()
@@ -72,7 +73,7 @@ def main():
         z = next(zettels)
 
         # TODO: This is not good. I think we should only output YAML now that we have Markdown.
-        this_result_output = ['---']
+        this_result_output = [YAML_HEADER]
         for field in row.keys():
             show_field = "show_" + field
             if argsd.get(show_field, None):
@@ -83,9 +84,13 @@ def main():
                     else:
                         this_result_output.append("%s:" % field)
                         this_result_output.append(row[field])
+    
 
-        this_result_output.append('---')
-        print('\n'.join(this_result_output))
+        this_result_output.append(YAML_HEADER)
+
+        # No output if just --- and ---
+        if len(this_result_output) > 2:
+           print('\n'.join(this_result_output))
 
         if argsd.get("show_document"):
             document = row['document']
