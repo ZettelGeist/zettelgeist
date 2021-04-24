@@ -505,6 +505,8 @@ class ZettelLoader(object):
             self.ydocs = [load_pure_yaml(infile)]
         elif infile.endswith('.md'):
             self.ydocs = [load_markdown_with_frontmatter(infile)]
+        else:
+            self.ydocs = []
 
     def getZettels(self):
         for yaml_document in self.ydocs:
@@ -576,7 +578,7 @@ def main():
 
         name_components['timestamp'] = strftime("%Y%m%d%H%M%S")
 
-        name_template = args.separator.join(["%%(%s)s" % name for name in args.name]) + ".yaml"
+        name_template = args.separator.join(["%%(%s)s" % name for name in args.name]) + ".md"
         name_template = "/".join([name_dir, name_template])
         filename = name_template % name_components
         if os.path.exists(filename):
@@ -595,7 +597,7 @@ def main():
         yaml_repr_stripped = first_zettel.get_yaml(args.restrict_output_fields).rstrip()
         document = first_zettel.get_document()
         if len(yaml_repr_stripped) > 0:
-           outfile.write('\n'.join(['---', yaml_repr_stripped, '---', document.rstrip()]))
+           outfile.write('\n'.join(['---', yaml_repr_stripped, '---', document.rstrip()])+'\n')
         else:
            doc_stripped = document.rstrip()
            if len(doc_stripped) > 0:
