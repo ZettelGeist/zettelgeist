@@ -329,8 +329,10 @@ class Zettel(object):
 
     def append_list_field(self, name, value):
         self.zettel[name] = self.zettel.get(name, [])
-        self.zettel[name].append(value)
-        parse_zettel(self.zettel)
+        tag_set = set(self.zettel[name])
+        if not value in tag_set:
+           self.zettel[name].append(value)
+           parse_zettel(self.zettel)
 
     def get_list_field(self, name):
         return self.zettel.get(name, [])
@@ -533,8 +535,8 @@ def main():
             sys.exit(1)
         filename = args.file
         filename_parts = os.path.splitext(filename)
-        if filename_parts[1] != '.yaml':
-            print("Input file not .yaml: %s" % filename)
+        if filename_parts[1] not in ['.yaml', '.md']:
+            print("Input file not .yaml/.md: %s" % filename)
             sys.exit(1)
         backup_filename = ".".join([filename, args.backup_id])
         shutil.copyfile(filename, backup_filename)
