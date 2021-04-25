@@ -30,6 +30,7 @@ def zcreate(args):
 
 def main():
     args = parse_options()
+    print("Warning: zcreate is deprecated - use zimport --create --database %s" % args.database)
     zcreate(args)
 
 
