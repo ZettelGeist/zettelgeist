@@ -145,7 +145,6 @@ class FNF(Exception):
 def get(db_name):
     return SQLiteFTS(db_name, ZettelSQLFields)
 
-
 GRAMMAR = """@@grammar::ZQUERY
 
 start = expression $ ;

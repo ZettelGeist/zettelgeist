@@ -32,7 +32,14 @@ def main():
     parser.add_argument('--validate', action="store_true",
                         help="check Zettels only (don't import)", default=False)
 
+    parser.add_argument('--create', action="store_true",
+                        help="create database and delete existing if present", default=False)
+
     args = parser.parse_args()
+
+    if args.create or not os.path.exists(args.database): 
+        zcreate(args)
+
     db = zdb.get(args.database)
     zettel_dir = args.dir
 
@@ -64,6 +71,16 @@ def main():
 
     db.done()
 
+
+def zcreate(args):
+    if os.path.exists(args.database):
+        print("Deleting existing database %s" % args.database)
+        os.unlink(args.database)
+    print("Creating new database %s" % args.database)
+    db = zdb.get(args.database)
+    db.drop_table()
+    db.create_table()
+    db.done()
 
 if __name__ == '__main__':
     main()
