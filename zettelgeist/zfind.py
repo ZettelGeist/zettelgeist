@@ -35,6 +35,12 @@ def get_argparse():
     parser.add_argument(
         '--stats', help="write statistics and parameters to filename", default=None)
 
+    parser.add_argument(
+        '--get-all-tags', help="show all tags in this database (disables all other options)", action="store_true", default=False)
+
+    parser.add_argument(
+        '--get-all-mentions', help="show all mentions in this database (disables all other options)", action="store_true", default=False)
+
     return parser
 
 
@@ -42,6 +48,15 @@ def main():
     parser = get_argparse()
     args = parser.parse_args()
     argsd = vars(args)
+
+    db = zdb.get(args.database)
+    if args.get_all_tags:
+        print('\n'.join(db.get_tags_list()))
+        exit(0)
+
+    if args.get_all_mentions:
+        print('\n'.join(db.get_mentions_list()))
+        exit(0)
 
     if args.query_prompt:
         input_line = input("zfind> ")
@@ -56,7 +71,6 @@ def main():
 
     if input_line:
         ast = zquery.compile(input_line)
-        db = zdb.get(args.database)
         gen = db.fts_query(ast[0])
     else:
         print("Warning: Query could not be loaded via --query, --query-file, or --query-prompt")

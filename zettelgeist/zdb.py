@@ -129,6 +129,24 @@ class SQLiteFTS(object):
     def fts_query(self, prepared_sql):
         return self.cursor.execute(prepared_sql)
 
+    def get_tags_generator(self):
+        Q = "select distinct(tag) from tags"
+        for row in self.cursor.execute(Q):
+           yield(row['tag'])
+
+    def get_tags_list(self):
+        gen = self.get_tags_generator()
+        return list(gen)
+
+    def get_mentions_generator(self):
+        Q = "select distinct(mention) from mentions"
+        for row in self.cursor.execute(Q):
+            yield(row['mention'])
+
+    def get_mentions_list(self):
+        gen = self.get_mentions_generator()
+        return list(gen)
+
     def done(self):
         self.conn.commit()
         self.conn.close()
