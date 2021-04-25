@@ -15,7 +15,7 @@ except ImportError:
 
 import os
 import os.path
-import pickle
+import json
 import shutil
 
 from time import strftime
@@ -721,18 +721,18 @@ def process_zettel_command_line_options(z, vargs, id):
 def get_count(counter_path, counter_name):
     # Create counter db if not present.
     if not os.path.exists(counter_path):
-        with open(counter_path, 'ab') as dbfile:
-            pickle.dump({}, dbfile)
+        with open(counter_path, 'w') as dbfile:
+            json.dump({}, dbfile)
 
     # Read count from counter. If non-existent, start at 0.
-    with open(counter_path, 'rb') as dbfile:
-      db = pickle.load(dbfile)
+    with open(counter_path, 'r') as dbfile:
+      db = json.load(dbfile)
       count = db.get(counter_name, -1) + 1
 
     # save count for next invocation
-    with open(counter_path, 'wb') as dbfile:
+    with open(counter_path, 'w') as dbfile:
       db[counter_name] = count
-      pickle.dump(db, dbfile)
+      json.dump(db, dbfile)
     return count
 
 def dict_as_yaml(data):
