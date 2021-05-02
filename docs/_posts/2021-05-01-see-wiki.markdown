@@ -1,0 +1,10 @@
+---
+layout: post
+title:  "Migrating to GitHub Wiki"
+date:   2017-05-01 23:21:00 -0500
+categories: zettelgeist update
+---
+
+For now, we have decided to use [github.com/zettelgeist/zettelgeist](https://github.com/zettelgeist/zettelgeist/) as the main presence for the ZettelGeist project. We're focusing on our energy on building the next version of ZettelGeist. Hosting code *and* documentation on GitHub will allow us to focus on improvements to ZettelGeist and keeping documentation up-to-date. 
+
+If you have any questions about ZettelGeist or wish to help us, please don't hesitate to reach out to [Team ZettelGeist](https://github.com/ZettelGeist/zettelgeist/wiki/Team).
