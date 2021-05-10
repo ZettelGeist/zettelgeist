@@ -20,7 +20,7 @@ setup(
     ],
     python_requires='>=3',
     install_requires=[
-        'PyYAML',
+        'python-frontmatter',
         'tatsu'
     ],
     entry_points = {
