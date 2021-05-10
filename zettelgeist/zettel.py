@@ -256,7 +256,7 @@ def get_argparse():
     parser.add_argument('--digits', type=int, help="digits in counter (default=4)", default=4)
 
     parser.add_argument('--separator', type=str, help="separate components with delimiter (default is '-')", default="-")
-    parser.add_argument('--counter', type=str, help="counter name")
+    parser.add_argument('--counter', type=str, help="counter name (defaults to --id if present) ")
     parser.add_argument('--counter-path', type=str, help="counter filename/path to filename", default=".counter.dat")
 
     parser.add_argument('--restrict-output-fields',
@@ -569,8 +569,16 @@ def main():
         if args.id != None:
             name_components['id'] = args.id
         digits = args.digits
-        if args.counter != None:
-            seq = get_count(args.counter_path, args.counter)
+
+        # --counter and --id can be specified separately
+        # If omitted, --counter takes on --id
+        # If both are omitted, then we are not using counters in the generated names.
+        counter_name = args.counter
+        if not args.counter:
+            counter_name = args.id
+
+        if counter_name != None:
+            seq = get_count(args.counter_path, counter_name)
             seq_text = str(seq)
             digits = max(len(seq_text), digits)
             pad_text = "0" * (digits - len(seq_text))
