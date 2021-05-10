@@ -110,6 +110,7 @@ def main():
             document = row['document']
             if len(document) > 0:
                 print(row['document'])
+                print()
 
     if args.count:
         print("%d Zettels matched search" % search_count)
