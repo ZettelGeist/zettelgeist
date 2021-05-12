@@ -1,8 +1,7 @@
-import sys
 import argparse
+import sys
 from time import strftime
 import yaml
-
 from . import zdb, zettel, zquery
 from .zutils import *
 
@@ -15,6 +14,10 @@ def get_argparse():
         parser.add_argument('--show-%s' % field,
                             action='store_const', const=True, default=False,
                             help="include field <%s> in output" % field)
+
+    parser.add_argument('--publish', help="use template to publish zfind output (suppresses all --show-FIELD)", default=None)
+
+    parser.add_argument('--publish-conf', help="use publish configuration file to format special fields", default=None)
 
     parser.add_argument('--count', action='store_const', const=True,
                         default=False, help="Show number of Zettels matching this search")
@@ -41,6 +44,7 @@ def get_argparse():
 
     parser.add_argument(
         '--get-all-mentions', help="show all mentions in this database (disables all other options)", action="store_true", default=False)
+
 
     return parser
 
@@ -87,6 +91,20 @@ def main():
 
     search_count = 0
     match_filenames = []
+
+    # This is for the --publish option. Publish suppresses all other output.
+
+    if args.publish:
+        template_file = args.publish
+        publish_conf = args.publish_conf
+        for row in gen:
+           loader = zettel.ZettelLoader(row['filename'])
+           zettels = loader.getZettels()
+           z = next(zettels)
+           publish(row, z, template_file, publish_conf)
+        return
+
+    # This is for the --show options
     for row in gen:
         search_count = search_count + 1
         printed_something = False
@@ -145,6 +163,67 @@ def main():
            write_to_file(args.stats, zettel.dict_as_yaml(doc), mode="w", newlines=1)
         else:
            print("Filename %s exists; will not overwrite." % args.stats)
+
+def publish(row, z, template_file, publish_conf):
+    import json
+
+    formatting = {}
+    if publish_conf:
+        with open(publish_conf) as jsonf:
+            formatting = json.load(jsonf)
+
+    all_vars = { k:'' for k in zettel.ZettelFields }
+    all_vars.update(z.zettel)
+    all_vars['filename'] = row['filename']
+
+
+
+    tags = reformat_tags(all_vars, formatting)
+    mentions = reformat_mentions(all_vars, formatting)
+    cite = reformat_cite(all_vars, formatting)
+
+    reformatted_data = { 'tags' : tags, 'mentions' : mentions, 'cite' : cite }
+
+    all_vars.update(reformatted_data)
+
+    with open(template_file) as tf:
+        text = tf.read()
+        print(text % all_vars)
+
+def reformat_tags(all_vars, formatting):
+    tags_format = formatting.get('tags', {})
+    tags = all_vars.get('tags', [])
+    if len(tags) == 0:
+        return ''
+    default_tag_format = '%(tag)s'
+    formatted_tags = \
+            [ tags_format.get('tag', default_tag_format) % { 'tag' : tag } for tag in tags ]
+    return tags_format.get('before','') + ''.join(formatted_tags) + tags_format.get('after','')
+
+def reformat_mentions(all_vars, formatting):
+    mentions_format = formatting.get('mentions', {})
+    mentions = all_vars.get('mentions', [])
+    if len(mentions) == 0:
+        return ''
+    default_mention_format = '%(mention)s'
+    formatted_mentions = \
+            [ mentions_format.get('mention', default_mention_format) % { 'mention' : mention } for mention in mentions ]
+    return mentions_format.get('before','') + ''.join(formatted_mentions) + mentions_format.get('after','')
+
+def reformat_cite(all_vars, formatting):
+    cite_format = formatting.get('cite', {})
+    cite = all_vars.get("cite", {})
+    if len(cite) == 0:
+        return ''
+    if len(cite) > 0 and type(cite_format) == type({}):
+        cite_template = cite_format.get('before')
+        cite_template += cite_format.get('bibkey', '%(bibkey)s')
+        cite_template += cite_format.get('page', '%(page)s')
+        cite_template += cite_format.get('after')
+        new_cite = cite_template % cite
+        return new_cite
+    else:
+        return ''
 
 if __name__ == '__main__':
     main()
