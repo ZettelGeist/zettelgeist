@@ -1,6 +1,7 @@
 import sys
 import argparse
 from time import strftime
+import yaml
 
 from . import zdb, zettel, zquery
 from .zutils import *
@@ -50,6 +51,10 @@ def main():
     argsd = vars(args)
 
     db = zdb.get(args.database)
+
+    # The --get-all-tags and --get-all-mentions stop processing of all other tags
+    # TODO: Make each group of functions a function to make this more comprehensible.
+
     if args.get_all_tags:
         print('\n'.join(db.get_tags_list()))
         exit(0)
@@ -57,6 +62,8 @@ def main():
     if args.get_all_mentions:
         print('\n'.join(db.get_mentions_list()))
         exit(0)
+
+    # The --query-{prompt,file,string} options are for ZQL processing.
 
     if args.query_prompt:
         input_line = input("zfind> ")
@@ -76,6 +83,8 @@ def main():
         print("Warning: Query could not be loaded via --query, --query-file, or --query-prompt")
         sys.exit(1)
 
+    # This is the actual logic to find and process results.
+
     search_count = 0
     match_filenames = []
     for row in gen:
@@ -86,31 +95,26 @@ def main():
         zettels = loader.getZettels()
         z = next(zettels)
 
-        # TODO: This is not good. I think we should only output YAML now that we have Markdown.
-        this_result_output = [YAML_HEADER]
+        # Handle output of YAML here
+        this_result_output = []
         for field in row.keys():
             show_field = "show_" + field
-            if argsd.get(show_field, None):
+            if show_field == 'show_filename':
+                filename_yaml = yaml.dump({ 'filename' : row['filename']})
+                this_result_output.append(filename_yaml.rstrip())
+            elif show_field == 'show_document':
+                continue
+            elif argsd.get(show_field, None):
                 if row[field]:
                     if z:
-                        # TODO: Think more carefully about special fields. 
-                        # Need to refactor this code to make it cleaner
-                        if field == 'document':
-                            continue
-                        if field == 'filename':
-                            this_result_output.append('filename: %s' % row['filename'])
-                        elif field in zettel.ZettelFields:
-                            this_result_output.append(z.get_yaml([field]).rstrip())
+                        this_result_output.append(z.get_yaml([field]).rstrip())
                     else:
                         this_result_output.append("%s:" % field)
                         this_result_output.append(row[field])
-    
-
-        this_result_output.append(YAML_HEADER)
 
         # No output if just --- and ---
-        if len(this_result_output) > 2:
-           print('\n'.join(this_result_output))
+        if len(this_result_output) > 0:
+           print('\n'.join([YAML_HEADER] + this_result_output + [YAML_HEADER]))
 
         if argsd.get("show_document"):
             document = row['document']
@@ -118,8 +122,13 @@ def main():
                 print(row['document'])
                 print()
 
+    # --count here / Should this be added to the YAML payload? I think the answer is yes.
+
     if args.count:
         print("%d Zettels matched search" % search_count)
+
+    # --fileset handled here / Should --fileset actually suppress the --show options? 
+    # It's primary purpose is to *avoid* showing output for subsequent processing, say, in a shell loop
 
     if args.fileset:
         if not os.path.exists(args.fileset):
@@ -127,10 +136,12 @@ def main():
         else:
            print("Filename %s exists; will not overwrite." % args.fileset)
 
+    # --stats seems to duplicate the work of --count. yes, it goes to a file, but that would
+    # allow for subsequent querying, say, with yq or equivalent.
+
     if args.stats:
         if not os.path.exists(args.stats):
-           doc = {'count': search_count,
-               'query': input_line.strip()}
+           doc = {'count': search_count, 'query': input_line.strip()}
            write_to_file(args.stats, zettel.dict_as_yaml(doc), mode="w", newlines=1)
         else:
            print("Filename %s exists; will not overwrite." % args.stats)

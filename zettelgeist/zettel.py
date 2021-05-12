@@ -407,7 +407,7 @@ class Zettel(object):
                 continue
             if key in ZettelStringFields:
                 yaml_zettel[key] = literal(self.zettel[key])
-            elif key not in ZettelExtraFields:
+            elif key != 'document': # Only field not allowed is Markdown document
                 try:
                     yaml_zettel[key] = self.zettel[key].copy()
                 except:
