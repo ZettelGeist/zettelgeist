@@ -92,8 +92,14 @@ def main():
             show_field = "show_" + field
             if argsd.get(show_field, None):
                 if row[field]:
-                    if z and field in zettel.ZettelFields:
-                        if field not in zettel.ZettelExtraFields:
+                    if z:
+                        # TODO: Think more carefully about special fields. 
+                        # Need to refactor this code to make it cleaner
+                        if field == 'document':
+                            continue
+                        if field == 'filename':
+                            this_result_output.append('filename: %s' % row['filename'])
+                        elif field in zettel.ZettelFields:
                             this_result_output.append(z.get_yaml([field]).rstrip())
                     else:
                         this_result_output.append("%s:" % field)
@@ -111,14 +117,6 @@ def main():
             if len(document) > 0:
                 print(row['document'])
                 print()
-
-        # TODO eliminate this duplication later. document/filename are the only special fields
-        if argsd.get("show_filename"):
-            filename = row['filename']
-            if len(filename) > 0:
-                print(row['filename'])
-                print()
-
 
     if args.count:
         print("%d Zettels matched search" % search_count)
