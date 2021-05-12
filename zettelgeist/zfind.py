@@ -112,6 +112,14 @@ def main():
                 print(row['document'])
                 print()
 
+        # TODO eliminate this duplication later. document/filename are the only special fields
+        if argsd.get("show_filename"):
+            filename = row['filename']
+            if len(filename) > 0:
+                print(row['filename'])
+                print()
+
+
     if args.count:
         print("%d Zettels matched search" % search_count)
 
