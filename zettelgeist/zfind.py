@@ -98,19 +98,19 @@ def main():
         # Handle output of YAML here
         this_result_output = []
         for field in row.keys():
-            show_field = "show_" + field
-            if show_field == 'show_filename':
-                filename_yaml = yaml.dump({ 'filename' : row['filename']})
-                this_result_output.append(filename_yaml.rstrip())
-            elif show_field == 'show_document':
-                continue
-            elif argsd.get(show_field, None):
-                if row[field]:
-                    if z:
-                        this_result_output.append(z.get_yaml([field]).rstrip())
-                    else:
-                        this_result_output.append("%s:" % field)
-                        this_result_output.append(row[field])
+            show_field = 'show_' + field
+            if argsd.get(show_field, None):
+                if field == 'filename':
+                   filename_yaml = yaml.dump({ 'filename' : row['filename']})
+                   this_result_output.append(filename_yaml.rstrip())
+                elif field == 'document':
+                   continue
+                elif row[field]:
+                   if z:
+                      this_result_output.append(z.get_yaml([field]).rstrip())
+                   else:
+                      this_result_output.append("%s:" % field)
+                      this_result_output.append(row[field])
 
         # No output if just --- and ---
         if len(this_result_output) > 0:
