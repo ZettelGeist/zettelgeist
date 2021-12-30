@@ -15,6 +15,10 @@ def get_argparse():
                             action='store_const', const=True, default=False,
                             help="include field <%s> in output" % field)
 
+    parser.add_argument('--show-all',
+                        action='store_const', const=True, default=False,
+                        help="include all fields in output")
+
     parser.add_argument('--publish', help="use template to publish zfind output (suppresses all --show-FIELD)", default=None)
 
     parser.add_argument('--publish-conf', help="use publish configuration file to format special fields", default=None)
@@ -117,7 +121,7 @@ def main():
         this_result_output = []
         for field in row.keys():
             show_field = 'show_' + field
-            if argsd.get(show_field, None):
+            if argsd.get(show_field, None) or argsd.get('show_all'):
                 if field == 'filename':
                    filename_yaml = yaml.dump({ 'filename' : row['filename']})
                    this_result_output.append(filename_yaml.rstrip())
