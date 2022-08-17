@@ -15,10 +15,13 @@ setup(
     keywords=['notetaking', 'YAML', 'Markdown', 'sqlite3', 'GitHub'],
     classifiers=[
         'Development Status :: 4 - Beta',
-        'Programming Language :: Python :: 3.0',
+        'Programming Language :: Python :: 3',
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Software Development",
         'License :: OSI Approved :: Apache Software License'
     ],
-    python_requires='>=3',
+    python_requires='>=3.10',
     install_requires=[
         'python-frontmatter',
         'tatsu'
