@@ -208,6 +208,7 @@ z_field
     ;
 
 literal
-    = word:/\w+|"(\s+|\w+)*"/
+    = word:/"(\s+|\w+)*"/
+    | word:/\w+/
     ;
 """
