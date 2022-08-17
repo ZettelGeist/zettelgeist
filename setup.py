@@ -8,6 +8,7 @@ setup(
     packages=['zettelgeist'],
     version=zversion.version(),
     description='ZettelGeist - a historiographically focused notetaking system',
+    long_description='ZettelGeist - a historiographically focused notetaking system',
     author='ZettelGeist Laboratories',
     author_email='gkt@cs.luc.edu',
     license='Apache License 2.0',
