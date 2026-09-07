@@ -1,18 +1,18 @@
-import sys
-import readline
-import pprint
-import json
-import tatsu
 import argparse
+import json
 import os.path
-import tempfile
 import pprint
+import readline
+import sys
+import tempfile
+
+import tatsu
 
 from . import zdb, zettel
 
 
 def unquote(text):
-    return text.replace('"', '').replace("'", "")
+    return text.replace('"', "").replace("'", "")
 
 
 class ZG(object):
@@ -22,16 +22,18 @@ class ZG(object):
     def _get_match_clause(self, ast, negate):
         text = unquote(ast.text)
         words = text.split()
-        return " NEAR/1 ".join(["%s%s:%s" % (negate, ast.field, word) for word in words])
+        return " NEAR/1 ".join(
+            ["%s%s:%s" % (negate, ast.field, word) for word in words]
+        )
 
     def z_field(self, ast):
-        match_clause = self._get_match_clause(ast, '')
+        match_clause = self._get_match_clause(ast, "")
         return "SELECT * FROM zettels WHERE zettels MATCH '%s'" % match_clause
 
     def and_expr(self, ast):
-        if ast.op == '&':
+        if ast.op == "&":
             return "SELECT * from (%s INTERSECT %s)" % (ast.left, ast.right)
-        elif ast.op == '!':
+        elif ast.op == "!":
             return "SELECT * from (%s EXCEPT %s)" % (ast.left, ast.right)
         # else: parser should have caught any non-op
 
@@ -65,12 +67,13 @@ class ZG2(object):
         return self.select_all
 
     def get_field_query_sql(self, field, field_context, docid):
-        default = """SELECT docid, %(field)s FROM zettels WHERE docid = %(docid)s""" % vars(
+        default = (
+            """SELECT docid, %(field)s FROM zettels WHERE docid = %(docid)s""" % vars()
         )
         field_queries = self.queries.get(field, [default]).copy()
         for i in range(0, len(field_queries)):
             field_queries[i] = field_queries[i] % vars()
-        #print(">>> field_queries", field_queries)
+        # print(">>> field_queries", field_queries)
         return field_queries
 
     def literal(self, ast):
@@ -79,30 +82,48 @@ class ZG2(object):
     def _get_match_clause(self, ast, negate):
         text = unquote(ast.text)
         words = text.split()
-        return " NEAR/1 ".join(["%s%s:%s" % (negate, ast.field, word) for word in words])
+        return " NEAR/1 ".join(
+            ["%s%s:%s" % (negate, ast.field, word) for word in words]
+        )
 
     def z_field(self, ast):
-        match_clause = self._get_match_clause(ast, '')
+        match_clause = self._get_match_clause(ast, "")
         query_list = self.queries.get(ast.field, [])
-        field_query = "SELECT docid FROM zettels WHERE zettels MATCH '%s'" % match_clause
-        context_query = """SELECT docid, snippet(zettels, '[', ']', '...', -1, -%%(field_context)s) as %s, %s as %s_verbatim, offsets(zettels) as %s_offsets FROM zettels WHERE zettels MATCH '%s' AND docid = %%(docid)s""" % (
-            ast.field, ast.field, ast.field, ast.field, match_clause)
+        field_query = (
+            "SELECT docid FROM zettels WHERE zettels MATCH '%s'" % match_clause
+        )
+        context_query = (
+            """SELECT docid, snippet(zettels, '[', ']', '...', -1, -%%(field_context)s) as %s, %s as %s_verbatim, offsets(zettels) as %s_offsets FROM zettels WHERE zettels MATCH '%s' AND docid = %%(docid)s"""
+            % (ast.field, ast.field, ast.field, ast.field, match_clause)
+        )
         query_list.append(context_query)
         self.queries[ast.field] = query_list
         return field_query
 
     def and_expr(self, ast):
-        if ast.op == '&':
-            return "SELECT %s from (%s INTERSECT %s)" % (self.select_fields, ast.left, ast.right)
-        elif ast.op == '!':
-            return "SELECT %s from (%s EXCEPT %s)" % (self.select_fields, ast.left, ast.right)
+        if ast.op == "&":
+            return "SELECT %s from (%s INTERSECT %s)" % (
+                self.select_fields,
+                ast.left,
+                ast.right,
+            )
+        elif ast.op == "!":
+            return "SELECT %s from (%s EXCEPT %s)" % (
+                self.select_fields,
+                ast.left,
+                ast.right,
+            )
         # else: parser should have caught any non-op
 
     def and_op(self, ast):
         return ast.op
 
     def or_expr(self, ast):
-        return "SELECT %s from (%s UNION %s)" % (self.select_fields, ast.left, ast.right)
+        return "SELECT %s from (%s UNION %s)" % (
+            self.select_fields,
+            ast.left,
+            ast.right,
+        )
 
 
 def compile(input_line):

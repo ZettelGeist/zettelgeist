@@ -1,6 +1,7 @@
 # ZettelGeist Roadmap
 
-**Status:** Phase 0 shipped as 1.1.6 on 2 September 2026. Phases 1–5 are open.
+**Status:** Phase 0 shipped as 1.1.6 on 2 September 2026. Phase 1 landed on
+6 September 2026. Phases 2–5 are open.
 
 This document is the plan for bringing ZettelGeist up to date: what is wrong with
 the codebase today, the order in which to fix it, and the reasoning behind that
@@ -123,7 +124,43 @@ and 1.1.6 was tagged following `docs/RELEASING.md`.
 *Closed: 37, 39, 42. Issue 41 left open — the summary line is the smaller half of
 it.*
 
-### Phase 1 — Prune the tree
+### Phase 1 — Prune the tree ✅
+
+**Landed 6 September 2026.** 92 tracked files became 57. The package, the
+tests, `docs/` and `.github/` are all that remain, plus `bin/` and `scripts/`,
+which Phase 2 takes. No behavior change: import, query, `--get-all-tags` and
+`zettel` output over the mlb corpus are byte-identical across the whole phase,
+including the 9 hits for `tags:"AL Central"` and the 29 for
+`tags:"National League"` recorded above.
+
+Three latent crashes turned up while checking the README's examples against a
+real checkout. None was previously recorded, none is fixed here, and all three
+are Phase 5 work: `zettel --file` on a note with an unknown field prints the
+right diagnostic and then dies with an `UnboundLocalError`; `zfind --publish`
+raises `TypeError` on any matched note carrying a `cite` field unless
+`--publish-conf` is given, because `reformat_cite()` builds its template from
+`cite_format.get('before')`, which is `None` with no configuration loaded; and
+`zimport --validate` creates the database file despite indexing nothing.
+
+Two departures from the plan as written, both in the direction of not landing a
+broken gate:
+
+- **PR #43's community files could not be harvested, only its idea.**
+  `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `SUPPORT.md` and
+  `GOVERNANCE.md` are zero-byte files in that branch; `CITATION.cff` is one
+  comment; `CODEOWNERS` and `FUNDING.yml` are GitHub's own documentation
+  examples, `@octocat` included. Those six were written from scratch against
+  this project instead; `CODEOWNERS` and `FUNDING.yml` were not taken at all.
+  `GOVERNANCE.md` describes current practice and wants the maintainer's
+  confirmation.
+- **Three of PR #43's pre-commit hooks were left out**, with the reasoning
+  recorded at the top of `.pre-commit-config.yaml`. flake8 and bandit report
+  ~120 and 23 findings against the package as it stands — almost entirely the
+  legacy style Phase 5 modernizes, or bandit reading the ZQL-built SQL as
+  injection and `md5_for_file()`'s checksum as a security hash. mdformat
+  rewrites this file's `---` rules into 70-character underscores and renumbers
+  its ordered lists. Deciding the linter question is already Phase 2's job; it
+  now also owns adding a linter hook that passes.
 
 *Risk: none — no behavior change. Value: every later phase greps, reviews and
 builds a smaller tree.*
@@ -156,7 +193,8 @@ arguments moved it here:
 2. PR #43's author is available now. Harvesting his contribution while he is
    around to review the split is worth more than harvesting it in a year.
 
-*Closes: no issues.*
+*Closed: no issues. Superseded PR #43, which can now be closed with a link to
+[Pull request #43](#pull-request-43).*
 
 ### Phase 2 — Make the build tell the truth
 
@@ -207,10 +245,14 @@ can publish untested code and the test suite cannot execute.*
   same run also reported that the token disabled Trusted Publishing and with it
   the attestations the action would otherwise have produced. Moving to trusted
   publishing retires the token that failed.
-- Settle the formatter question. Phase 1 lands PR #43's Black/isort result and
-  its `.pre-commit-config.yaml`; if CI is to run Ruff, decide here whether
-  `ruff format` replaces Black or the two coexist, and make the pre-commit config
-  and CI agree.
+- Settle the formatter and linter question. Phase 1 landed PR #43's
+  Black/isort result and a `.pre-commit-config.yaml` carrying isort and Black
+  only — no linter, because neither flake8 nor bandit passes on this tree
+  today. Decide here whether `ruff format` replaces Black or the two coexist,
+  pick the linter, configure it so that it is green on the code as it stands
+  (deferring the rest to Phase 5 rather than suppressing it), and make the
+  pre-commit config and CI agree. `pyroma` is worth adding once there is a
+  `pyproject.toml` for it to check.
 - Delete `bin/` and `scripts/deploy.sh`; the entry points and the workflow
   already cover both.
 - Turn the README build-status placeholder into a real badge.
@@ -233,9 +275,10 @@ deliberately.*
 - Stop list fields from bleeding into each other across the comma join, so a
   phrase can no longer span two adjacent tags.
 - Promote the baseball zettels moved in Phase 1 to a test fixture and assert
-  exact result counts per query. Read
-  [Before Phase 3](#before-phase-3-check-the-fixture-corpus) before writing those
-  assertions.
+  exact result counts per query. They are at `tests/fixtures/mlb/`, and
+  `tests/fixtures/README.md` records their provenance and the defect in the
+  data. Read [Before Phase 3](#before-phase-3-check-the-fixture-corpus) before
+  writing those assertions.
 
 *Note: fts5 forces a reindex, which `zdb.py` already documents as expected — the
 index is declared ephemeral.*
@@ -294,6 +337,10 @@ this roadmap wants and would otherwise have to redo; the other half would break
 the release and relicense the project. Phase 1 takes the first half as separate
 commits with attribution to the author, and the PR is then closed with a link to
 this section.
+
+*Done in Phase 1.* The deletions and the formatting pass were taken as
+described. The community files were not — see Phase 1 above for why the idea
+survived the harvest but the contents did not.
 
 ### Worth taking
 
@@ -363,8 +410,9 @@ a reformat, which should be avoided if possible.
 ## Before Phase 3: check the fixture corpus
 
 With the grammar fixed, `tags:"National League"` still returns all 29 baseball
-zettels — because in `deprecated/docs/example/mlb` every team, American League
-included, carries the tag `National League`. The fixture data is wrong, not the
+zettels — because in `tests/fixtures/mlb` (`deprecated/docs/example/mlb` when
+this was written) every team, American League included, carries the tag
+`National League`. The fixture data is wrong, not the
 query. Issue 38 expects 15, so confirm which corpus the wiki tutorial actually
 ships before writing that assertion into a test.
 

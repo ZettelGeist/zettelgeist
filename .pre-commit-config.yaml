@@ -1,0 +1,58 @@
+# Keeps the Phase 1 formatting pass from drifting back. Harvested from PR #43
+# (Nicholas Synovic) with the hook revs brought current and three hooks left
+# out on purpose:
+#
+#   flake8, bandit  The package currently reports ~120 flake8 findings and 23
+#                   bandit ones, essentially all of them the pre-existing style
+#                   Phase 5 modernizes (bare excepts, star imports, long lines)
+#                   or false positives (bandit reads every SQL string built from
+#                   the ZQL grammar as an injection vector, and md5_for_file's
+#                   checksum as a security hash). Landing either as a blocking
+#                   hook means a gate that is red on day one. ROADMAP.md Phase 2
+#                   settles which linter this project runs and how; add it back
+#                   there, with a configuration that passes.
+#
+#   mdformat        Rewrites ROADMAP.md's --- rules into 70-character
+#                   underscores and renumbers its ordered lists. That is a
+#                   restyle of documents whose form was chosen, not a fix.
+#
+# Run over the whole tree with:  pre-commit run --all-files
+
+default_language_version:
+  python: python3
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: requirements-txt-fixer
+      # The mlb corpus is the fixture every issue-38 count in ROADMAP.md is
+      # measured against; leave its bytes alone.
+      - id: end-of-file-fixer
+        exclude: ^tests/fixtures/
+      - id: trailing-whitespace
+        exclude: ^tests/fixtures/
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 9.0.1
+    hooks:
+      - id: isort
+        files: '\.py$'
+
+  - repo: https://github.com/psf/black
+    rev: 26.5.1
+    hooks:
+      - id: black
+        files: '\.py$'

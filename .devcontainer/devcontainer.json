@@ -1,0 +1,35 @@
+{
+    "name": "ZettelGeist",
+    "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
+    "postCreateCommand": "pip install --user -e . pytest pre-commit && pre-commit install",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.rulers": [
+                    88
+                ],
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
+                },
+                "[markdown]": {
+                    "editor.wordWrap": "bounded",
+                    "editor.wordWrapColumn": 80
+                },
+                "files.trimTrailingWhitespace": true,
+                "files.insertFinalNewline": true
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.debugpy",
+                "ms-python.black-formatter",
+                "ms-python.isort",
+                "yzhang.markdown-all-in-one",
+                "redhat.vscode-yaml"
+            ]
+        }
+    }
+}

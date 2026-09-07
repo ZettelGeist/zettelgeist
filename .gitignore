@@ -80,6 +80,7 @@ celerybeat-schedule
 
 # virtualenv
 venv/
+.venv/
 ENV/
 
 # Spyder project settings
@@ -95,7 +96,6 @@ zettels.db
 # OS X Junk
 .DS_Store
 
-*.class
 *.log
 *~
 
@@ -103,22 +103,7 @@ zettels.db
 *.swp
 *.swo
 
-# sbt specific
-.cache
-.history
-.lib/
-dist/*
-target/
-lib_managed/
-src_managed/
-project/boot/
-project/plugins/project/
-scala-2.10/
-scala-2.11/
-
-# Scala-IDE specific
-.scala_dependencies
-.worksheet
+# JetBrains
 .idea/
 
 

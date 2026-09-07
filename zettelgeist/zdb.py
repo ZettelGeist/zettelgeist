@@ -1,4 +1,3 @@
-
 # ZettelGeist uses a FTS system for organizing Zettels. The index is intended
 # to be emphemeral and can be regenerated at any time. The schema itself is
 # ephemeral and can be augmented with additional fields of interest.
@@ -16,22 +15,22 @@ from . import zettel
 
 ZettelSQLFields = zettel.ZettelFieldsOrdered
 # Default Zettel DB name
-ZDB = 'zettels.db'
+ZDB = "zettels.db"
 
 
 def get_argparse():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--database', help="database name", required=True)
+    parser.add_argument("--database", help="database name", required=True)
     return parser
 
 
 import pprint
+
 printer = pprint.PrettyPrinter(indent=2)
 
 
 def unquote(text):
-    return text.replace('"', '').replace("'", "")
+    return text.replace('"', "").replace("'", "")
 
 
 class SQLiteFTS(object):
@@ -43,18 +42,17 @@ class SQLiteFTS(object):
 
         self.fts_field_names = field_names
         # for sqlite insert template generation
-        self.fts_field_refs = ['?'] * len(self.fts_field_names)
-        self.fts_field_init = [''] * len(self.fts_field_names)
+        self.fts_field_refs = ["?"] * len(self.fts_field_names)
+        self.fts_field_init = [""] * len(self.fts_field_names)
         self.fts_fields = dict(zip(self.fts_field_names, self.fts_field_refs))
-        self.fts_default_record = dict(
-            zip(self.fts_field_names, self.fts_field_init))
+        self.fts_default_record = dict(zip(self.fts_field_names, self.fts_field_init))
         self.zettel = None
 
     def bind(self, zettel, filename, document=""):
         self.zettel = zettel
         doc = zettel.get_indexed_representation()
-        doc.update({'filename': filename})
-        doc.update({'document': document})
+        doc.update({"filename": filename})
+        doc.update({"document": document})
         self.record = self.fts_default_record.copy()
         for k in doc.keys():
             if k in self.record.keys():
@@ -71,17 +69,17 @@ class SQLiteFTS(object):
 
     def create_table(self):
         sql_fields = ",".join(self.fts_default_record.keys())
-        #print("CREATE VIRTUAL TABLE zettels USING fts4(%s)" % sql_fields)
-        self.cursor.execute(
-            "CREATE VIRTUAL TABLE zettels USING fts4(%s)" % sql_fields)
+        # print("CREATE VIRTUAL TABLE zettels USING fts4(%s)" % sql_fields)
+        self.cursor.execute("CREATE VIRTUAL TABLE zettels USING fts4(%s)" % sql_fields)
         self.conn.commit()
-        self.create_index_table('tags', 'tag')
-        self.create_index_table('mentions', 'mention')
+        self.create_index_table("tags", "tag")
+        self.create_index_table("mentions", "mention")
 
     def create_index_table(self, table_name, field_name):
         self.cursor.execute("DROP TABLE IF EXISTS %(table_name)s" % vars())
         self.cursor.execute(
-            "CREATE TABLE %(table_name)s (%(field_name)s text)" % vars())
+            "CREATE TABLE %(table_name)s (%(field_name)s text)" % vars()
+        )
         self.conn.commit()
 
     def update_index(self, table_name, field_name, items):
@@ -89,20 +87,20 @@ class SQLiteFTS(object):
             return
         for item in items:
             self.cursor.execute(
-                "INSERT INTO %(table_name)s (%(field_name)s) VALUES (?)" % vars(), (item,))
+                "INSERT INTO %(table_name)s (%(field_name)s) VALUES (?)" % vars(),
+                (item,),
+            )
             # NB: (item,) means to pack this item into a tuple as required by sqlite3.
 
     def insert_into_table(self):
         sql_params = ",".join(self.fts_fields.values())
         sql_columns = ",".join(list(self.record.keys()))
         sql_insert_values = list(self.record.values())
-        insert_sql = "INSERT INTO zettels (%s) VALUES (%s)" % (
-            sql_columns, sql_params)
+        insert_sql = "INSERT INTO zettels (%s) VALUES (%s)" % (sql_columns, sql_params)
         self.cursor.execute(insert_sql, sql_insert_values)
         self.conn.commit()
-        self.update_index('tags', 'tag', self.zettel.get_list_field('tags'))
-        self.update_index('mentions', 'mention',
-                          self.zettel.get_list_field('mentions'))
+        self.update_index("tags", "tag", self.zettel.get_list_field("tags"))
+        self.update_index("mentions", "mention", self.zettel.get_list_field("mentions"))
 
     # A term_list is a list of 3-tuples (not-option, fieldname, word)
 
@@ -110,10 +108,10 @@ class SQLiteFTS(object):
         safe_term_list = []
         for term in term_list:
             if type(term) == type(()) and len(term) == 3:
-                (name, not_operator, words) = term
+                name, not_operator, words = term
                 words = unquote(words)
-                if not_operator not in '-':
-                    not_operator = ''
+                if not_operator not in "-":
+                    not_operator = ""
                 if name not in self.fts_field_names:
                     continue
                 for word in words.split():
@@ -124,7 +122,7 @@ class SQLiteFTS(object):
         Q = "SELECT * from zettels where zettels match '%s'" % fts_terms
         # print(Q)
         for row in self.cursor.execute(Q):
-            yield(row)
+            yield (row)
 
     def fts_query(self, prepared_sql):
         return self.cursor.execute(prepared_sql)
@@ -132,7 +130,7 @@ class SQLiteFTS(object):
     def get_tags_generator(self):
         Q = "select distinct(tag) from tags"
         for row in self.cursor.execute(Q):
-           yield(row['tag'])
+            yield (row["tag"])
 
     def get_tags_list(self):
         gen = self.get_tags_generator()
@@ -141,7 +139,7 @@ class SQLiteFTS(object):
     def get_mentions_generator(self):
         Q = "select distinct(mention) from mentions"
         for row in self.cursor.execute(Q):
-            yield(row['mention'])
+            yield (row["mention"])
 
     def get_mentions_list(self):
         gen = self.get_mentions_generator()
@@ -163,6 +161,7 @@ class FNF(Exception):
 def get(db_name):
     return SQLiteFTS(db_name, ZettelSQLFields)
 
+
 GRAMMAR = """@@grammar::ZQUERY
 
 start = expression $ ;
@@ -179,7 +178,7 @@ or_expr
     ;
 
 term
-    = 
+    =
     | and_expr
     | factor
     ;
@@ -203,7 +202,7 @@ factor
     | z_field
     ;
 
-z_field 
+z_field
     = field:literal ':' text:literal
     ;
 

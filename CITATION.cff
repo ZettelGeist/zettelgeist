@@ -1,0 +1,36 @@
+# https://citation-file-format.github.io
+# Validate with:  pip install cffconvert && cffconvert --validate
+cff-version: 1.2.0
+message: "If you use ZettelGeist in your research, please cite it as below."
+title: ZettelGeist
+abstract: >-
+  ZettelGeist is a plaintext, historiographically focused notetaking system.
+  Notes are YAML or Markdown-with-frontmatter files; they are indexed into a
+  SQLite full-text-search database and queried through ZQL, a small query
+  language.
+type: software
+authors:
+  - family-names: Thiruvathukal
+    given-names: George K.
+    email: gkt@cs.luc.edu
+    affiliation: Loyola University Chicago
+  - family-names: Dennis
+    given-names: David B.
+    affiliation: Loyola University Chicago
+  - family-names: Cornelius
+    given-names: Ian
+    email: icornelius@luc.edu
+    affiliation: Loyola University Chicago
+repository-code: https://github.com/ZettelGeist/zettelgeist
+url: https://github.com/ZettelGeist/zettelgeist/wiki
+license: Apache-2.0
+version: 1.1.6
+date-released: "2026-09-02"
+keywords:
+  - notetaking
+  - zettelkasten
+  - YAML
+  - Markdown
+  - sqlite3
+  - full-text search
+  - digital humanities

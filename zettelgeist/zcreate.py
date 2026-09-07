@@ -1,14 +1,20 @@
 # zcreate.py - create Zettel database
 
-import os.path
 import argparse
+import os.path
+
 from . import zdb
 
 
 def parse_options():
     parser = zdb.get_argparse()
-    parser.add_argument('--delete', action='store_const', const=True,
-                        default=False, help="delete if it already exists")
+    parser.add_argument(
+        "--delete",
+        action="store_const",
+        const=True,
+        default=False,
+        help="delete if it already exists",
+    )
     return parser.parse_args()
 
 
@@ -30,9 +36,12 @@ def zcreate(args):
 
 def main():
     args = parse_options()
-    print("Warning: zcreate is deprecated - use zimport --create --database %s" % args.database)
+    print(
+        "Warning: zcreate is deprecated - use zimport --create --database %s"
+        % args.database
+    )
     zcreate(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
